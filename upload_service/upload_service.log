@@ -1,0 +1,196 @@
+[2026-02-03 10:37:17] [upload_service] [ERROR] Failed to connect to MongoDB. Exiting.
+[2026-02-03 10:43:27] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 10:43:27] [upload_service] [INFO] Environment: development
+[2026-02-03 10:43:27] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 10:43:28] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 10:43:28] [upload_service] [INFO] Environment: development
+[2026-02-03 10:43:28] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 10:50:54] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/5cf551cc8f33_Travel-Policy_3rd-feb_final.pdf
+[2026-02-03 10:50:54] [upload_service] [INFO] Document uploaded: doc_8327de574b2c v1
+[2026-02-03 10:50:54] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_8327de574b2c
+[2026-02-03 10:50:54] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_8327de574b2c
+[2026-02-03 10:50:54] [upload_service] [INFO] Starting async pipeline for: doc_8327de574b2c (Travel-Policy_3rd-feb_final.pdf)
+[2026-02-03 10:50:56] [upload_service] [INFO] Pipeline thread started for doc_8327de574b2c
+[2026-02-03 10:50:56] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_8327de574b2c
+[2026-02-03 10:50:56] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 10:50:56] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 10:52:21] [upload_service.database] [INFO] Stage 1 (extract-clauses) stored: stage_1_75a20326
+[2026-02-03 10:52:21] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 10:52:21] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 10:54:07] [upload_service.database] [INFO] Stage 2 (classify-intents) stored: stage_2_3afb7e66
+[2026-02-03 10:54:07] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 10:54:07] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:00:00] [upload_service.database] [INFO] Stage 3 (extract-entities) stored: stage_3_064457ad
+[2026-02-03 11:00:00] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 11:00:00] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:02:59] [upload_service.database] [INFO] Stage 4 (detect-ambiguities) stored: stage_4_977266b9
+[2026-02-03 11:02:59] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 11:02:59] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:03:56] [upload_service.database] [INFO] Stage 5 (clarify-ambiguities) stored: stage_5_5d947d67
+[2026-02-03 11:03:56] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 11:03:56] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:03:56] [upload_service.database] [INFO] Stage 6 (generate-dsl) stored: stage_6_e79a3708
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Stage 7 (confidence-rationale) stored: stage_7_c0a3c9b8
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 11:03:57] [upload_service.database] [INFO] Stage 8 (normalize-policies) stored: stage_8_1c3f02f9
+[2026-02-03 11:25:43] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 11:25:43] [upload_service] [INFO] Environment: development
+[2026-02-03 11:25:43] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:01:47] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/3527d0196be6_Travel_Policy.pdf
+[2026-02-03 12:01:47] [upload_service] [INFO] Document uploaded: doc_5ee2c50f1e8b v1
+[2026-02-03 12:01:47] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_5ee2c50f1e8b
+[2026-02-03 12:01:47] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_5ee2c50f1e8b
+[2026-02-03 12:01:47] [upload_service] [INFO] Starting async pipeline for: doc_5ee2c50f1e8b (Travel_Policy.pdf)
+[2026-02-03 12:01:49] [upload_service] [INFO] Pipeline thread started for doc_5ee2c50f1e8b
+[2026-02-03 12:01:49] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_5ee2c50f1e8b
+[2026-02-03 12:01:49] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:01:49] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:02:23] [upload_service.database] [INFO] Stage 1 (extract-clauses) stored: stage_1_2195d2b4
+[2026-02-03 12:02:23] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:02:23] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:03:16] [upload_service.database] [INFO] Stage 2 (classify-intents) stored: stage_2_e2d523f3
+[2026-02-03 12:03:16] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:03:16] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:06:37] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:06:37] [upload_service] [INFO] Environment: development
+[2026-02-03 12:06:37] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:06:38] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:06:38] [upload_service] [INFO] Environment: development
+[2026-02-03 12:06:38] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:06:44] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/dd20547efdd0_Travel_Policy.pdf
+[2026-02-03 12:06:44] [upload_service] [INFO] Document uploaded: doc_6056a4a69b8a v1
+[2026-02-03 12:06:44] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_6056a4a69b8a
+[2026-02-03 12:06:44] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_6056a4a69b8a
+[2026-02-03 12:06:44] [upload_service] [INFO] Starting async pipeline for: doc_6056a4a69b8a (Travel_Policy.pdf)
+[2026-02-03 12:06:46] [upload_service] [INFO] Pipeline thread started for doc_6056a4a69b8a
+[2026-02-03 12:06:46] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_6056a4a69b8a
+[2026-02-03 12:06:46] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:06:46] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:07:10] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:07:10] [upload_service] [INFO] Environment: development
+[2026-02-03 12:07:10] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:07:23] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/fd7de0a57918_Travel_Policy.pdf
+[2026-02-03 12:07:23] [upload_service] [INFO] Document uploaded: doc_6056a4a69b8a v2
+[2026-02-03 12:07:23] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_6056a4a69b8a
+[2026-02-03 12:07:23] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_6056a4a69b8a
+[2026-02-03 12:07:23] [upload_service] [INFO] Starting async pipeline for: doc_6056a4a69b8a (Travel_Policy.pdf)
+[2026-02-03 12:07:25] [upload_service] [INFO] Pipeline thread started for doc_6056a4a69b8a
+[2026-02-03 12:07:25] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_6056a4a69b8a
+[2026-02-03 12:07:25] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:07:25] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:07:54] [upload_service.database] [INFO] Stage 1 (extract-clauses) stored: stage_1_56d1ad4a
+[2026-02-03 12:07:54] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:07:54] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:08:18] [upload_service.database] [INFO] Stage 2 (classify-intents) stored: stage_2_839373b9
+[2026-02-03 12:08:18] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:08:18] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:10:01] [upload_service.database] [INFO] Stage 3 (extract-entities) stored: stage_3_77cc86a0
+[2026-02-03 12:10:01] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:10:01] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:10:46] [upload_service.database] [INFO] Stage 4 (detect-ambiguities) stored: stage_4_f5cf50a6
+[2026-02-03 12:10:46] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:10:46] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Stage 5 (clarify-ambiguities-with-context) stored: stage_5_cbe42bdd
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Stage 6 (generate-dsl) stored: stage_6_aac4fb54
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Stage 7 (confidence-rationale) stored: stage_7_ae7141fe
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:11:42] [upload_service.database] [INFO] Stage 8 (normalize-policies) stored: stage_8_9c5a1104
+[2026-02-03 12:12:16] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:12:16] [upload_service] [INFO] Environment: development
+[2026-02-03 12:12:16] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:19:11] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:19:11] [upload_service] [INFO] Environment: development
+[2026-02-03 12:19:11] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:19:17] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:19:17] [upload_service] [INFO] Environment: development
+[2026-02-03 12:19:17] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:31:09] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:31:09] [upload_service] [INFO] Environment: development
+[2026-02-03 12:31:09] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:34:53] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:34:53] [upload_service] [INFO] Environment: development
+[2026-02-03 12:34:53] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:34:53] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 12:34:53] [upload_service] [INFO] Environment: development
+[2026-02-03 12:34:53] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 12:49:30] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/e3ba8b763dae_Travel_Policy.pdf
+[2026-02-03 12:49:30] [upload_service] [INFO] Document uploaded: doc_d9d5ae7038fa v1
+[2026-02-03 12:49:30] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_d9d5ae7038fa
+[2026-02-03 12:49:30] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_d9d5ae7038fa
+[2026-02-03 12:49:30] [upload_service] [INFO] Starting async pipeline for: doc_d9d5ae7038fa (Travel_Policy.pdf)
+[2026-02-03 12:49:33] [upload_service] [INFO] Pipeline thread started for doc_d9d5ae7038fa
+[2026-02-03 12:49:33] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_d9d5ae7038fa
+[2026-02-03 12:49:33] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:49:33] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:50:04] [upload_service.database] [INFO] Stage 1 (extract-clauses) stored: stage_1_bcd8d72b
+[2026-02-03 12:50:04] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:50:04] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:50:50] [upload_service.database] [INFO] Stage 2 (classify-intents) stored: stage_2_e3673bc5
+[2026-02-03 12:50:50] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:50:50] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:51:32] [upload_service.database] [INFO] Stage 3 (extract-entities) stored: stage_3_ac4eeb24
+[2026-02-03 12:51:32] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:51:32] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:52:10] [upload_service.database] [INFO] Stage 4 (detect-ambiguities) stored: stage_4_d85cb6aa
+[2026-02-03 12:52:10] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:52:10] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Stage 5 (clarify-ambiguities-with-context) stored: stage_5_5ca9314d
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Stage 6 (generate-dsl) stored: stage_6_39b201c5
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Stage 7 (confidence-rationale) stored: stage_7_4f328508
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 12:52:36] [upload_service.database] [INFO] Stage 8 (normalize-policies) stored: stage_8_1426abd2
+[2026-02-03 12:52:36] [upload_service] [INFO] Pipeline completed for doc_d9d5ae7038fa, triggering output_formatter.py
+[2026-02-03 12:52:36] [upload_service] [INFO] ✅ output_formatter.py executed successfully
+[2026-02-03 13:57:02] [upload_service] [ERROR] Failed to connect to MongoDB. Exiting.
+[2026-02-03 13:57:51] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 13:57:51] [upload_service] [INFO] Environment: development
+[2026-02-03 13:57:51] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 13:57:52] [upload_service] [INFO] Starting Document Upload Service v1.0.0
+[2026-02-03 13:57:52] [upload_service] [INFO] Environment: development
+[2026-02-03 13:57:52] [upload_service] [INFO] Listening on 0.0.0.0:5000
+[2026-02-03 13:58:25] [upload_service] [INFO] File saved: /home/hutech/Documents/docupolicy/upload_service/uploads/26e14751bf6d_Travel_Policy.pdf
+[2026-02-03 13:58:25] [upload_service] [INFO] Document uploaded: doc_062a864cf99c v1
+[2026-02-03 13:58:25] [upload_service] [INFO] Pipeline ready to trigger: POST /api/v1/process-document/doc_062a864cf99c
+[2026-02-03 13:58:25] [upload_service] [INFO] AUTO-TRIGGERING pipeline for document: doc_062a864cf99c
+[2026-02-03 13:58:25] [upload_service] [INFO] Starting async pipeline for: doc_062a864cf99c (Travel_Policy.pdf)
+[2026-02-03 13:58:28] [upload_service] [INFO] Pipeline thread started for doc_062a864cf99c
+[2026-02-03 13:58:28] [upload_service] [INFO] ✅ Pipeline auto-triggered successfully for doc_062a864cf99c
+[2026-02-03 13:58:28] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 13:58:28] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 13:59:15] [upload_service.database] [INFO] Stage 1 (extract-clauses) stored: stage_1_171d9cce
+[2026-02-03 13:59:15] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 13:59:15] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:00:20] [upload_service.database] [INFO] Stage 2 (classify-intents) stored: stage_2_810b8e51
+[2026-02-03 14:00:20] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:00:20] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:01:08] [upload_service.database] [INFO] Stage 3 (extract-entities) stored: stage_3_6db2dd9d
+[2026-02-03 14:01:08] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:01:08] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:02:23] [upload_service.database] [INFO] Stage 4 (detect-ambiguities) stored: stage_4_44d45f71
+[2026-02-03 14:02:23] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:02:23] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Stage 5 (clarify-ambiguities-with-context) stored: stage_5_d8a2e662
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Stage 6 (generate-dsl) stored: stage_6_3f0be672
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Stage 7 (confidence-rationale) stored: stage_7_8af943ba
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Pipeline stage indexes created successfully
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Connected to MongoDB (Pipeline Stages): mongodb://localhost:27017
+[2026-02-03 14:03:15] [upload_service.database] [INFO] Stage 8 (normalize-policies) stored: stage_8_8cb8c616
+[2026-02-03 14:03:15] [upload_service] [INFO] Pipeline completed for doc_062a864cf99c, triggering output_formatter.py
+[2026-02-03 14:03:15] [upload_service] [INFO] ✅ output_formatter.py executed successfully

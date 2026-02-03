@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Approval</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .policies-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .policies-list {
+            padding: 20px;
+        }
+
+        .policy-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .policy-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .policy-id {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .policy-enforcement {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .enforcement-warn {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .enforcement-enforce {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .policy-details {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .policy-conditions {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .metadata-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .metadata-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            margin-bottom: 15px;
+        }
+
+        .metadata-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metadata-value {
+            color: #666;
+            word-break: break-word;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-approve:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-decline {
+            background: #e9ecef;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-decline:hover {
+            background: #dee2e6;
+            border-color: #adb5bd;
+            transform: translateY(-2px);
+        }
+
+        .btn-decline:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .error-state p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn-retry {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-retry:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Policy Approval Portal</h1>
+            <p>Review and approve the normalized policies generated from your document</p>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="alertSuccess" class="alert alert-success"></div>
+        <div id="alertError" class="alert alert-error"></div>
+
+        <!-- Progress Modal -->
+        <div id="progressModal" class="modal" style="display: none; background: rgba(0,0,0,0.5);">
+            <div class="modal-content" style="width: 90%; max-width: 500px; padding: 30px;">
+                <h3 style="margin-bottom: 20px; text-align: center;">Pipeline Processing</h3>
+                <div id="progressBar" style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 20px;">
+                    <div id="progressFill" style="background: #667eea; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                </div>
+                <p id="progressText" style="text-align: center; margin-bottom: 20px;">Initializing pipeline...</p>
+                <div id="progressConsole" style="background: #1e1e1e; color: #00ff00; padding: 15px; border-radius: 5px; height: 250px; overflow-y: auto; font-family: monospace; font-size: 12px; line-height: 1.5;">
+                    <div id="consoleLogs"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Loading policies...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-state" style="display: none;">
+            <p id="errorMessage"></p>
+            <button class="btn-retry" onclick="loadPolicies()">Try Again</button>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" style="display: none;">
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalPolicies">0</div>
+                    <div class="stat-label">Total Policies</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="warnPolicies">0</div>
+                    <div class="stat-label">Warn Policies</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="enforcePolicies">0</div>
+                    <div class="stat-label">Enforce Policies</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="generatedDate">-</div>
+                    <div class="stat-label">Generated Date</div>
+                </div>
+            </div>
+
+            <!-- Policies List -->
+            <div class="policies-container">
+                <div class="policies-list" id="policiesList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Metadata Section -->
+            <div class="metadata-section">
+                <h3 style="margin-bottom: 20px;">Policy Metadata</h3>
+                <div class="metadata-item">
+                    <div class="metadata-label">Total clauses in policies:</div>
+                    <div class="metadata-value" id="metadataTotalPolicies">-</div>
+                </div>
+                <div class="metadata-item">
+                    <div class="metadata-label">Format:</div>
+                    <div class="metadata-value" id="metadataFormat">-</div>
+                </div>
+                <div class="metadata-item">
+                    <div class="metadata-label">Generated:</div>
+                    <div class="metadata-value" id="metadataGenerated">-</div>
+                </div>
+            </div>
+
+            <!-- Approval Form -->
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px;">Approval Decision</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Your Name/Email</label>
+                    <input type="email" id="approverEmail" class="form-input" placeholder="your.email@company.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Approval Notes (Optional)</label>
+                    <textarea id="approvalNotes" class="form-textarea" placeholder="Add any notes about this approval..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-approve" id="approveBtn" onclick="approvePolicies()">Approve All Policies</button>
+                    <button class="btn btn-decline" id="declineBtn" onclick="declinePolicies()">Decline & Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let policiesData = null;
+
+        // Load policies on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPolicies();
+        });
+
+        function addConsoleLog(message) {
+            const consoleLogs = document.getElementById('consoleLogs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            consoleLogs.appendChild(logEntry);
+            consoleLogs.parentElement.scrollTop = consoleLogs.parentElement.scrollHeight;
+        }
+
+        function updateProgress(percentage, message) {
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = message;
+            addConsoleLog(message);
+        }
+
+        async function checkPipelineStatus(documentId) {
+            try {
+                const response = await fetch(`/api/v1/process-status/${documentId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const status = data.data;
+                    updateProgress(status.progress, `Stage ${status.current_stage}/${status.total_stages} - ${Math.round(status.progress)}%`);
+                    
+                    if (status.status === 'completed') {
+                        return true;
+                    } else if (status.status === 'failed') {
+                        throw new Error(status.error || 'Pipeline failed');
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.error('Status check error:', error);
+                throw error;
+            }
+        }
+
+        async function waitForPipeline(documentId, maxWaitTime = 600000) {
+            return new Promise((resolve, reject) => {
+                const startTime = Date.now();
+                const pollInterval = 2000; // Poll every 2 seconds
+                
+                const poll = async () => {
+                    try {
+                        const isComplete = await checkPipelineStatus(documentId);
+                        
+                        if (isComplete) {
+                            resolve(true);
+                        } else if (Date.now() - startTime > maxWaitTime) {
+                            reject(new Error('Pipeline timeout (10 minutes)'));
+                        } else {
+                            setTimeout(poll, pollInterval);
+                        }
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                
+                poll();
+            });
+        }
+
+        function loadPolicies() {
+            showLoading();
+            hideError();
+
+            fetch('/api/v1/normalized-policies')
+                .then(response => response.json())
+                .then(async data => {
+                    if (data.success) {
+                        policiesData = data.data;
+                        displayPolicies();
+                        showMainContent();
+                    } else {
+                        // Pipeline might be in progress
+                        showError(data.error || 'Failed to load policies');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('Failed to load policies: ' + error.message);
+                });
+        }
+
+        async function startPipelineAndWait(documentId) {
+            // Show progress modal
+            document.getElementById('progressModal').style.display = 'flex';
+            document.getElementById('progressModal').style.justifyContent = 'center';
+            document.getElementById('progressModal').style.alignItems = 'center';
+            
+            addConsoleLog(`Starting pipeline for document: ${documentId}`);
+            updateProgress(5, 'Starting pipeline...');
+            
+            try {
+                // Trigger pipeline
+                const triggerResponse = await fetch(`/api/v1/process-document/${documentId}`, {
+                    method: 'POST'
+                });
+                const triggerData = await triggerResponse.json();
+                
+                if (!triggerData.success) {
+                    throw new Error(triggerData.error || 'Failed to start pipeline');
+                }
+                
+                addConsoleLog('Pipeline process initiated');
+                updateProgress(10, 'Pipeline initiated - waiting for processing...');
+                
+                // Wait for completion
+                await waitForPipeline(documentId);
+                
+                addConsoleLog('Pipeline processing complete!');
+                updateProgress(100, 'Pipeline complete! Reloading policies...');
+                
+                // Wait a moment then close modal and reload
+                setTimeout(() => {
+                    document.getElementById('progressModal').style.display = 'none';
+                    location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                addConsoleLog(`ERROR: ${error.message}`);
+                updateProgress(0, `Error: ${error.message}`);
+                
+                setTimeout(() => {
+                    document.getElementById('progressModal').style.display = 'none';
+                    showError(error.message);
+                }, 3000);
+            }
+        }
+
+        function displayPolicies() {
+            if (!policiesData) return;
+
+            const policies = policiesData.policies || [];
+            const metadata = policiesData.metadata || {};
+
+            // Update statistics (safe access)
+            const warnCount = policies.filter(p => p.outcome && p.outcome.enforcement === 'warn').length;
+            const enforceCount = policies.filter(p => p.outcome && p.outcome.enforcement === 'enforce').length;
+
+            document.getElementById('totalPolicies').textContent = policies.length;
+            document.getElementById('warnPolicies').textContent = warnCount;
+            document.getElementById('enforcePolicies').textContent = enforceCount;
+            document.getElementById('generatedDate').textContent = new Date(metadata.generated).toLocaleDateString();
+
+            // Update metadata section
+            document.getElementById('metadataTotalPolicies').textContent = metadata.total_policies || policies.length;
+            document.getElementById('metadataFormat').textContent = metadata.format || 'Normalized Policy JSON';
+            document.getElementById('metadataGenerated').textContent = new Date(metadata.generated).toLocaleString();
+
+            // Render policies list with human-readable explanations
+            const policiesList = document.getElementById('policiesList');
+            policiesList.innerHTML = policies.map(policy => {
+                const readable = policy.readable || {};
+                const constraint = (policy.what && policy.what.constraint) || {};
+                const whenConditions = policy.when || [];
+                const outcome = policy.outcome || {};
+
+                return `
+                <div class="policy-item">
+                    <div class="policy-header">
+                        <div class="policy-id">${policy.policyId || 'UNKNOWN'}</div>
+                    </div>
+                    
+                    ${policy.core_attributes && policy.core_attributes.text_clarified ? `
+                        <div style="margin-bottom: 12px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px;">
+                            <div style="font-size: 12px; color: #856404; font-weight: 500; margin-bottom: 6px;">📄 Policy Clause</div>
+                            <div style="font-size: 12px; color: #665d00; line-height: 1.5;">${policy.core_attributes.text_clarified}</div>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 4px;">
+                        <div style="font-size: 14px; color: #333; font-weight: 500; margin-bottom: 8px;">📖 Business Rule</div>
+                        <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                            <strong>${readable.when_text || 'Always applies'}</strong><br>
+                            Then: <strong>${readable.constraint || 'No constraint defined'}</strong>
+                        </div>
+                    </div>
+                    
+                    ${readable.explanation ? `
+                        <div style="font-size: 12px; color: #666; padding: 10px; background: #f5f5f5; border-radius: 4px; margin-bottom: 10px; white-space: pre-wrap;">
+                            ${readable.explanation}
+                        </div>
+                    ` : ''}
+                    
+                    <details style="margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 4px; border: 1px solid #ddd;">
+                        <summary style="cursor: pointer; color: #667eea; font-weight: bold;">🔧 Technical DSL (Advanced)</summary>
+                        <div style="margin-top: 10px; font-family: monospace; font-size: 11px; color: #666; background: #fff; padding: 8px; border-radius: 3px;">
+                            <div><strong>Policy ID:</strong> ${policy.policyId || 'UNKNOWN'}</div>
+                            ${constraint && constraint.fact ? `
+                                <div><strong>Constraint:</strong> ${constraint.fact} ${constraint.operator || ''} ${constraint.value || ''}</div>
+                            ` : '<div><strong>Constraint:</strong> Not defined</div>'}
+                            ${whenConditions && whenConditions.length > 0 ? `
+                                <div><strong>Conditions:</strong> ${whenConditions.map(w => `${w.fact} ${w.operator} ${w.value}`).join(', ')}</div>
+                            ` : ''}
+                            ${outcome.message ? `<div><strong>Message:</strong> ${outcome.message}</div>` : ''}
+                        </div>
+                    </details>
+                </div>
+            `}).join('');
+        }
+
+        function approvePolicies() {
+            const email = document.getElementById('approverEmail').value.trim();
+            const notes = document.getElementById('approvalNotes').value.trim();
+
+            if (!email) {
+                showAlert('Please enter your email address', 'error');
+                return;
+            }
+
+            if (!policiesData) {
+                showAlert('No policies loaded', 'error');
+                return;
+            }
+
+            const approveBtn = document.getElementById('approveBtn');
+            approveBtn.disabled = true;
+            approveBtn.textContent = 'Approving...';
+
+            const payload = {
+                policies: policiesData.policies,
+                metadata: policiesData.metadata,
+                approved_by: email,
+                notes: notes
+            };
+
+            fetch('/api/v1/approve-policies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                approveBtn.disabled = false;
+                approveBtn.textContent = 'Approve All Policies';
+
+                if (data.success) {
+                    showAlert(`✓ Successfully approved and saved ${data.data.saved_count} policies to MongoDB!`, 'success');
+                    setTimeout(() => {
+                        // Redirect or reset
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showAlert(data.error || 'Failed to approve policies', 'error');
+                }
+            })
+            .catch(error => {
+                approveBtn.disabled = false;
+                approveBtn.textContent = 'Approve All Policies';
+                showAlert('Error: ' + error.message, 'error');
+            });
+        }
+
+        function declinePolicies() {
+            const reason = prompt('Please provide a reason for declining:', '');
+            if (reason === null) return; // User cancelled
+
+            const email = document.getElementById('approverEmail').value.trim();
+            if (!email) {
+                showAlert('Please enter your email address first', 'error');
+                return;
+            }
+
+            const declineBtn = document.getElementById('declineBtn');
+            declineBtn.disabled = true;
+            declineBtn.textContent = 'Declining...';
+
+            const payload = {
+                declined_by: email,
+                reason: reason || 'Not specified'
+            };
+
+            fetch('/api/v1/decline-policies', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                declineBtn.disabled = false;
+                declineBtn.textContent = 'Decline & Review';
+
+                if (data.success) {
+                    showAlert('✓ Policies declined and logged. You can make changes and resubmit.', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showAlert(data.error || 'Failed to decline policies', 'error');
+                }
+            })
+            .catch(error => {
+                declineBtn.disabled = false;
+                declineBtn.textContent = 'Decline & Review';
+                showAlert('Error: ' + error.message, 'error');
+            });
+        }
+
+        function showAlert(message, type) {
+            const alertId = type === 'success' ? 'alertSuccess' : 'alertError';
+            const alertElement = document.getElementById(alertId);
+            alertElement.textContent = message;
+            alertElement.classList.add('show');
+
+            setTimeout(() => {
+                alertElement.classList.remove('show');
+            }, 5000);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+        }
+
+        function showMainContent() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorState').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Validation Layer - Policy Stages</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #dc2626;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .stages-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stage-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stage-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .stage-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .stage-title {
+            flex: 1;
+        }
+
+        .stage-title h3 {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .stage-meta {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .stage-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .stage-body {
+            padding: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #667eea;
+        }
+
+        .clause-item {
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .clause-id {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .clause-text {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .clause-intent {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #667eea;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .entity-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .entity-tag {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .ambiguity-item {
+            background: #fff5f5;
+            border-left: 3px solid #ef4444;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .ambiguity-icon {
+            color: #dc2626;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .ambiguity-text {
+            color: #7f1d1d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .confidence-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .confidence-label {
+            font-size: 12px;
+            color: #666;
+            min-width: 60px;
+        }
+
+        .confidence-track {
+            flex: 1;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.3s ease;
+        }
+
+        .stage-footer {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px 20px;
+            justify-content: flex-end;
+        }
+
+        .notes-section {
+            margin-bottom: 20px;
+        }
+
+        .notes-label {
+            font-size: 13px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #0c2d6b;
+            border: 1px solid #bfdbfe;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Human Validation Layer</h1>
+            <p>Review extracted clauses, intents, entities, and ambiguity flags before approval</p>
+            
+            <div class="controls">
+                <button class="btn-primary" onclick="refreshPendingStages()">↻ Refresh Pending</button>
+                <button class="btn-secondary" onclick="goHome()">← Back to Upload</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Filter by Stage:</label>
+                    <select id="stageFilter" onchange="filterStages()">
+                        <option value="">All Stages</option>
+                        <option value="1">Stage 1: Extract Clauses</option>
+                        <option value="2">Stage 2: Classify Intent</option>
+                        <option value="3">Stage 3: Extract Entities</option>
+                        <option value="4">Stage 4: Detect Ambiguities</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Filter by Status:</label>
+                    <select id="statusFilter" onchange="filterStages()">
+                        <option value="">All Status</option>
+                        <option value="pending_approval">Pending Approval</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div id="loadingContainer" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading pending stages...</p>
+        </div>
+
+        <div id="stagesContainer" class="stages-grid"></div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">✓</div>
+            <p>All stages are approved or rejected!</p>
+        </div>
+    </div>
+
+    <!-- Modal for approval -->
+    <div id="approvalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Approve Stage</div>
+            <label class="notes-label">Approval Notes:</label>
+            <textarea id="approvalNotes" placeholder="Enter your approval notes..."></textarea>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn-approve" onclick="submitApproval()">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for rejection -->
+    <div id="rejectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Reject Stage</div>
+            <label class="notes-label">Rejection Reason (required):</label>
+            <textarea id="rejectionReason" placeholder="Explain why you're rejecting this stage..."></textarea>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn-reject" onclick="submitRejection()">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1';
+        let allStages = [];
+        let currentStageId = null;
+        let currentAction = null;
+
+        async function refreshPendingStages() {
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('stagesContainer').innerHTML = '';
+            document.getElementById('emptyState').style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/stages/pending?limit=50`);
+                const data = await response.json();
+
+                if (data.success && data.data.pending_stages.length > 0) {
+                    allStages = data.data.pending_stages;
+                    renderStages(allStages);
+                } else {
+                    document.getElementById('emptyState').style.display = 'block';
+                    allStages = [];
+                }
+            } catch (error) {
+                showAlert(`Error loading stages: ${error.message}`, 'error');
+            } finally {
+                document.getElementById('loadingContainer').style.display = 'none';
+            }
+        }
+
+        async function renderStages(stages) {
+            const container = document.getElementById('stagesContainer');
+            
+            if (stages.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            container.innerHTML = stages.map(stage => renderStageCard(stage)).join('');
+        }
+
+        function renderStageCard(stage) {
+            const stageNames = {
+                1: 'Extract Clauses',
+                2: 'Classify Intent',
+                3: 'Extract Entities',
+                4: 'Detect Ambiguities'
+            };
+
+            const stageNum = stage.stage_number;
+            const stageName = stageNames[stageNum] || 'Unknown';
+            const output = stage.output || {};
+
+            let contentHtml = '';
+
+            // Stage 1: Clauses
+            if (stageNum === 1 && output.clauses) {
+                contentHtml = `
+                    <div class="detail-section">
+                        <div class="section-title">Extracted Clauses</div>
+                        ${output.clauses.map(c => `
+                            <div class="clause-item">
+                                <div class="clause-id">${c.clauseId}</div>
+                                <div class="clause-text">${escapeHtml(c.text)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Stage 2: Intent Classification
+            if (stageNum === 2 && output.classified_clauses) {
+                contentHtml = `
+                    <div class="detail-section">
+                        <div class="section-title">Intent Classification</div>
+                        ${output.classified_clauses.map(c => `
+                            <div class="clause-item">
+                                <div class="clause-id">${c.clauseId}</div>
+                                <div class="clause-text">${escapeHtml(c.text.substring(0, 150))}...</div>
+                                <div style="margin-top: 8px;">
+                                    <span class="clause-intent">${c.intent}</span>
+                                    <div class="confidence-bar" style="margin-top: 6px;">
+                                        <span class="confidence-label">Confidence:</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill" style="width: ${(c.confidence || 0) * 100}%"></div>
+                                        </div>
+                                        <span style="font-size: 12px; color: #666; min-width: 40px;">${((c.confidence || 0) * 100).toFixed(0)}%</span>
+                                    </div>
+                                </div>
+                                ${c.reasoning ? `<div class="clause-text" style="margin-top: 8px; font-style: italic; color: #999;">Reasoning: ${escapeHtml(c.reasoning)}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${output.metadata ? `
+                        <div class="detail-section">
+                            <div class="section-title">Statistics</div>
+                            <div style="font-size: 13px; color: #666;">
+                                <div>Average Confidence: ${(output.metadata.average_confidence * 100).toFixed(1)}%</div>
+                                <div>Intent Distribution: ${Object.entries(output.metadata.intent_distribution).map(([k,v]) => `${k} (${v})`).join(', ')}</div>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+            }
+
+            // Stage 3: Entities
+            if (stageNum === 3 && output.extracted_clauses) {
+                contentHtml = `
+                    <div class="detail-section">
+                        <div class="section-title">Extracted Entities</div>
+                        ${output.extracted_clauses.map(c => `
+                            <div class="clause-item">
+                                <div class="clause-id">${c.clauseId}</div>
+                                <div class="clause-text">${escapeHtml(c.text.substring(0, 150))}...</div>
+                                ${c.entities ? `
+                                    <div class="entity-list">
+                                        ${Object.entries(c.entities).map(([k,v]) => `
+                                            <div class="entity-tag">
+                                                <strong>${k}:</strong> ${escapeHtml(String(v).substring(0, 30))}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Stage 4: Ambiguities
+            if (stageNum === 4 && Array.isArray(output) && output.length > 0) {
+                contentHtml = `
+                    <div class="detail-section">
+                        <div class="section-title">Ambiguity Detection</div>
+                        ${output.map(item => `
+                            <div class="ambiguity-item">
+                                <div class="clause-id">${item.clauseId}</div>
+                                ${item.ambiguous ? `
+                                    <div class="ambiguity-text">
+                                        <span class="ambiguity-icon">⚠</span>
+                                        ${escapeHtml(item.reason)}
+                                    </div>
+                                ` : `<div style="color: #10b981;">✓ No ambiguities detected</div>`}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="stage-card">
+                    <div class="stage-header">
+                        <div class="stage-title">
+                            <h3>Stage ${stageNum}: ${stageName}</h3>
+                            <div class="stage-meta">${stage.document_id} | ${new Date(stage.created_at).toLocaleString()}</div>
+                        </div>
+                        <span class="stage-status status-pending">${stage.status}</span>
+                    </div>
+                    <div class="stage-body">
+                        ${contentHtml}
+                        <div class="stage-footer">
+                            <button class="btn-reject" onclick="openRejectionModal('${stage.stage_id}')">✗ Reject</button>
+                            <button class="btn-approve" onclick="openApprovalModal('${stage.stage_id}')">✓ Approve</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openApprovalModal(stageId) {
+            currentStageId = stageId;
+            currentAction = 'approve';
+            document.getElementById('approvalNotes').value = '';
+            document.getElementById('approvalModal').classList.add('show');
+        }
+
+        function openRejectionModal(stageId) {
+            currentStageId = stageId;
+            currentAction = 'reject';
+            document.getElementById('rejectionReason').value = '';
+            document.getElementById('rejectionModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('approvalModal').classList.remove('show');
+            document.getElementById('rejectionModal').classList.remove('show');
+        }
+
+        async function submitApproval() {
+            const notes = document.getElementById('approvalNotes').value.trim();
+            const approvedBy = prompt('Enter your name/email for approval:');
+            
+            if (!approvedBy) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/stages/${currentStageId}/approve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        approved_by: approvedBy,
+                        notes: notes
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✓ Stage approved by ${approvedBy}`, 'success');
+                    closeModal();
+                    await refreshPendingStages();
+                } else {
+                    showAlert(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function submitRejection() {
+            const reason = document.getElementById('rejectionReason').value.trim();
+            if (!reason) {
+                showAlert('Please enter a rejection reason', 'error');
+                return;
+            }
+
+            const rejectedBy = prompt('Enter your name/email for rejection:');
+            if (!rejectedBy) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/stages/${currentStageId}/reject`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        rejected_by: rejectedBy,
+                        reason: reason
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(`✗ Stage rejected by ${rejectedBy}`, 'info');
+                    closeModal();
+                    await refreshPendingStages();
+                } else {
+                    showAlert(`Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function filterStages() {
+            const stageFilter = document.getElementById('stageFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = allStages;
+
+            if (stageFilter) {
+                filtered = filtered.filter(s => s.stage_number === parseInt(stageFilter));
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(s => s.status === statusFilter);
+            }
+
+            if (filtered.length === 0) {
+                document.getElementById('stagesContainer').innerHTML = '';
+                document.getElementById('emptyState').style.display = 'block';
+            } else {
+                document.getElementById('emptyState').style.display = 'none';
+                renderStages(filtered);
+            }
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} show`;
+            alert.textContent = message;
+            container.appendChild(alert);
+
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        // Close modal on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'approvalModal' || e.target.id === 'rejectionModal') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        refreshPendingStages();
+    </script>
+</body>
+</html>
