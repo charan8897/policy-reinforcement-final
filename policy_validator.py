@@ -4288,12 +4288,20 @@ class RegoGenerator:
         clause_data = merged_data
         dsl_rule = clause_data.get('dsl_rule', {})
         normalized = clause_data.get('normalized_policy', {})
-        is_ambiguous = clause_data.get('is_ambiguous', False)
+        
+        # Extract intent from Stage 8 core_attributes (correct source)
+        intent = normalized.get('core_attributes', {}).get('intent', 'INFORMATIONAL')
+        
+        # Extract is_ambiguous from Stage 8 ambiguity_analysis (correct source)
+        is_ambiguous = normalized.get('ambiguity_analysis', {}).get('is_ambiguous', False)
+        
+        # Extract confidence from Stage 8 core_attributes.confidence_score (correct source)
+        confidence = normalized.get('core_attributes', {}).get('confidence_score', 
+                                   clause_data.get('confidence', 0.5))
         
         # Extract components
         when_all = dsl_rule.get('when', {}).get('all', [])
         then_clause = dsl_rule.get('then', {})
-        intent = normalized.get('intent', 'INFORMATIONAL')
         
         # Generate Rego function name
         rule_name = f"allow_{clause_id.lower().replace('_', '')}_{intent.lower()[:10]}"
@@ -4320,7 +4328,7 @@ class RegoGenerator:
             'intent': intent,
             'is_ambiguous': is_ambiguous,
             'action': action,
-            'confidence': clause_data.get('confidence', 0.5)
+            'confidence': confidence
         }
     
     def generate_rego_bundles(self, merged_data):
@@ -7470,6 +7478,657 @@ Fill in any missing values as JSON (or return {{}} if nothing found):
             for entry in self.log:
                 f.write(entry + "\n")
 
+# ============================================================================
+# STAGE 10: OPA Bundle Storage & Management
+# ============================================================================
+
+class OPABundleStorageManager:
+    """
+    Stage 10: Store Rego rules in OPA-compatible bundle format with versioning,
+    persistence, and rollback capability.
+    
+    Input: stage9_rego_bundles.json (Complete Rego packages with rules)
+    Output: OPA bundle directory structure with manifest, versioning, and validation
+    
+    Component Architecture:
+    - Bundle Generator: Convert Rego to OPA bundle format
+    - Manifest Manager: Create OPA-standard manifest.json with metadata
+    - Version Controller: Semantic versioning and version registry
+    - Storage Backend: Hybrid persistence (filesystem + MongoDB)
+    - Integrity Checker: SHA256 validation and bundle verification
+    - Cleanup Manager: Retention policy and version cleanup
+    """
+    
+    def __init__(self, rego_bundles_file, storage_dir=None, document_id=None, 
+                 enable_mongodb=True, enable_cleanup=False, retention_days=30):
+        """
+        Initialize OPA Bundle Storage Manager
+        
+        Args:
+            rego_bundles_file (str): Path to stage9_rego_bundles.json
+            storage_dir (str): Directory for bundle storage (default: OUTPUT_DIR/opa_bundles)
+            document_id (str): Reference to document in raw_documents collection
+            enable_mongodb (bool): Store metadata and versions to MongoDB
+            enable_cleanup (bool): Enable automatic cleanup of old versions
+            retention_days (int): Days to retain old versions before cleanup
+        """
+        self.rego_bundles_file = rego_bundles_file
+        self.storage_dir = storage_dir or f"{OUTPUT_DIR}/opa_bundles"
+        self.document_id = document_id or "unknown"
+        self.enable_mongodb = enable_mongodb and MONGODB_AVAILABLE
+        self.enable_cleanup = enable_cleanup
+        self.retention_days = retention_days
+        
+        self.log = []
+        self.log_lock = threading.Lock()
+        
+        # Bundle metadata
+        self.bundle_metadata = None
+        self.bundle_version = None
+        self.bundle_hash = None
+        self.version_registry = []
+        
+        # Initialize storage
+        self.storage = PipelineStageStorage(enable_mongodb=enable_mongodb, document_id=document_id)
+        
+        # Create storage directory
+        Path(self.storage_dir).mkdir(parents=True, exist_ok=True)
+        self.log_entry("INFO", f"OPA Bundle Storage initialized at: {self.storage_dir}")
+    
+    def log_entry(self, level, message):
+        """Thread-safe log entry with timestamp"""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        entry = f"[{timestamp}] [{level}] {message}"
+        with self.log_lock:
+            self.log.append(entry)
+        print(entry)
+    
+    # ========================================================================
+    # STEP 1: Read Stage 9 Output
+    # ========================================================================
+    
+    def read_rego_bundles(self):
+        """
+        Read stage9_rego_bundles.json and validate structure
+        
+        Expected structure:
+        {
+            "metadata": {
+                "stage": 9,
+                "total_rules": N,
+                "generated": "ISO timestamp"
+            },
+            "policies": [
+                {
+                    "rule_count": N,
+                    "rule_details": [...],
+                    "policy_category": "..."
+                }
+            ],
+            "rego_code": {
+                "package": "policies.main",
+                "imports": [...],
+                "rules": [...]
+            },
+            "statistics": {
+                "ambiguous_rules": N,
+                "enforce_rules": N,
+                ...
+            }
+        }
+        
+        Returns:
+            dict: Parsed stage9 output or None if failed
+        """
+        try:
+            with open(self.rego_bundles_file, 'r') as f:
+                data = json.load(f)
+            
+            # Validate required fields
+            if "metadata" not in data or "rego_code" not in data:
+                self.log_entry("ERROR", "Invalid stage9 structure: missing 'metadata' or 'rego_code'")
+                return None
+            
+            if "package" not in data["rego_code"]:
+                self.log_entry("ERROR", "Invalid rego_code: missing 'package' field")
+                return None
+            
+            self.log_entry("SUCCESS", f"Read stage9 output: {len(data.get('policies', []))} policies")
+            self.bundle_metadata = data["metadata"]
+            return data
+            
+        except json.JSONDecodeError as e:
+            self.log_entry("ERROR", f"Failed to parse stage9 JSON: {e}")
+            return None
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to read rego bundles: {e}")
+            return None
+    
+    # ========================================================================
+    # STEP 2: Bundle Generator - Convert to OPA Format
+    # ========================================================================
+    
+    def generate_opa_bundle(self, rego_data):
+        """
+        Convert stage9 Rego output to OPA-compatible bundle format
+        
+        OPA Bundle Structure:
+        bundle/
+        ├── .manifest                    (OPA standard manifest)
+        ├── data.json                    (Data bundles)
+        ├── policies/
+        │   ├── main.rego               (Main policy package)
+        │   └── helpers.rego            (Helper functions)
+        └── bundles.json                (Bundle metadata)
+        
+        Args:
+            rego_data (dict): Parsed stage9 output
+            
+        Returns:
+            dict: Generated bundle structure or None if failed
+        """
+        try:
+            self.log_entry("STEP", "Generating OPA bundle structure")
+            
+            bundle_structure = {
+                "bundle_id": self.generate_bundle_id(),
+                "created_at": datetime.now().isoformat(),
+                "policies": {},
+                "rego_code": rego_data.get("rego_code", ""),
+                "data": {},
+                "metadata": rego_data.get("metadata", {}),
+                "statistics": rego_data.get("statistics", {})
+            }
+            
+            # Extract rules from policies array
+            policies = rego_data.get("policies", [])
+            total_rules = 0
+            
+            for policy in policies:
+                rules = policy.get("rules", [])
+                total_rules += len(rules)
+                
+                # Organize rules by intent type
+                for rule in rules:
+                    intent = rule.get("intent", "general")
+                    if intent not in bundle_structure["policies"]:
+                        bundle_structure["policies"][intent] = []
+                    bundle_structure["policies"][intent].append(rule)
+            
+            self.log_entry("SUCCESS", f"Generated bundle structure with {total_rules} rules organized by {len(bundle_structure['policies'])} intent categories")
+            return bundle_structure
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to generate OPA bundle: {e}")
+            return None
+    
+    def generate_bundle_id(self):
+        """Generate unique bundle ID based on timestamp and hash"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        import hashlib
+        hash_str = hashlib.md5(timestamp.encode()).hexdigest()[:8]
+        return f"bundle_{timestamp}_{hash_str}"
+    
+    # ========================================================================
+    # STEP 3: Manifest Manager - Create OPA Manifest
+    # ========================================================================
+    
+    def create_manifest(self, bundle_structure):
+        """
+        Create manifest.json following OPA standard
+        
+        OPA Manifest Format:
+        {
+            "revision": "semantic version",
+            "roots": ["data/policies"],
+            "metadata": {
+                "bundle_name": "...",
+                "generated_at": "ISO timestamp",
+                "rego_version": "...",
+                "rule_count": N
+            }
+        }
+        
+        Args:
+            bundle_structure (dict): Generated bundle structure
+            
+        Returns:
+            dict: OPA-compliant manifest or None if failed
+        """
+        try:
+            self.log_entry("STEP", "Creating OPA manifest")
+            
+            rule_count = sum(len(rules) for rules in bundle_structure.get("policies", {}).values())
+            
+            manifest = {
+                "revision": self.bundle_version or self.generate_semantic_version(),
+                "roots": ["data/policies", "data/rules"],
+                "metadata": {
+                    "bundle_name": f"policy_{self.document_id}",
+                    "generated_at": datetime.now().isoformat(),
+                    "rego_version": "v1",
+                    "rule_count": rule_count,
+                    "source_stage": 9,
+                    "destination_stage": 10,
+                    "document_id": self.document_id
+                }
+            }
+            
+            self.log_entry("SUCCESS", f"Created manifest with {rule_count} rules")
+            return manifest
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to create manifest: {e}")
+            return None
+    
+    # ========================================================================
+    # STEP 4: Version Controller - Semantic Versioning
+    # ========================================================================
+    
+    def generate_semantic_version(self, increment_type="patch"):
+        """
+        Generate semantic version (major.minor.patch)
+        
+        Args:
+            increment_type (str): 'major', 'minor', or 'patch'
+            
+        Returns:
+            str: New semantic version
+        """
+        try:
+            version_file = f"{self.storage_dir}/.version_registry"
+            
+            # Read previous versions
+            versions = []
+            if Path(version_file).exists():
+                with open(version_file, 'r') as f:
+                    versions = [line.strip() for line in f.readlines()]
+            
+            if not versions:
+                new_version = "1.0.0"
+            else:
+                last_version = versions[-1]
+                major, minor, patch = map(int, last_version.split('.'))
+                
+                if increment_type == "major":
+                    major += 1
+                    minor = 0
+                    patch = 0
+                elif increment_type == "minor":
+                    minor += 1
+                    patch = 0
+                else:  # patch
+                    patch += 1
+                
+                new_version = f"{major}.{minor}.{patch}"
+            
+            # Store new version
+            with open(version_file, 'a') as f:
+                f.write(f"{new_version}\n")
+            
+            self.bundle_version = new_version
+            self.log_entry("SUCCESS", f"Generated semantic version: {new_version}")
+            return new_version
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to generate semantic version: {e}")
+            return "1.0.0"
+    
+    # ========================================================================
+    # STEP 5: Integrity Checker - SHA256 Validation
+    # ========================================================================
+    
+    def calculate_bundle_hash(self, bundle_data):
+        """
+        Calculate SHA256 hash for bundle integrity verification
+        
+        Args:
+            bundle_data (dict): Bundle structure
+            
+        Returns:
+            str: SHA256 hash of bundle
+        """
+        try:
+            import hashlib
+            
+            # Convert bundle to JSON string for hashing
+            bundle_json = json.dumps(bundle_data, sort_keys=True)
+            hash_object = hashlib.sha256(bundle_json.encode())
+            hash_hex = hash_object.hexdigest()
+            
+            self.bundle_hash = hash_hex
+            self.log_entry("SUCCESS", f"Calculated bundle hash: {hash_hex[:16]}...")
+            return hash_hex
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to calculate bundle hash: {e}")
+            return None
+    
+    def verify_bundle_integrity(self, bundle_data, expected_hash):
+        """
+        Verify bundle integrity using SHA256 hash
+        
+        Args:
+            bundle_data (dict): Bundle structure
+            expected_hash (str): Expected SHA256 hash
+            
+        Returns:
+            bool: True if integrity verified, False otherwise
+        """
+        try:
+            calculated_hash = self.calculate_bundle_hash(bundle_data)
+            
+            if calculated_hash == expected_hash:
+                self.log_entry("SUCCESS", "Bundle integrity verified")
+                return True
+            else:
+                self.log_entry("ERROR", f"Bundle integrity check failed: {calculated_hash} != {expected_hash}")
+                return False
+                
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to verify bundle integrity: {e}")
+            return False
+    
+    # ========================================================================
+    # STEP 6: Storage Backend - Hybrid Persistence
+    # ========================================================================
+    
+    def persist_bundle_to_filesystem(self, bundle_structure, manifest):
+        """
+        Store bundle to filesystem with version directory structure
+        
+        Directory Layout:
+        opa_bundles/
+        ├── v1.0.0/
+        │   ├── .manifest
+        │   ├── policies/
+        │   │   ├── main.rego
+        │   │   └── helpers.rego
+        │   ├── data.json
+        │   └── bundle_metadata.json
+        ├── v1.0.1/
+        ...
+        
+        Args:
+            bundle_structure (dict): Generated bundle
+            manifest (dict): OPA manifest
+            
+        Returns:
+            str: Path to stored bundle directory or None if failed
+        """
+        try:
+            self.log_entry("STEP", "Persisting bundle to filesystem")
+            
+            version = manifest.get("revision", "1.0.0")
+            version_dir = f"{self.storage_dir}/{version}"
+            policies_dir = f"{version_dir}/policies"
+            
+            # Create version directory
+            Path(version_dir).mkdir(parents=True, exist_ok=True)
+            Path(policies_dir).mkdir(parents=True, exist_ok=True)
+            
+            # Write manifest
+            manifest_file = f"{version_dir}/.manifest"
+            with open(manifest_file, 'w') as f:
+                json.dump(manifest, f, indent=2)
+            self.log_entry("SUCCESS", f"Wrote manifest: {manifest_file}")
+            
+            # Write bundle metadata
+            bundle_meta_file = f"{version_dir}/bundle_metadata.json"
+            with open(bundle_meta_file, 'w') as f:
+                json.dump(bundle_structure, f, indent=2)
+            self.log_entry("SUCCESS", f"Wrote bundle metadata: {bundle_meta_file}")
+            
+            # Write Rego policies
+            rego_code = bundle_structure.get("rego_code", {})
+            rego_file = f"{policies_dir}/main.rego"
+            rego_content = self.serialize_rego_code(rego_code)
+            with open(rego_file, 'w') as f:
+                f.write(rego_content)
+            self.log_entry("SUCCESS", f"Wrote Rego policies: {rego_file}")
+            
+            # Write data bundle
+            data_file = f"{version_dir}/data.json"
+            with open(data_file, 'w') as f:
+                json.dump(bundle_structure.get("data", {}), f, indent=2)
+            self.log_entry("SUCCESS", f"Wrote data bundle: {data_file}")
+            
+            # Write hash for integrity
+            hash_file = f"{version_dir}/.bundle_hash"
+            with open(hash_file, 'w') as f:
+                f.write(self.bundle_hash or "")
+            
+            self.log_entry("SUCCESS", f"Bundle persisted to: {version_dir}")
+            return version_dir
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to persist bundle to filesystem: {e}")
+            return None
+    
+    def serialize_rego_code(self, rego_code):
+        """
+        Serialize Rego code to text format
+        
+        Args:
+            rego_code (str or dict): Rego code (string from stage9 or dict structure)
+            
+        Returns:
+            str: Formatted Rego code
+        """
+        # If rego_code is already a string, return it directly
+        if isinstance(rego_code, str):
+            return rego_code
+        
+        # If rego_code is a dict, serialize it
+        lines = []
+        
+        # Add package declaration
+        package = rego_code.get("package", "policies.main")
+        lines.append(f"package {package}")
+        lines.append("")
+        
+        # Add imports
+        imports = rego_code.get("imports", [])
+        for import_stmt in imports:
+            lines.append(f"import {import_stmt}")
+        if imports:
+            lines.append("")
+        
+        # Add rules
+        rules = rego_code.get("rules", [])
+        for rule in rules:
+            if isinstance(rule, dict):
+                rule_name = rule.get("name", "unnamed_rule")
+                rule_body = rule.get("body", rule)
+                lines.append(f"# Rule: {rule_name}")
+                lines.append(str(rule_body))
+                lines.append("")
+            else:
+                lines.append(str(rule))
+                lines.append("")
+        
+        return "\n".join(lines)
+    
+    def persist_bundle_to_mongodb(self, bundle_structure, manifest, version_dir):
+        """
+        Store bundle metadata and version info to MongoDB
+        
+        Args:
+            bundle_structure (dict): Generated bundle
+            manifest (dict): OPA manifest
+            version_dir (str): Filesystem path to version directory
+            
+        Returns:
+            dict: {'success': bool, 'bundle_id': str, 'error': str}
+        """
+        try:
+            if not self.enable_mongodb:
+                self.log_entry("DEBUG", "MongoDB storage disabled")
+                return {'success': False, 'bundle_id': None, 'error': 'MongoDB disabled'}
+            
+            self.log_entry("STEP", "Persisting bundle metadata to MongoDB")
+            
+            bundle_record = {
+                "document_id": self.document_id,
+                "stage": 10,
+                "stage_name": "opa_bundle_storage",
+                "bundle_version": manifest.get("revision"),
+                "bundle_id": bundle_structure.get("bundle_id"),
+                "created_at": bundle_structure.get("created_at"),
+                "manifest": manifest,
+                "rule_count": manifest.get("metadata", {}).get("rule_count", 0),
+                "filesystem_path": version_dir,
+                "bundle_hash": self.bundle_hash,
+                "status": "active"
+            }
+            
+            # Use pipeline stage storage for MongoDB persistence
+            result = self.storage.store_stage(
+                stage_number=10,
+                stage_name="opa_bundle_storage",
+                stage_output=bundle_record,
+                filename=self.rego_bundles_file.split('/')[-1]
+            )
+            
+            if result['success']:
+                self.log_entry("SUCCESS", f"Bundle stored to MongoDB with ID: {result['stage_id']}")
+            else:
+                self.log_entry("WARNING", f"MongoDB storage failed: {result['error']}")
+            
+            return result
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to persist bundle to MongoDB: {e}")
+            return {'success': False, 'bundle_id': None, 'error': str(e)}
+    
+    # ========================================================================
+    # STEP 7: Cleanup Manager - Retention Policy
+    # ========================================================================
+    
+    def cleanup_old_versions(self, keep_count=5):
+        """
+        Delete old bundle versions based on retention policy
+        
+        Args:
+            keep_count (int): Number of recent versions to keep
+            
+        Returns:
+            dict: {'deleted': list, 'kept': list, 'error': str or None}
+        """
+        try:
+            if not self.enable_cleanup:
+                self.log_entry("DEBUG", "Cleanup disabled")
+                return {'deleted': [], 'kept': [], 'error': None}
+            
+            self.log_entry("STEP", f"Cleaning up old versions (keeping {keep_count})")
+            
+            # List all version directories
+            version_dirs = sorted(
+                [d for d in Path(self.storage_dir).iterdir() if d.is_dir() and d.name != '.git'],
+                key=lambda x: x.stat().st_mtime,
+                reverse=True
+            )
+            
+            deleted = []
+            kept = [d.name for d in version_dirs[:keep_count]]
+            
+            # Delete old versions
+            for version_dir in version_dirs[keep_count:]:
+                try:
+                    import shutil
+                    shutil.rmtree(version_dir)
+                    deleted.append(version_dir.name)
+                    self.log_entry("SUCCESS", f"Deleted old version: {version_dir.name}")
+                except Exception as e:
+                    self.log_entry("WARNING", f"Failed to delete {version_dir.name}: {e}")
+            
+            self.log_entry("SUCCESS", f"Cleanup complete: deleted {len(deleted)}, kept {len(kept)}")
+            return {'deleted': deleted, 'kept': kept, 'error': None}
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Cleanup failed: {e}")
+            return {'deleted': [], 'kept': [], 'error': str(e)}
+    
+    # ========================================================================
+    # Main Processing Workflow
+    # ========================================================================
+    
+    def process(self):
+        """
+        Main workflow: Read → Generate → Manifest → Version → Hash → Persist → Cleanup
+        
+        Returns:
+            dict: {
+                'success': bool,
+                'bundle_version': str,
+                'bundle_hash': str,
+                'filesystem_path': str,
+                'mongodb_result': dict,
+                'cleanup_result': dict
+            }
+        """
+        self.log_entry("START", "Stage 10: OPA Bundle Storage & Management")
+        
+        try:
+            # Step 1: Read stage9 output
+            rego_data = self.read_rego_bundles()
+            if not rego_data:
+                return {'success': False, 'error': 'Failed to read rego bundles'}
+            
+            # Step 2: Generate OPA bundle structure
+            bundle_structure = self.generate_opa_bundle(rego_data)
+            if not bundle_structure:
+                return {'success': False, 'error': 'Failed to generate OPA bundle'}
+            
+            # Step 3: Create OPA manifest
+            manifest = self.create_manifest(bundle_structure)
+            if not manifest:
+                return {'success': False, 'error': 'Failed to create manifest'}
+            
+            # Step 4: Generate semantic version (done in create_manifest)
+            
+            # Step 5: Calculate bundle hash
+            bundle_hash = self.calculate_bundle_hash(bundle_structure)
+            if not bundle_hash:
+                return {'success': False, 'error': 'Failed to calculate bundle hash'}
+            
+            # Step 6: Persist to filesystem
+            version_dir = self.persist_bundle_to_filesystem(bundle_structure, manifest)
+            if not version_dir:
+                return {'success': False, 'error': 'Failed to persist bundle to filesystem'}
+            
+            # Step 6b: Persist to MongoDB
+            mongodb_result = self.persist_bundle_to_mongodb(bundle_structure, manifest, version_dir)
+            
+            # Step 7: Cleanup old versions
+            cleanup_result = self.cleanup_old_versions(keep_count=5)
+            
+            self.log_entry("SUCCESS", "Stage 10 processing complete")
+            
+            return {
+                'success': True,
+                'bundle_version': self.bundle_version,
+                'bundle_hash': bundle_hash,
+                'filesystem_path': version_dir,
+                'mongodb_result': mongodb_result,
+                'cleanup_result': cleanup_result
+            }
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Stage 10 processing failed: {e}")
+            return {'success': False, 'error': str(e)}
+    
+    def save_log(self):
+        """Append log to mechanism.log"""
+        try:
+            with open(LOG_FILE, 'a') as f:
+                f.write("\n\n=== STAGE 10: OPA BUNDLE STORAGE LOG ===\n")
+                f.write(f"Timestamp: {datetime.now()}\n")
+                f.write("="*60 + "\n\n")
+                for entry in self.log:
+                    f.write(entry + "\n")
+        except Exception as e:
+            print(f"Failed to save log: {e}")
 
 
 if __name__ == "__main__":
