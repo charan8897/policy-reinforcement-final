@@ -4105,6 +4105,388 @@ def interactive_menu():
         return None
 
 
+# ============================================================================
+# STAGE 9: DSL to Rego Converter
+# ============================================================================
+
+class RegoGenerator:
+    """
+    Stage 9: Generate Rego rules from DSL rules and normalized policies
+    
+    Merges stage6_dsl_rules.yaml and stage8_normalized_policies.json
+    Output: stage9_rego_bundles.json (OPA-compatible Rego format)
+    
+    Features:
+    - Converts WHEN/THEN logic to Rego syntax
+    - Ambiguous rules marked with WARN action
+    - Clear rules use ENFORCE action
+    - Preserves confidence scores
+    - Generates complete Rego package
+    """
+    
+    def __init__(self, dsl_file, normalized_file, document_id=None, enable_mongodb=True):
+        self.dsl_file = dsl_file
+        self.normalized_file = normalized_file
+        self.rego_bundles_file = f"{OUTPUT_DIR}/stage9_rego_bundles.json"
+        self.document_id = document_id
+        self.log = []
+        self.log_lock = threading.Lock()
+        
+        # Initialize MongoDB storage
+        self.storage = PipelineStageStorage(enable_mongodb=enable_mongodb, document_id=document_id or "unknown")
+        
+        self.log_entry("INFO", "RegoGenerator initialized")
+    
+    def log_entry(self, level, message):
+        """Thread-safe log entry with timestamp"""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        entry = f"[{timestamp}] [{level}] [Stage 9] {message}"
+        with self.log_lock:
+            self.log.append(entry)
+        print(entry)
+    
+    def read_dsl_rules(self):
+        """Read stage6_dsl_rules.yaml"""
+        try:
+            import yaml
+            with open(self.dsl_file, 'r') as f:
+                data = yaml.safe_load(f)
+            
+            rules = data.get('rules', [])
+            self.log_entry("SUCCESS", f"Read {len(rules)} DSL rules from {self.dsl_file}")
+            return data
+        
+        except FileNotFoundError:
+            self.log_entry("ERROR", f"DSL file not found: {self.dsl_file}")
+            return None
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to read DSL rules: {e}")
+            return None
+    
+    def read_normalized_policies(self):
+        """Read stage8_normalized_policies.json"""
+        try:
+            with open(self.normalized_file, 'r') as f:
+                data = json.load(f)
+            
+            policies = data.get('policies', [])
+            self.log_entry("SUCCESS", f"Read {len(policies)} normalized policies from {self.normalized_file}")
+            return data
+        
+        except FileNotFoundError:
+            self.log_entry("ERROR", f"Normalized file not found: {self.normalized_file}")
+            return None
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to read normalized policies: {e}")
+            return None
+    
+    def merge_dsl_and_normalized(self, dsl_data, normalized_data):
+        """Merge DSL rules and normalized policies by clause_id"""
+        merged = {}
+        
+        # Extract DSL rules
+        dsl_rules = {rule['rule_id']: rule for rule in dsl_data.get('rules', [])}
+        self.log_entry("MERGE", f"Extracted {len(dsl_rules)} DSL rules")
+        
+        # Extract normalized policies and correlate with DSL rules
+        for policy in normalized_data.get('policies', []):
+            # Handle different clause_id locations
+            clause_id = policy.get('clause_id')
+            if not clause_id:
+                # Check in core_attributes
+                clause_id = policy.get('core_attributes', {}).get('clauseId')
+            
+            if clause_id and clause_id in dsl_rules:
+                merged[clause_id] = {
+                    'clause_id': clause_id,
+                    'dsl_rule': dsl_rules[clause_id],
+                    'normalized_policy': policy,
+                    'confidence': policy.get('confidence_score', policy.get('rationale_metadata', {}).get('confidence', 0.5)),
+                    'is_ambiguous': policy.get('is_ambiguous', policy.get('core_attributes', {}).get('is_real_ambiguity', False))
+                }
+        
+        self.log_entry("MERGE", f"Merged into {len(merged)} clause records")
+        return merged
+    
+    def convert_operator_to_rego(self, operator):
+        """Convert DSL operator to Rego syntax"""
+        operator_map = {
+            'EQUALS': '==',
+            'NOT_EQUALS': '!=',
+            'LESS_THAN': '<',
+            'LESS_THAN_OR_EQUAL': '<=',
+            'GREATER_THAN': '>',
+            'GREATER_THAN_OR_EQUAL': '>=',
+            'IN': 'in',
+            'CONTAINS': 'contains'
+        }
+        return operator_map.get(operator, '==')
+    
+    def generate_rego_when_conditions(self, when_conditions):
+        """Convert DSL WHEN conditions to Rego syntax"""
+        conditions = []
+        
+        for condition in when_conditions:
+            fact = condition.get('fact', 'unknown')
+            operator = condition.get('operator', 'EQUALS')
+            value = condition.get('value')
+            
+            # Convert operator
+            rego_operator = self.convert_operator_to_rego(operator)
+            
+            # Format value
+            if isinstance(value, list):
+                formatted_value = json.dumps(value)
+            elif isinstance(value, str):
+                if re.match(r'^-?\d+\.?\d*$', value):
+                    formatted_value = value
+                else:
+                    formatted_value = f'"{value}"'
+            else:
+                formatted_value = json.dumps(value)
+            
+            # Build condition
+            condition_str = f"input.{fact} {rego_operator} {formatted_value}"
+            conditions.append(condition_str)
+        
+        return "\n    ".join(conditions) if conditions else "true"
+    
+    def generate_rego_then_constraints(self, then_constraints, intent, is_ambiguous):
+        """Convert DSL THEN constraints to Rego output"""
+        action = 'warn' if is_ambiguous else 'enforce'
+        
+        constraints = then_constraints.get(action, [])
+        
+        if not constraints:
+            all_actions = [k for k in then_constraints.keys() if k in ['enforce', 'warn']]
+            if all_actions:
+                constraints = then_constraints.get(all_actions[0], [])
+            else:
+                constraints = []
+        
+        # Extract constraint info
+        if isinstance(constraints, list) and constraints:
+            constraint = constraints[0] if isinstance(constraints[0], dict) else {}
+        else:
+            constraint = constraints if isinstance(constraints, dict) else {}
+        
+        constraint_name = constraint.get('constraint', 'policy_check')
+        constraint_value = constraint.get('value', 'APPROVED')
+        
+        rego_code = f"""
+    result := {{
+        "allow": true,
+        "action": "{action}",
+        "constraint": "{constraint_name}",
+        "status": "{constraint_value}"
+    }}"""
+        
+        return rego_code, action
+    
+    def generate_rego_rule(self, clause_id, merged_data):
+        """Generate complete Rego rule for a single clause"""
+        clause_data = merged_data
+        dsl_rule = clause_data.get('dsl_rule', {})
+        normalized = clause_data.get('normalized_policy', {})
+        is_ambiguous = clause_data.get('is_ambiguous', False)
+        
+        # Extract components
+        when_all = dsl_rule.get('when', {}).get('all', [])
+        then_clause = dsl_rule.get('then', {})
+        intent = normalized.get('intent', 'INFORMATIONAL')
+        
+        # Generate Rego function name
+        rule_name = f"allow_{clause_id.lower().replace('_', '')}_{intent.lower()[:10]}"
+        
+        # Generate conditions
+        when_conditions = self.generate_rego_when_conditions(when_all)
+        
+        # Generate constraints
+        constraint_code, action = self.generate_rego_then_constraints(then_clause, intent, is_ambiguous)
+        
+        # Build complete Rego rule
+        rego_code = f"""
+# Rule: {clause_id}
+# Intent: {intent}
+# Ambiguous: {is_ambiguous}
+{rule_name} {{
+    {when_conditions}{constraint_code}
+}}"""
+        
+        return {
+            'clause_id': clause_id,
+            'rego_rule_name': rule_name,
+            'rego_code': rego_code,
+            'intent': intent,
+            'is_ambiguous': is_ambiguous,
+            'action': action,
+            'confidence': clause_data.get('confidence', 0.5)
+        }
+    
+    def generate_rego_bundles(self, merged_data):
+        """Generate complete Rego bundles with package structure"""
+        self.log_entry("GENERATE", "Generating Rego bundles from merged data")
+        
+        # Group rules by policy domain
+        policy_groups = self._group_by_policy_domain(merged_data)
+        
+        policies = []
+        all_rules = []
+        all_rego_code = []
+        
+        # Package header
+        all_rego_code.append("""package travel_policy
+
+# Generated by Stage 9: DSL to Rego Converter
+# Date: """ + datetime.now().isoformat() + """
+# This file contains all policy rules converted from DSL format
+
+""")
+        
+        for policy_name, clauses in policy_groups.items():
+            rules = []
+            
+            for clause_id in clauses:
+                rego_rule = self.generate_rego_rule(clause_id, merged_data[clause_id])
+                rules.append(rego_rule)
+                all_rules.append(rego_rule)
+                all_rego_code.append(rego_rule['rego_code'])
+            
+            policy = {
+                'policy_name': policy_name,
+                'package': f'data.{policy_name}',
+                'description': f'Enforced policy rules for {policy_name}',
+                'rule_count': len(rules),
+                'rules': rules
+            }
+            policies.append(policy)
+            
+            self.log_entry("POLICY", f"Generated {len(rules)} Rego rules for policy: {policy_name}")
+        
+        # Add allow_all default rule
+        all_rego_code.append("""
+# Default: Allow if no violations
+allow_default {
+    true
+}
+""")
+        
+        total_rules = len(all_rules)
+        bundles = {
+            'metadata': {
+                'generated': datetime.now().isoformat(),
+                'stage': 9,
+                'stage_name': 'dsl-to-rego',
+                'source_dsl': self.dsl_file,
+                'source_normalized': self.normalized_file,
+                'total_policies': len(policies),
+                'total_rules': total_rules
+            },
+            'policies': policies,
+            'rego_code': '\n'.join(all_rego_code),
+            'statistics': {
+                'total_clauses': len(merged_data),
+                'total_rules': total_rules,
+                'ambiguous_rules': sum(1 for r in all_rules if r['is_ambiguous']),
+                'enforce_rules': sum(1 for r in all_rules if r['action'] == 'enforce'),
+                'warn_rules': sum(1 for r in all_rules if r['action'] == 'warn')
+            }
+        }
+        
+        return bundles
+    
+    def _group_by_policy_domain(self, merged_data):
+        """Group clauses by policy domain"""
+        groups = {}
+        
+        for clause_id in merged_data.keys():
+            domain = 'travel_policy'
+            
+            if domain not in groups:
+                groups[domain] = []
+            
+            groups[domain].append(clause_id)
+        
+        return groups
+    
+    def save_rego_bundles(self, bundles):
+        """Save Rego bundles to JSON file"""
+        try:
+            with open(self.rego_bundles_file, 'w') as f:
+                json.dump(bundles, f, indent=2)
+            
+            self.log_entry("SUCCESS", f"Rego bundles saved to {self.rego_bundles_file}")
+            
+            # Store to MongoDB
+            db_result = self.storage.store_stage(
+                stage_number=9,
+                stage_name='dsl-to-rego',
+                stage_output=bundles
+            )
+            
+            if db_result['success']:
+                self.log_entry("MONGODB", f"Stage stored with ID: {db_result['stage_id']}")
+            else:
+                self.log_entry("WARNING", f"MongoDB storage failed: {db_result['error']}")
+            
+            return True
+        
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to save Rego bundles: {e}")
+            return False
+    
+    def generate(self):
+        """Main workflow for Rego generation"""
+        self.log_entry("START", "Stage 9: DSL to Rego Conversion")
+        
+        # Step 1: Read input files
+        self.log_entry("STEP", "Reading DSL rules")
+        dsl_data = self.read_dsl_rules()
+        if not dsl_data:
+            return False
+        
+        self.log_entry("STEP", "Reading normalized policies")
+        normalized_data = self.read_normalized_policies()
+        if not normalized_data:
+            return False
+        
+        # Step 2: Merge DSL and normalized data
+        self.log_entry("STEP", "Merging DSL rules with normalized policies")
+        merged_data = self.merge_dsl_and_normalized(dsl_data, normalized_data)
+        
+        if not merged_data:
+            self.log_entry("ERROR", "Merge resulted in empty data")
+            return False
+        
+        # Step 3: Generate Rego bundles
+        self.log_entry("STEP", "Generating Rego bundles")
+        bundles = self.generate_rego_bundles(merged_data)
+        
+        # Step 4: Save to file
+        self.log_entry("STEP", "Saving Rego bundles to file")
+        if not self.save_rego_bundles(bundles):
+            return False
+        
+        self.log_entry("SUCCESS", "Stage 9 completed successfully")
+        self.log_entry("STATS", f"Generated Rego bundles with {bundles['statistics']['total_rules']} rules")
+        
+        return True
+    
+    def save_log(self):
+        """Append log to mechanism.log"""
+        try:
+            with open(LOG_FILE, 'a') as f:
+                f.write("\n\n=== STAGE 9: DSL TO REGO CONVERSION LOG ===\n")
+                f.write(f"Timestamp: {datetime.now()}\n")
+                f.write("="*60 + "\n\n")
+                for entry in self.log:
+                    f.write(entry + "\n")
+            
+            self.log_entry("SUCCESS", f"Log saved to {LOG_FILE}")
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to save log: {e}")
+
+
 def main():
     """Main CLI interface - supports both CLI args and interactive mode"""
     
@@ -6471,15 +6853,42 @@ class PipelineOrchestrator:
             self.log_entry("ERROR", f"Stage 8 exception: {e}")
             return False
     
+    def run_stage_9(self):
+        """Stage 9: Convert DSL rules to Rego format for OPA"""
+        self.log_entry("STAGE", "Running Stage 9: DSL to Rego Conversion")
+        
+        try:
+            dsl_file = self.stage_results.get('stage6_file', f"{OUTPUT_DIR}/stage6_dsl_rules.yaml")
+            normalized_file = self.stage_results.get('stage8_file', f"{OUTPUT_DIR}/stage8_normalized_policies.json")
+            
+            generator = RegoGenerator(
+                dsl_file,
+                normalized_file,
+                enable_mongodb=self.enable_mongodb
+            )
+            success = generator.generate()
+            generator.save_log()
+            
+            if success:
+                self.stage_results['stage9_file'] = f"{OUTPUT_DIR}/stage9_rego_bundles.json"
+                self.log_entry("SUCCESS", "Stage 9 complete")
+                return True
+            else:
+                self.log_entry("ERROR", "Stage 9 failed")
+                return False
+        except Exception as e:
+            self.log_entry("ERROR", f"Stage 9 exception: {e}")
+            return False
+    
     def run_full_pipeline(self):
         """
-        Execute full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8
+        Execute full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9
         
         Returns:
             dict: Results with success status and stage file paths
         """
         self.log_entry("START", "="*80)
-        self.log_entry("START", "FULL PIPELINE ORCHESTRATION: Stages 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8")
+        self.log_entry("START", "FULL PIPELINE ORCHESTRATION: Stages 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9")
         self.log_entry("START", "="*80)
         
         stages = [
@@ -6490,7 +6899,8 @@ class PipelineOrchestrator:
             ('4', self.run_stage_4),
             ('5', self.run_stage_5),
             ('6', self.run_stage_6),
-            ('8', self.run_stage_8)
+            ('8', self.run_stage_8),
+            ('9', self.run_stage_9)
         ]
         
         for stage_name, stage_func in stages:
