@@ -7859,51 +7859,72 @@ class OPABundleStorageManager:
     # STEP 5: Integrity Checker - SHA256 Validation
     # ========================================================================
     
-    def calculate_bundle_hash(self, bundle_data):
+    def calculate_bundle_hash(self, manifest, rego_code_content):
         """
         Calculate SHA256 hash for bundle integrity verification
         
+        Hash is calculated from: sha256(manifest.json + rego_code)
+        This ensures:
+        - Tamper detection: Any change to manifest or rules is detected
+        - Reproducibility: Same manifest + rules = same hash
+        
+        IMPORTANT: Manifest hash field MUST be excluded from calculation
+        
         Args:
-            bundle_data (dict): Bundle structure
+            manifest (dict): Manifest object (without hash field for calculation)
+            rego_code_content (str): Serialized Rego code
             
         Returns:
-            str: SHA256 hash of bundle
+            str: SHA256 hash in hex format
         """
         try:
             import hashlib
             
-            # Convert bundle to JSON string for hashing
-            bundle_json = json.dumps(bundle_data, sort_keys=True)
-            hash_object = hashlib.sha256(bundle_json.encode())
+            # Remove hash field if present (should not be)
+            manifest_copy = manifest.copy()
+            manifest_copy.pop("hash", None)
+            
+            # Serialize manifest to JSON (sorted keys for reproducibility)
+            manifest_json = json.dumps(manifest_copy, sort_keys=True)
+            
+            # Combine manifest + rego code
+            combined_content = manifest_json + rego_code_content
+            
+            # Calculate SHA256
+            hash_object = hashlib.sha256(combined_content.encode())
             hash_hex = hash_object.hexdigest()
             
             self.bundle_hash = hash_hex
-            self.log_entry("SUCCESS", f"Calculated bundle hash: {hash_hex[:16]}...")
+            self.log_entry("SUCCESS", f"Calculated integrity hash: {hash_hex[:16]}... (manifest + rego_code)")
             return hash_hex
             
         except Exception as e:
             self.log_entry("ERROR", f"Failed to calculate bundle hash: {e}")
             return None
     
-    def verify_bundle_integrity(self, bundle_data, expected_hash):
+    def verify_bundle_integrity(self, manifest, rego_code_content, expected_hash):
         """
         Verify bundle integrity using SHA256 hash
         
+        Confirms that manifest.json + rego_code hasn't been tampered with
+        
         Args:
-            bundle_data (dict): Bundle structure
+            manifest (dict): Manifest object
+            rego_code_content (str): Serialized Rego code
             expected_hash (str): Expected SHA256 hash
             
         Returns:
             bool: True if integrity verified, False otherwise
         """
         try:
-            calculated_hash = self.calculate_bundle_hash(bundle_data)
+            calculated_hash = self.calculate_bundle_hash(manifest, rego_code_content)
             
             if calculated_hash == expected_hash:
-                self.log_entry("SUCCESS", "Bundle integrity verified")
+                self.log_entry("SUCCESS", "Bundle integrity verified - manifest + rego unchanged")
                 return True
             else:
-                self.log_entry("ERROR", f"Bundle integrity check failed: {calculated_hash} != {expected_hash}")
+                self.log_entry("ERROR", f"Bundle integrity check FAILED: {calculated_hash} != {expected_hash}")
+                self.log_entry("ERROR", "This indicates the manifest or rego code has been modified")
                 return False
                 
         except Exception as e:
@@ -8134,7 +8155,16 @@ class OPABundleStorageManager:
     
     def process(self):
         """
-        Main workflow: Read → Generate → Manifest → Version → Hash → Persist → Cleanup
+        Main workflow:
+        1. Read stage9 output
+        2. Generate OPA bundle structure
+        3. Create manifest
+        4. Generate semantic version
+        5. Serialize Rego code
+        6. Calculate integrity hash: sha256(manifest + rego_code)
+        7. Persist to filesystem
+        8. Persist to MongoDB
+        9. Cleanup old versions
         
         Returns:
             dict: {
@@ -8166,24 +8196,32 @@ class OPABundleStorageManager:
             
             # Step 4: Generate semantic version (done in create_manifest)
             
-            # Step 5: Calculate bundle hash
-            bundle_hash = self.calculate_bundle_hash(bundle_structure)
+            # Step 5: Serialize Rego code for hashing
+            rego_code_content = self.serialize_rego_code(bundle_structure)
+            
+            # Step 6: Calculate integrity hash from manifest + rego code
+            # Purpose: Detect tampering, ensure reproducibility
+            # NOTE: Hash is calculated BEFORE adding hash field to manifest
+            bundle_hash = self.calculate_bundle_hash(manifest, rego_code_content)
             if not bundle_hash:
                 return {'success': False, 'error': 'Failed to calculate bundle hash'}
             
-            # Add hash to manifest
+            # Now add hash to manifest after calculation
             manifest["hash"] = f"sha256:{bundle_hash}"
             
-            # Step 6: Persist to filesystem
+            # Step 7: Persist to filesystem
             version_dir = self.persist_bundle_to_filesystem(bundle_structure, manifest)
             if not version_dir:
                 return {'success': False, 'error': 'Failed to persist bundle to filesystem'}
             
-            # Step 6b: Persist to MongoDB
+            # Step 8: Persist to MongoDB
             mongodb_result = self.persist_bundle_to_mongodb(bundle_structure, manifest, version_dir)
             
-            # Step 7: Cleanup old versions
+            # Step 9: Cleanup old versions
             cleanup_result = self.cleanup_old_versions(keep_count=5)
+            
+            # Step 10: Verify bundle fingerprint (integrity check)
+            fingerprint_verified = self.verify_bundle_fingerprint(version_dir)
             
             self.log_entry("SUCCESS", "Stage 10 processing complete")
             
@@ -8192,6 +8230,7 @@ class OPABundleStorageManager:
                 'bundle_version': self.bundle_version,
                 'bundle_hash': bundle_hash,
                 'filesystem_path': version_dir,
+                'fingerprint_verified': fingerprint_verified,
                 'mongodb_result': mongodb_result,
                 'cleanup_result': cleanup_result
             }
@@ -8199,6 +8238,64 @@ class OPABundleStorageManager:
         except Exception as e:
             self.log_entry("ERROR", f"Stage 10 processing failed: {e}")
             return {'success': False, 'error': str(e)}
+    
+    def verify_bundle_fingerprint(self, version_dir):
+        """
+        Verify bundle integrity by checking manifest hash against rego code
+        
+        This ensures:
+        - No tampering with manifest or rego rules
+        - Bundle reproducibility verification
+        
+        Note: Hash is calculated WITHOUT the hash field in manifest
+        
+        Args:
+            version_dir (str): Path to bundle version directory
+            
+        Returns:
+            bool: True if fingerprint matches, False otherwise
+        """
+        try:
+            self.log_entry("STEP", f"Verifying bundle fingerprint: {version_dir}")
+            
+            # Read manifest
+            manifest_file = f"{version_dir}/manifest.json"
+            with open(manifest_file, 'r') as f:
+                manifest = json.load(f)
+            
+            expected_hash = manifest.get("hash", "").replace("sha256:", "")
+            if not expected_hash:
+                self.log_entry("WARNING", "No hash found in manifest")
+                return False
+            
+            # Read rego code
+            rego_files = []
+            policy_dir = f"{version_dir}/.policy"
+            if os.path.exists(policy_dir):
+                rego_files = [f for f in os.listdir(policy_dir) if f.endswith(".rego")]
+            
+            if not rego_files:
+                self.log_entry("ERROR", "No Rego files found in bundle")
+                return False
+            
+            # Concatenate all rego files
+            rego_content = ""
+            for rego_file in sorted(rego_files):
+                with open(f"{policy_dir}/{rego_file}", 'r') as f:
+                    rego_content += f.read()
+            
+            # Remove hash field from manifest copy for verification
+            # (hash was not present when originally calculated)
+            manifest_copy = manifest.copy()
+            manifest_copy.pop("hash", None)
+            
+            # Verify
+            verified = self.verify_bundle_integrity(manifest_copy, rego_content, expected_hash)
+            return verified
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Bundle fingerprint verification failed: {e}")
+            return False
     
     def save_log(self):
         """Append log to mechanism.log"""
