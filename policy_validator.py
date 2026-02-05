@@ -8340,52 +8340,93 @@ class OPABundleStorageManager:
              return {'success': False, 'stage_id': None, 'error': str(e)}
     
     # ========================================================================
-    # STEP 7: Cleanup Manager - Retention Policy
+    # STEP 7: Cleanup Manager - Retention Policy & Archive
     # ========================================================================
     
-    def cleanup_old_versions(self, keep_count=5):
-        """
-        Delete old bundle versions based on retention policy
-        
-        Args:
-            keep_count (int): Number of recent versions to keep
-            
-        Returns:
-            dict: {'deleted': list, 'kept': list, 'error': str or None}
-        """
-        try:
-            if not self.enable_cleanup:
-                self.log_entry("DEBUG", "Cleanup disabled")
-                return {'deleted': [], 'kept': [], 'error': None}
-            
-            self.log_entry("STEP", f"Cleaning up old versions (keeping {keep_count})")
-            
-            # List all version directories
-            version_dirs = sorted(
-                [d for d in Path(self.storage_dir).iterdir() if d.is_dir() and d.name != '.git'],
-                key=lambda x: x.stat().st_mtime,
-                reverse=True
-            )
-            
-            deleted = []
-            kept = [d.name for d in version_dirs[:keep_count]]
-            
-            # Delete old versions
-            for version_dir in version_dirs[keep_count:]:
-                try:
-                    import shutil
-                    shutil.rmtree(version_dir)
-                    deleted.append(version_dir.name)
-                    self.log_entry("SUCCESS", f"Deleted old version: {version_dir.name}")
-                except Exception as e:
-                    self.log_entry("WARNING", f"Failed to delete {version_dir.name}: {e}")
-            
-            self.log_entry("SUCCESS", f"Cleanup complete: deleted {len(deleted)}, kept {len(kept)}")
-            return {'deleted': deleted, 'kept': kept, 'error': None}
-            
-        except Exception as e:
-            self.log_entry("ERROR", f"Cleanup failed: {e}")
-            return {'deleted': [], 'kept': [], 'error': str(e)}
+    def cleanup_old_versions(self, keep_count=5, archive_old=False, archive_dir=None):
+         """
+         Delete/archive old bundle versions based on retention policy
+         
+         Retention Policy:
+         - Keep last N versions active/inactive
+         - Archive versions older than N (optional)
+         - Delete archived versions if needed
+         - Log all operations for audit trail
+         
+         Args:
+             keep_count (int): Number of recent versions to keep
+             archive_old (bool): Archive old versions instead of deleting
+             archive_dir (str): Directory for archived versions
+             
+         Returns:
+             dict: {
+                 'deleted': [list of deleted versions],
+                 'archived': [list of archived versions],
+                 'kept': [list of kept versions],
+                 'error': str or None
+             }
+         """
+         try:
+             if not self.enable_cleanup:
+                 self.log_entry("DEBUG", "Cleanup disabled")
+                 return {'deleted': [], 'archived': [], 'kept': [], 'error': None}
+             
+             self.log_entry("STEP", f"Cleaning up old versions (keeping {keep_count})")
+             
+             # Load version registry
+             registry = self.load_version_registry()
+             
+             # Get all versions sorted by creation date
+             all_versions = registry.get("versions", [])
+             sorted_versions = sorted(all_versions, key=lambda x: x.get("created", ""), reverse=True)
+             
+             deleted = []
+             archived = []
+             kept = [v.get("version") for v in sorted_versions[:keep_count]]
+             
+             # Process old versions
+             for version_entry in sorted_versions[keep_count:]:
+                 version = version_entry.get("version")
+                 version_dir = f"{self.storage_dir}/v{version}"
+                 
+                 if archive_old and archive_dir:
+                     # Archive instead of delete
+                     try:
+                         import shutil
+                         archive_path = f"{archive_dir}/v{version}"
+                         Path(archive_dir).mkdir(parents=True, exist_ok=True)
+                         shutil.move(version_dir, archive_path)
+                         archived.append(version)
+                         
+                         # Update status in registry
+                         version_entry["status"] = "archived"
+                         self.log_entry("SUCCESS", f"Archived version: v{version}")
+                     except Exception as e:
+                         self.log_entry("WARNING", f"Failed to archive v{version}: {e}")
+                 else:
+                     # Delete old version
+                     try:
+                         import shutil
+                         shutil.rmtree(version_dir)
+                         deleted.append(version)
+                         
+                         # Update status in registry
+                         version_entry["status"] = "deleted"
+                         self.log_entry("SUCCESS", f"Deleted version: v{version}")
+                     except Exception as e:
+                         self.log_entry("WARNING", f"Failed to delete v{version}: {e}")
+             
+             # Update registry with new statuses
+             versions_file = f"{self.storage_dir}/versions.json"
+             with open(versions_file, 'w') as f:
+                 json.dump(registry, f, indent=2)
+             
+             self.log_entry("SUCCESS", f"Cleanup complete: deleted={len(deleted)}, archived={len(archived)}, kept={len(kept)}")
+             return {'deleted': deleted, 'archived': archived, 'kept': kept, 'error': None}
+             
+         except Exception as e:
+             self.log_entry("ERROR", f"Cleanup failed: {e}")
+             return {'deleted': [], 'archived': [], 'kept': [], 'error': str(e)}
     
     # ========================================================================
     # Main Processing Workflow
@@ -8458,15 +8499,14 @@ class OPABundleStorageManager:
             # Step 9: Persist to MongoDB (dual persistence backup)
             mongodb_result = self.persist_bundle_to_mongodb(bundle_structure, manifest, version_dir)
             
-            # Step 10: Cleanup old versions
-            cleanup_result = self.cleanup_old_versions(keep_count=5)
+            # Step 10: Cleanup old versions (keep last 5)
+            cleanup_result = self.cleanup_old_versions(keep_count=5, archive_old=False)
             
             # Step 11: Verify bundle fingerprint (integrity check)
             fingerprint_verified = self.verify_bundle_fingerprint(version_dir)
             
-            self.log_entry("SUCCESS", "Stage 10 processing complete")
-            
-            return {
+            # Prepare result
+            result = {
                 'success': True,
                 'bundle_version': self.bundle_version,
                 'bundle_hash': bundle_hash,
@@ -8475,6 +8515,12 @@ class OPABundleStorageManager:
                 'mongodb_result': mongodb_result,
                 'cleanup_result': cleanup_result
             }
+            
+            # Step 12: Write deployment audit log
+            self.write_deployment_audit_log(result, self.bundle_version, bundle_hash)
+            
+            self.log_entry("SUCCESS", "Stage 10 processing complete")
+            return result
             
         except Exception as e:
             self.log_entry("ERROR", f"Stage 10 processing failed: {e}")
@@ -8536,6 +8582,62 @@ class OPABundleStorageManager:
             
         except Exception as e:
             self.log_entry("ERROR", f"Bundle fingerprint verification failed: {e}")
+            return False
+    
+    def write_deployment_audit_log(self, result, bundle_version, bundle_hash):
+        """
+        Write deployment audit log for complete traceability
+        
+        Log Format (audit_log.jsonl):
+        {
+            "timestamp": "ISO",
+            "event": "DEPLOYMENT",
+            "bundle_version": "1.0.14",
+            "document_id": "doc2",
+            "policy_type": "travel_policy",
+            "rules_count": 56,
+            "hash": "...",
+            "filesystem_path": "v1.0.14",
+            "status": "active",
+            "operation": "create/update/rollback"
+        }
+        
+        Args:
+            result (dict): Process result
+            bundle_version (str): Bundle version
+            bundle_hash (str): Bundle hash
+            
+        Returns:
+            bool: True if successful
+        """
+        try:
+            audit_log_file = f"{self.storage_dir}/audit_log.jsonl"
+            
+            audit_entry = {
+                "timestamp": datetime.now().isoformat() + "Z",
+                "event": "DEPLOYMENT",
+                "bundle_version": bundle_version,
+                "document_id": self.document_id,
+                "policy_type": None,
+                "rules_count": 0,
+                "hash": bundle_hash,
+                "filesystem_path": result.get("filesystem_path", "").split("/")[-1],
+                "status": "active",
+                "operation": "create",
+                "success": result.get("success", False),
+                "fingerprint_verified": result.get("fingerprint_verified", False),
+                "mongodb_stored": result.get("mongodb_result", {}).get("success", False)
+            }
+            
+            # Append to audit log (JSONL format - one JSON per line)
+            with open(audit_log_file, 'a') as f:
+                f.write(json.dumps(audit_entry) + "\n")
+            
+            self.log_entry("SUCCESS", f"Audit log entry created: {bundle_version}")
+            return True
+            
+        except Exception as e:
+            self.log_entry("WARNING", f"Failed to write audit log: {e}")
             return False
     
     def save_log(self):
