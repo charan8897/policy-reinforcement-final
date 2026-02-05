@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "generated": "2026-02-03T14:03:15.467643",
+    "stage": "7",
+    "source": [
+      "/home/hutech/Documents/docupolicy/stage5_clarified_clauses.json",
+      "/home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml"
+    ],
+    "title": "Confidence & Rationale for DSL Rules",
+    "total_clauses": 20
+  },
+  "confidenceAndRationale": {
+    "C1": {
+      "clauseId": "C1",
+      "rationale": "SOURCE: This policy covers expenses and entitlements of employees who travel on company\u2019s business, or deputed to attend seminars / conferences / workshops /training programs\n\nENFORCEABLE: Rule defines classifications or reference information. Entities extracted: Standard policy terms. Fixed ambiguities: SUBJECTIVE_LANGUAGE, VAGUE_METRICS, UNDEFINED_REFERENCES.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 0.63,
+      "ambiguitiesFixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "INFORMATIONAL"
+    },
+    "C10": {
+      "clauseId": "C10",
+      "rationale": "SOURCE: Travelling advance CANNOT be entertained IF there is any balance in the employee's account\n\nENFORCEABLE: Rule specifies conditional allowances/entitlements with measurable thresholds. Entities extracted: Standard policy terms. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 0.9,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "CONDITIONAL_ALLOWANCE"
+    },
+    "C11": {
+      "clauseId": "C11",
+      "rationale": "SOURCE: Incase of not getting bills in remote areas, the employee can claim the eligible amount by self attestation\n\nENFORCEABLE: Rule specifies conditional allowances/entitlements with measurable thresholds. Entities extracted: Standard policy terms. Clear and unambiguous.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 1.0,
+      "ambiguitiesFixed": [],
+      "sourceSection": "CONDITIONAL_ALLOWANCE"
+    },
+    "C12": {
+      "clauseId": "C12",
+      "rationale": "SOURCE: The claims approved by reporting manager SHALL be validated by HR & Accounts\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: validationAuthority, approvalAuthority. Fixed ambiguities: UNDEFINED_AUTHORITY, SUBJECTIVE_LANGUAGE.\n\nKEY_VALUES: validationAuthority, approvalAuthority",
+      "confidence": 0.82,
+      "ambiguitiesFixed": [
+        "UNDEFINED_AUTHORITY",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "sourceSection": "APPROVAL_REQUIRED"
+    },
+    "C13": {
+      "clauseId": "C13",
+      "rationale": "SOURCE: Boarding & Lodging CANNOT be claimed as a combined limit\n\nENFORCEABLE: Rule enforces restrictions with clear conditions and approval authorities. Entities extracted: Standard policy terms. Fixed ambiguities: INCOMPLETE_CONDITIONS.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 0.93,
+      "ambiguitiesFixed": [
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "sourceSection": "RESTRICTION"
+    },
+    "C14": {
+      "clauseId": "C14",
+      "rationale": "SOURCE: For Boarding/Lodging, the eligible amount or bill amount, whichever is less, will apply\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: boardingLodgingRule. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: boardingLodgingRule",
+      "confidence": 0.86,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "LIMIT"
+    },
+    "C15": {
+      "clauseId": "C15",
+      "rationale": "SOURCE: Employees other than sales personnel shall be eligible for Food Reimbursement during out of office work (at business associates etc\n\nENFORCEABLE: Rule specifies conditional allowances/entitlements with measurable thresholds. Entities extracted: minimumOutOfficeHours. Clear and unambiguous.\n\nKEY_VALUES: minimumOutOfficeHours",
+      "confidence": 1.0,
+      "ambiguitiesFixed": [],
+      "sourceSection": "CONDITIONAL_ALLOWANCE"
+    },
+    "C16": {
+      "clauseId": "C16",
+      "rationale": "SOURCE: No official Travel by Personal Car MUST exceed 200 kms on any day by Self Drive for Safety Reasons\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: maximumDailyDistance, travelMode. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: maximumDailyDistance, travelMode",
+      "confidence": 0.87,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "LIMIT"
+    },
+    "C17": {
+      "clauseId": "C17",
+      "rationale": "SOURCE: Beyond 200 Kms of personal car travel MAY be encouraged only for Group Travel \u2013 3 or more people\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: minimumTravelDistanceForEncouragement, minimumGroupSizeForEncouragement. Fixed ambiguities: SUBJECTIVE_LANGUAGE, UNDEFINED_REFERENCES.\n\nKEY_VALUES: minimumTravelDistanceForEncouragement, minimumGroupSizeForEncouragement",
+      "confidence": 0.77,
+      "ambiguitiesFixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "ADVISORY"
+    },
+    "C18": {
+      "clauseId": "C18",
+      "rationale": "SOURCE: No Driver Charges SHALL be paid for personal car travel\n\nENFORCEABLE: Rule enforces restrictions with clear conditions and approval authorities. Entities extracted: driverChargesApplicability. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: driverChargesApplicability",
+      "confidence": 0.91,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "RESTRICTION"
+    },
+    "C19": {
+      "clauseId": "C19",
+      "rationale": "SOURCE: No official Travel by Personal Bike MUST exceed 50 kms on any day\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: maximumDailyDistance. Clear and unambiguous.\n\nKEY_VALUES: maximumDailyDistance",
+      "confidence": 1.0,
+      "ambiguitiesFixed": [],
+      "sourceSection": "LIMIT"
+    },
+    "C2": {
+      "clauseId": "C2",
+      "rationale": "SOURCE: This policy shall be applicable to all employees of NAGA LIMITED\n\nENFORCEABLE: Rule defines classifications or reference information. Entities extracted: applicableTo. Clear and unambiguous.\n\nKEY_VALUES: applicableTo",
+      "confidence": 1.0,
+      "ambiguitiesFixed": [],
+      "sourceSection": "INFORMATIONAL"
+    },
+    "C20": {
+      "clauseId": "C20",
+      "rationale": "SOURCE: This policy came into effect from 01st April 2014\n\nENFORCEABLE: Rule defines classifications or reference information. Entities extracted: policyEffectiveDate. Clear and unambiguous.\n\nKEY_VALUES: policyEffectiveDate",
+      "confidence": 1.0,
+      "ambiguitiesFixed": [],
+      "sourceSection": "INFORMATIONAL"
+    },
+    "C3": {
+      "clauseId": "C3",
+      "rationale": "SOURCE: Employees are allowed to stay in their relative/ friends home/ room, in the touring destination\n\nENFORCEABLE: Rule specifies conditional allowances/entitlements with measurable thresholds. Entities extracted: relativeFriendStayAllowancePercentage. Fixed ambiguities: VAGUE_METRICS, SUBJECTIVE_LANGUAGE, UNDEFINED_REFERENCES.\n\nKEY_VALUES: relativeFriendStayAllowancePercentage",
+      "confidence": 0.69,
+      "ambiguitiesFixed": [
+        "VAGUE_METRICS",
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "CONDITIONAL_ALLOWANCE"
+    },
+    "C4": {
+      "clauseId": "C4",
+      "rationale": "SOURCE: For Twin sharing, the claim can be made to the maximum of 125% of the eligible amount of the Senior level employee\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: maximumClaimPercentage, claimBasis. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: maximumClaimPercentage, claimBasis",
+      "confidence": 0.87,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "LIMIT"
+    },
+    "C5": {
+      "clauseId": "C5",
+      "rationale": "SOURCE: All tours MUST be made in accordance with the tour programme duly sanctioned by the Reporting Manager\n\nENFORCEABLE: Rule enforces restrictions with clear conditions and approval authorities. Entities extracted: approvalAuthority. Fixed ambiguities: SUBJECTIVE_LANGUAGE, UNDEFINED_AUTHORITY, INCOMPLETE_CONDITIONS.\n\nKEY_VALUES: approvalAuthority",
+      "confidence": 0.74,
+      "ambiguitiesFixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_AUTHORITY",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "sourceSection": "RESTRICTION"
+    },
+    "C6": {
+      "clauseId": "C6",
+      "rationale": "SOURCE: Travel on Company account will be on the most economical basis, consistent with the Company\u2019s interest, dignity and work requirement\n\nENFORCEABLE: Rule extracted from policy clause. Entities extracted: Standard policy terms. Fixed ambiguities: SUBJECTIVE_LANGUAGE.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 0.9,
+      "ambiguitiesFixed": [
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "sourceSection": "ADVISORY"
+    },
+    "C7": {
+      "clauseId": "C7",
+      "rationale": "SOURCE: Employees SHALL claim the Travel entitlements as per the eligibilities fixed based on their job levels i\n\nENFORCEABLE: Rule specifies conditional allowances/entitlements with measurable thresholds. Entities extracted: eligibilityBasis, policyReference. Fixed ambiguities: UNDEFINED_REFERENCES, SUBJECTIVE_LANGUAGE.\n\nKEY_VALUES: eligibilityBasis, policyReference",
+      "confidence": 0.82,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "sourceSection": "CONDITIONAL_ALLOWANCE"
+    },
+    "C8": {
+      "clauseId": "C8",
+      "rationale": "SOURCE: All travels SHALL be supported by original bills\n\nENFORCEABLE: Rule enforces restrictions with clear conditions and approval authorities. Entities extracted: Standard policy terms. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: Standard policy terms",
+      "confidence": 0.9,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "RESTRICTION"
+    },
+    "C9": {
+      "clauseId": "C9",
+      "rationale": "SOURCE: Travelling advance MUST be settled within 2 days after the tour programme\n\nENFORCEABLE: Rule enforces restrictions with clear conditions and approval authorities. Entities extracted: settlementDeadline. Fixed ambiguities: UNDEFINED_REFERENCES.\n\nKEY_VALUES: settlementDeadline",
+      "confidence": 0.91,
+      "ambiguitiesFixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "sourceSection": "RESTRICTION"
+    }
+  }
+}

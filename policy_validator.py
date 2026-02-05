@@ -7835,17 +7835,18 @@ class OPABundleStorageManager:
     
     def persist_bundle_to_filesystem(self, bundle_structure, manifest):
         """
-        Store bundle to filesystem with version directory structure
+        Store bundle to filesystem with OPA-standard directory structure
         
-        Directory Layout:
+        OPA Bundle Directory Layout (Standard):
         opa_bundles/
         ├── v1.0.0/
-        │   ├── .manifest
-        │   ├── policies/
+        │   ├── .manifest                    (OPA standard manifest)
+        │   ├── data/                        (OPA data directory)
+        │   │   └── policies.json
+        │   ├── policies/                    (OPA policies directory)
         │   │   ├── main.rego
         │   │   └── helpers.rego
-        │   ├── data.json
-        │   └── bundle_metadata.json
+        │   └── bundle_metadata.json         (Extended metadata)
         ├── v1.0.1/
         ...
         
@@ -7857,29 +7858,25 @@ class OPABundleStorageManager:
             str: Path to stored bundle directory or None if failed
         """
         try:
-            self.log_entry("STEP", "Persisting bundle to filesystem")
+            self.log_entry("STEP", "Persisting bundle to filesystem (OPA standard format)")
             
             version = manifest.get("revision", "1.0.0")
             version_dir = f"{self.storage_dir}/{version}"
             policies_dir = f"{version_dir}/policies"
+            data_dir = f"{version_dir}/data"
             
-            # Create version directory
+            # Create version directory and subdirectories
             Path(version_dir).mkdir(parents=True, exist_ok=True)
             Path(policies_dir).mkdir(parents=True, exist_ok=True)
+            Path(data_dir).mkdir(parents=True, exist_ok=True)
             
-            # Write manifest
+            # Write manifest (OPA standard)
             manifest_file = f"{version_dir}/.manifest"
             with open(manifest_file, 'w') as f:
                 json.dump(manifest, f, indent=2)
-            self.log_entry("SUCCESS", f"Wrote manifest: {manifest_file}")
+            self.log_entry("SUCCESS", f"Wrote OPA manifest: {manifest_file}")
             
-            # Write bundle metadata
-            bundle_meta_file = f"{version_dir}/bundle_metadata.json"
-            with open(bundle_meta_file, 'w') as f:
-                json.dump(bundle_structure, f, indent=2)
-            self.log_entry("SUCCESS", f"Wrote bundle metadata: {bundle_meta_file}")
-            
-            # Write Rego policies
+            # Write Rego policies (OPA standard)
             rego_code = bundle_structure.get("rego_code", {})
             rego_file = f"{policies_dir}/main.rego"
             rego_content = self.serialize_rego_code(rego_code)
@@ -7887,11 +7884,21 @@ class OPABundleStorageManager:
                 f.write(rego_content)
             self.log_entry("SUCCESS", f"Wrote Rego policies: {rego_file}")
             
-            # Write data bundle
-            data_file = f"{version_dir}/data.json"
+            # Write data bundle (OPA standard - data/ directory)
+            data_file = f"{data_dir}/policies.json"
+            data_content = {
+                "policies": bundle_structure.get("policies", {}),
+                "metadata": bundle_structure.get("metadata", {})
+            }
             with open(data_file, 'w') as f:
-                json.dump(bundle_structure.get("data", {}), f, indent=2)
+                json.dump(data_content, f, indent=2)
             self.log_entry("SUCCESS", f"Wrote data bundle: {data_file}")
+            
+            # Write extended bundle metadata (custom, in root)
+            bundle_meta_file = f"{version_dir}/bundle_metadata.json"
+            with open(bundle_meta_file, 'w') as f:
+                json.dump(bundle_structure, f, indent=2)
+            self.log_entry("SUCCESS", f"Wrote extended metadata: {bundle_meta_file}")
             
             # Write hash for integrity
             hash_file = f"{version_dir}/.bundle_hash"

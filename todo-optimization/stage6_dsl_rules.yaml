@@ -1,0 +1,218 @@
+rules:
+- rule_id: C1
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C10
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C11
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C12
+  when:
+    all:
+    - fact: validationauthority
+      operator: EQUALS
+      value: HR & Accounts
+    - fact: approvalauthority
+      operator: EQUALS
+      value: reporting manager
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C13
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C14
+  when:
+    all:
+    - fact: boardinglodgingrule
+      operator: EQUALS
+      value: eligible amount or bill amount, whichever is less
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C15
+  when:
+    all:
+    - fact: minimumoutofficehours
+      operator: GREATER_THAN_OR_EQUAL
+      value: 6 hours
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C16
+  when:
+    all:
+    - fact: maximumdailydistance
+      operator: LESS_THAN_OR_EQUAL
+      value: 200 kms
+    - fact: travelmode
+      operator: EQUALS
+      value: Self Drive
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C17
+  when:
+    all:
+    - fact: minimumtraveldistanceforencouragement
+      operator: GREATER_THAN_OR_EQUAL
+      value: 200 Kms
+    - fact: minimumgroupsizeforencouragement
+      operator: GREATER_THAN_OR_EQUAL
+      value: '3'
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C18
+  when:
+    all:
+    - fact: driverchargesapplicability
+      operator: EQUALS
+      value: not applicable
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C19
+  when:
+    all:
+    - fact: maximumdailydistance
+      operator: LESS_THAN_OR_EQUAL
+      value: 50 kms
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C2
+  when:
+    all:
+    - fact: applicableto
+      operator: EQUALS
+      value: all employees of NAGA LIMITED
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C20
+  when:
+    all:
+    - fact: policyeffectivedate
+      operator: EQUALS
+      value: 01st April 2014
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C3
+  when:
+    all:
+    - fact: relativefriendstayallowancepercentage
+      operator: EQUALS
+      value: 25%
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C4
+  when:
+    all:
+    - fact: maximumclaimpercentage
+      operator: LESS_THAN_OR_EQUAL
+      value: 125%
+    - fact: claimbasis
+      operator: EQUALS
+      value: eligible amount of the Senior level employee
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C5
+  when:
+    all:
+    - fact: approvalauthority
+      operator: EQUALS
+      value: Reporting Manager
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C6
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C7
+  when:
+    all:
+    - fact: eligibilitybasis
+      operator: EQUALS
+      value: Job band and grade
+    - fact: policyreference
+      operator: EQUALS
+      value: Company Policy
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C8
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C9
+  when:
+    all:
+    - fact: settlementdeadline
+      operator: EQUALS
+      value: 2 days
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'

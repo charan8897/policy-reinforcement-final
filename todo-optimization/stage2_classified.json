@@ -1,0 +1,161 @@
+{
+  "metadata": {
+    "generated": "2026-02-03T14:00:20.432704",
+    "source": "/home/hutech/Documents/docupolicy/stage1_clauses.json",
+    "format": "Intent Classification (Stage 2)",
+    "total_clauses": 20,
+    "stage": "2",
+    "next_stage": "3 - Payload Evaluation",
+    "average_confidence": 0.932,
+    "intent_distribution": {
+      "INFORMATIONAL": 3,
+      "CONDITIONAL_ALLOWANCE": 5,
+      "LIMIT": 4,
+      "RESTRICTION": 5,
+      "ADVISORY": 2,
+      "APPROVAL_REQUIRED": 1
+    }
+  },
+  "classified_clauses": [
+    {
+      "clauseId": "C1",
+      "text": "This policy covers expenses and entitlements of employees who travel on company\u2019s business, or deputed to attend seminars / conferences / workshops /training programs. It highlights entitlements during travel including Accommodation, Food, and Local conveyance.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause primarily defines the scope of the policy \u2013 who it applies to (employees on company business or training) and what it covers (travel expenses). It's descriptive rather than prescriptive, setting no restrictions, limits, or conditions."
+    },
+    {
+      "clauseId": "C2",
+      "text": "This policy shall be applicable to all employees of NAGA LIMITED.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause simply states the scope of the policy - who it applies to. It doesn't restrict, limit, conditionally allow, create exceptions, require approval, or advise; it merely defines applicability."
+    },
+    {
+      "clauseId": "C3",
+      "text": "Employees are allowed to stay in their relative/ friends home/ room, in the touring destination. IF staying with relatives/friends, they can claim 25% of their eligible amount and are NOT required to produce bills.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause outlines a specific allowance (staying with relatives/friends) *if* a certain condition is met (staying with relatives/friends). It also details a benefit contingent on that condition (claiming 25% of eligible amount without bills)."
+    },
+    {
+      "clauseId": "C4",
+      "text": "For Twin sharing, the claim can be made to the maximum of 125% of the eligible amount of the Senior level employee.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets a maximum claim amount (125%) based on the eligible amount of a senior employee, thus establishing a threshold or cap. It doesn't prohibit claims entirely, but limits how much can be claimed."
+    },
+    {
+      "clauseId": "C5",
+      "text": "All tours MUST be made in accordance with the tour programme duly sanctioned by the Reporting Manager.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement and prohibiting tours not following the sanctioned program. This is a clear restriction on how tours can be conducted."
+    },
+    {
+      "clauseId": "C6",
+      "text": "Travel on Company account will be on the most economical basis, consistent with the Company\u2019s interest, dignity and work requirement.",
+      "intent": "ADVISORY",
+      "confidence": 0.85,
+      "reasoning": "The clause uses phrasing like \"consistent with\" and \"most economical basis\" which suggests a recommended approach rather than a strict requirement or prohibition. It advises *how* travel should be conducted, not whether it is allowed or disallowed."
+    },
+    {
+      "clauseId": "C7",
+      "text": "Employees SHALL claim the Travel entitlements as per the eligibilities fixed based on their job levels i.e. Job band and grade as per the Company Policy.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.9,
+      "reasoning": "The clause states employees 'SHALL' claim travel entitlements, but this allowance is dependent on their job level (band and grade) as defined by company policy. This establishes an 'if/then' relationship between eligibility and entitlement."
+    },
+    {
+      "clauseId": "C8",
+      "text": "All travels SHALL be supported by original bills.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The use of 'SHALL' indicates a mandatory requirement. The clause prohibits travel expense claims without original bills, effectively restricting acceptable documentation."
+    },
+    {
+      "clauseId": "C9",
+      "text": "Travelling advance MUST be settled within 2 days after the tour programme.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement and thus a restriction on behavior. It prohibits delaying settlement beyond the specified timeframe."
+    },
+    {
+      "clauseId": "C10",
+      "text": "Travelling advance CANNOT be entertained IF there is any balance in the employee's account.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause states a condition ('IF there is any balance...') under which a travelling advance is 'CANNOT' be provided. This is an allowance that is contingent on meeting a specific condition."
+    },
+    {
+      "clauseId": "C11",
+      "text": "Incase of not getting bills in remote areas, the employee can claim the eligible amount by self attestation.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.85,
+      "reasoning": "The clause outlines a specific allowance (claiming an amount) *if* a certain condition is met (not receiving bills in remote areas). The 'incase of' phrasing introduces a conditional scenario."
+    },
+    {
+      "clauseId": "C12",
+      "text": "The claims approved by reporting manager SHALL be validated by HR & Accounts.",
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states that claims approved by a reporting manager *must* be validated by HR & Accounts, indicating a requirement for further authorization before being considered final. This necessitates approval from these departments."
+    },
+    {
+      "clauseId": "C13",
+      "text": "Boarding & Lodging CANNOT be claimed as a combined limit.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly prohibits combining 'Boarding & Lodging' for claim purposes using the word 'CANNOT'. This directly restricts a potential action."
+    },
+    {
+      "clauseId": "C14",
+      "text": "For Boarding/Lodging, the eligible amount or bill amount, whichever is less, will apply.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a cap on the reimbursable amount for boarding/lodging \u2013 it will be the lower of the eligible amount or the actual bill. This sets a maximum allowable expense, fitting the definition of a limit."
+    },
+    {
+      "clauseId": "C15",
+      "text": "Employees other than sales personnel shall be eligible for Food Reimbursement during out of office work (at business associates etc.) if spending more than 6 hours.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause outlines a specific condition (spending more than 6 hours out of office) that must be met for a benefit (Food Reimbursement) to be allowed. It's an 'if-then' statement regarding eligibility."
+    },
+    {
+      "clauseId": "C16",
+      "text": "No official Travel by Personal Car MUST exceed 200 kms on any day by Self Drive for Safety Reasons.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets a maximum distance (200 kms) for a specific type of travel (Personal Car - Self Drive). This establishes a threshold, making it a limit rather than a complete prohibition."
+    },
+    {
+      "clauseId": "C17",
+      "text": "Beyond 200 Kms of personal car travel MAY be encouraged only for Group Travel \u2013 3 or more people.",
+      "intent": "ADVISORY",
+      "confidence": 0.85,
+      "reasoning": "The clause uses \"MAY be encouraged,\" indicating a recommendation rather than a requirement, prohibition, or limit. It suggests a preferred behavior for travel exceeding 200 Kms."
+    },
+    {
+      "clauseId": "C18",
+      "text": "No Driver Charges SHALL be paid for personal car travel.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly prohibits the payment of 'Driver Charges' for 'personal car travel' using the strong negative term 'SHALL not be paid'. This clearly restricts a specific action."
+    },
+    {
+      "clauseId": "C19",
+      "text": "No official Travel by Personal Bike MUST exceed 50 kms on any day.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets a maximum distance (50 kms) for a specific activity (official travel by personal bike). This establishes a threshold, fitting the definition of a LIMIT."
+    },
+    {
+      "clauseId": "C20",
+      "text": "This policy came into effect from 01st April 2014.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause simply states the effective date of the policy. It doesn't restrict, limit, conditionally allow, create exceptions, require approval, or advise; it merely provides factual information."
+    }
+  ]
+}

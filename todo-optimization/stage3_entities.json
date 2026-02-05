@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "generated": "2026-02-03T14:01:08.277132",
+    "source": "/home/hutech/Documents/docupolicy/stage2_classified.json",
+    "format": "Dynamic Entity & Threshold Extraction (Stage 3)",
+    "total_clauses": 20,
+    "stage": "3",
+    "next_stage": "4 - Payload Validation",
+    "statistics": {
+      "total_entities": 19,
+      "total_clauses": 20,
+      "clauses_with_entities": 14,
+      "entity_type_distribution": {
+        "applicableTo": 1,
+        "relativeFriendStayAllowancePercentage": 1,
+        "maximumClaimPercentage": 1,
+        "claimBasis": 1,
+        "approvalAuthority": 2,
+        "eligibilityBasis": 1,
+        "policyReference": 1,
+        "settlementDeadline": 1,
+        "validationAuthority": 1,
+        "boardingLodgingRule": 1,
+        "minimumOutOfficeHours": 1,
+        "maximumDailyDistance": 2,
+        "travelMode": 1,
+        "minimumTravelDistanceForEncouragement": 1,
+        "minimumGroupSizeForEncouragement": 1,
+        "driverChargesApplicability": 1,
+        "policyEffectiveDate": 1
+      },
+      "coverage": 70.0
+    },
+    "note": "Entity types are dynamically extracted - not predefined. Each entity name is derived from the clause context."
+  },
+  "extracted_entity_names": [
+    "applicableTo",
+    "approvalAuthority",
+    "boardingLodgingRule",
+    "claimBasis",
+    "driverChargesApplicability",
+    "eligibilityBasis",
+    "maximumClaimPercentage",
+    "maximumDailyDistance",
+    "minimumGroupSizeForEncouragement",
+    "minimumOutOfficeHours",
+    "minimumTravelDistanceForEncouragement",
+    "policyEffectiveDate",
+    "policyReference",
+    "relativeFriendStayAllowancePercentage",
+    "settlementDeadline",
+    "travelMode",
+    "validationAuthority"
+  ],
+  "extracted_clauses": [
+    {
+      "clauseId": "C1",
+      "text": "This policy covers expenses and entitlements of employees who travel on company\u2019s business, or deputed to attend seminars / conferences / workshops /training programs. It highlights entitlements during travel including Accommodation, Food, and Local conveyance.",
+      "intent": "INFORMATIONAL",
+      "entities": {}
+    },
+    {
+      "clauseId": "C2",
+      "text": "This policy shall be applicable to all employees of NAGA LIMITED.",
+      "intent": "INFORMATIONAL",
+      "entities": {
+        "applicableTo": "all employees of NAGA LIMITED"
+      }
+    },
+    {
+      "clauseId": "C3",
+      "text": "Employees are allowed to stay in their relative/ friends home/ room, in the touring destination. IF staying with relatives/friends, they can claim 25% of their eligible amount and are NOT required to produce bills.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "entities": {
+        "relativeFriendStayAllowancePercentage": "25%"
+      }
+    },
+    {
+      "clauseId": "C4",
+      "text": "For Twin sharing, the claim can be made to the maximum of 125% of the eligible amount of the Senior level employee.",
+      "intent": "LIMIT",
+      "entities": {
+        "maximumClaimPercentage": "125%",
+        "claimBasis": "eligible amount of the Senior level employee"
+      }
+    },
+    {
+      "clauseId": "C5",
+      "text": "All tours MUST be made in accordance with the tour programme duly sanctioned by the Reporting Manager.",
+      "intent": "RESTRICTION",
+      "entities": {
+        "approvalAuthority": "Reporting Manager"
+      }
+    },
+    {
+      "clauseId": "C6",
+      "text": "Travel on Company account will be on the most economical basis, consistent with the Company\u2019s interest, dignity and work requirement.",
+      "intent": "ADVISORY",
+      "entities": {}
+    },
+    {
+      "clauseId": "C7",
+      "text": "Employees SHALL claim the Travel entitlements as per the eligibilities fixed based on their job levels i.e. Job band and grade as per the Company Policy.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "entities": {
+        "eligibilityBasis": "Job band and grade",
+        "policyReference": "Company Policy"
+      }
+    },
+    {
+      "clauseId": "C8",
+      "text": "All travels SHALL be supported by original bills.",
+      "intent": "RESTRICTION",
+      "entities": {}
+    },
+    {
+      "clauseId": "C9",
+      "text": "Travelling advance MUST be settled within 2 days after the tour programme.",
+      "intent": "RESTRICTION",
+      "entities": {
+        "settlementDeadline": "2 days"
+      }
+    },
+    {
+      "clauseId": "C10",
+      "text": "Travelling advance CANNOT be entertained IF there is any balance in the employee's account.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "entities": {}
+    },
+    {
+      "clauseId": "C11",
+      "text": "Incase of not getting bills in remote areas, the employee can claim the eligible amount by self attestation.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "entities": {}
+    },
+    {
+      "clauseId": "C12",
+      "text": "The claims approved by reporting manager SHALL be validated by HR & Accounts.",
+      "intent": "APPROVAL_REQUIRED",
+      "entities": {
+        "validationAuthority": "HR & Accounts",
+        "approvalAuthority": "reporting manager"
+      }
+    },
+    {
+      "clauseId": "C13",
+      "text": "Boarding & Lodging CANNOT be claimed as a combined limit.",
+      "intent": "RESTRICTION",
+      "entities": {}
+    },
+    {
+      "clauseId": "C14",
+      "text": "For Boarding/Lodging, the eligible amount or bill amount, whichever is less, will apply.",
+      "intent": "LIMIT",
+      "entities": {
+        "boardingLodgingRule": "eligible amount or bill amount, whichever is less"
+      }
+    },
+    {
+      "clauseId": "C15",
+      "text": "Employees other than sales personnel shall be eligible for Food Reimbursement during out of office work (at business associates etc.) if spending more than 6 hours.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "entities": {
+        "minimumOutOfficeHours": "6 hours"
+      }
+    },
+    {
+      "clauseId": "C16",
+      "text": "No official Travel by Personal Car MUST exceed 200 kms on any day by Self Drive for Safety Reasons.",
+      "intent": "LIMIT",
+      "entities": {
+        "maximumDailyDistance": "200 kms",
+        "travelMode": "Self Drive"
+      }
+    },
+    {
+      "clauseId": "C17",
+      "text": "Beyond 200 Kms of personal car travel MAY be encouraged only for Group Travel \u2013 3 or more people.",
+      "intent": "ADVISORY",
+      "entities": {
+        "minimumTravelDistanceForEncouragement": "200 Kms",
+        "minimumGroupSizeForEncouragement": "3"
+      }
+    },
+    {
+      "clauseId": "C18",
+      "text": "No Driver Charges SHALL be paid for personal car travel.",
+      "intent": "RESTRICTION",
+      "entities": {
+        "driverChargesApplicability": "not applicable"
+      }
+    },
+    {
+      "clauseId": "C19",
+      "text": "No official Travel by Personal Bike MUST exceed 50 kms on any day.",
+      "intent": "LIMIT",
+      "entities": {
+        "maximumDailyDistance": "50 kms"
+      }
+    },
+    {
+      "clauseId": "C20",
+      "text": "This policy came into effect from 01st April 2014.",
+      "intent": "INFORMATIONAL",
+      "entities": {
+        "policyEffectiveDate": "01st April 2014"
+      }
+    }
+  ]
+}

@@ -1,0 +1,413 @@
+{
+  "metadata": {
+    "generated": "2026-02-05T10:57:50.589360",
+    "source": "/home/hutech/Documents/docupolicy/stage1_clauses.json",
+    "format": "Intent Classification (Stage 2)",
+    "total_clauses": 56,
+    "stage": "2",
+    "next_stage": "3 - Payload Evaluation",
+    "average_confidence": 0.942,
+    "intent_distribution": {
+      "LIMIT": 19,
+      "INFORMATIONAL": 5,
+      "CONDITIONAL_ALLOWANCE": 20,
+      "RESTRICTION": 8,
+      "APPROVAL_REQUIRED": 3,
+      "ADVISORY": 1
+    }
+  },
+  "classified_clauses": [
+    {
+      "clauseId": "C1",
+      "text": "This policy is applicable to all employees of the company who are required to undertake business travel within India. Applicability is limited to official business travel.",
+      "intent": "LIMIT",
+      "confidence": 0.85,
+      "reasoning": "The clause limits the applicability of the policy to 'official business travel' specifically, defining a scope for where the policy applies. It doesn't prohibit travel, but restricts *what kind* of travel the policy covers."
+    },
+    {
+      "clauseId": "C2",
+      "text": "Travel is classified as a 'Tour' if the duration is between 1 to 15 days (inclusive). 'Deputation' is defined as travel lasting 15 days to 1 year. 'Transfer' is defined as travel exceeding 1 year in duration.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause provides definitions for different travel types ('Tour', 'Deputation', 'Transfer') based on duration. It does not restrict, limit, conditionally allow, require approval, or advise; it simply categorizes."
+    },
+    {
+      "clauseId": "C3",
+      "text": "Lodging & Boarding allowances will be payable to employees for tours within India, as per the limits specified in Table 4. Amounts are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states allowances are payable 'as per the limits specified in Table 4' and defines 'maximum permissible rates'. This directly sets upper bounds on the amount employees can claim."
+    },
+    {
+      "clauseId": "C4",
+      "text": "Directors, CEO, COO, and Presidents (Grade M1) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies entitlements (travel allowances) *based on* specific roles/grades (Directors, CEO, etc.). This is an 'if/then' structure: IF you are in these roles, THEN you are entitled to these travel benefits."
+    },
+    {
+      "clauseId": "C5",
+      "text": "VP, AVP, GM, DGM, and RM (Grade M2) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Taxi (AC) includes hatchback/sedan cars; Sedan/SUV cars can be booked when traveling with clients.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.85,
+      "reasoning": "The clause outlines travel entitlements for specific roles, but introduces a condition for a higher class of taxi based on whether they are traveling with clients. This 'if traveling with clients, then higher class taxi' structure indicates a conditional allowance."
+    },
+    {
+      "clauseId": "C6",
+      "text": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3) are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Taxi (AC) for local travel.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies which roles *are entitled* to certain travel benefits. This is an allowance based on the condition of being in one of the listed roles."
+    },
+    {
+      "clauseId": "C7",
+      "text": "M4 grade employees are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Auto, Taxi (Non-AC) for local travel.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies travel entitlements *based on* employee grade (M4). This 'if employee grade is M4, then they are allowed...' structure defines a conditional allowance."
+    },
+    {
+      "clauseId": "C8",
+      "text": "M5/M6 grade employees are entitled to Train & Bus (Sleeper) / Shared Taxi / Auto for inter-city travel and Auto, Taxi (Non-AC) for local travel. Local travel via Auto is limited to <10 KM; >10 KM requires Public/Shared Transport.",
+      "intent": "LIMIT",
+      "confidence": 0.9,
+      "reasoning": "The clause sets a distance limit (10 KM) for auto travel and specifies a different mode of transport is required beyond that limit. This establishes a threshold for a specific action, fitting the definition of a LIMIT intent."
+    },
+    {
+      "clauseId": "C9",
+      "text": "Auto/Taxi Non-AC fares are Rs. 8/KM. Taxi AC fares are Rs. 10/KM.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific fares (Rs. 8/KM and Rs. 10/KM) for different taxi types, effectively capping the amount charged per kilometer. It doesn't prohibit anything, nor is it a condition for allowance; it defines maximum costs."
+    },
+    {
+      "clauseId": "C10",
+      "text": "Lodging allowances for Grade M1 employees in Category A cities are Rs. 4000, and in Category B cities are Rs. 3000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 150.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C11",
+      "text": "Lodging allowances for Grade M2 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 125.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits for lodging, boarding, and incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C12",
+      "text": "Lodging allowances for Grade M3 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 100.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits on lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C13",
+      "text": "Lodging allowances for Grade M4 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 75.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C14",
+      "text": "Lodging allowances for Grade M5 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C15",
+      "text": "Lodging allowances for Grade M6 employees in Category A cities are Rs. 1000, and in Category B cities are Rs. 700. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary limits for lodging, boarding, and incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+    },
+    {
+      "clauseId": "C16",
+      "text": "If an employee stays at a relative\u2019s or friend\u2019s place during an official tour, they will be given Rs. 250 per day as lodging reimbursement.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause outlines a specific allowance (lodging reimbursement) *if* a certain condition is met (staying with relatives/friends). This is a clear 'if-then' entitlement structure."
+    },
+    {
+      "clauseId": "C17",
+      "text": "Employees are entitled to claim Rs. 7.0 per KM for Four Wheeler usage and Rs. 2.5 per KM for Two Wheeler usage for official work.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause defines the reimbursement rates for employee travel using company or personal vehicles. It's providing information about entitlements rather than restricting, limiting, or requiring approval."
+    },
+    {
+      "clauseId": "C18",
+      "text": "Entitlement calculation is based on a 24-hour clock. For durations of 3 to 12 hours, 50% of the daily allowance is payable. For durations of 12 to 24 hours, 100% of the daily allowance is payable.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause defines different levels of entitlement (allowance payable) *based on* the duration of time, establishing an 'if duration is X, then allowance is Y' structure."
+    },
+    {
+      "clauseId": "C19",
+      "text": "IF travel duration is between 3 to 12 hours, THEN employee is entitled to 50% of their daily allowance.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states an 'IF/THEN' relationship, granting an allowance based on the duration of travel. This directly represents a conditional entitlement."
+    },
+    {
+      "clauseId": "C20",
+      "text": "IF travel duration is between 12 to 24 hours, THEN employee is entitled to 100% of their daily allowance.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states an 'IF/THEN' relationship, granting an allowance based on the duration of travel. This directly represents a conditional entitlement."
+    },
+    {
+      "clauseId": "C21",
+      "text": "All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. It restricts expense claims from being processed without supporting documentation (bills/invoices), except for specific categories. This is a clear prohibition against submitting unsupported claims."
+    },
+    {
+      "clauseId": "C22",
+      "text": "IF a travel duration is greater than 15 days but less than 1 year at one location, THEN it will be treated as deputation.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a rule based on a condition (travel duration) and specifies a resulting treatment (deputation). The 'IF/THEN' structure clearly indicates a conditional allowance or categorization."
+    },
+    {
+      "clauseId": "C23",
+      "text": "During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.9,
+      "reasoning": "The clause specifies benefits are allowed *if* the travel duration is between 1-7 days during deputation, linking entitlement to a condition."
+    },
+    {
+      "clauseId": "C24",
+      "text": "IF deputation duration exceeds 7 days, THEN allowances will be provided as per Table 7, based on employee Grade and Category.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states an 'IF/THEN' relationship: allowances are provided *if* a condition (deputation duration) is met. This directly indicates a conditional entitlement."
+    },
+    {
+      "clauseId": "C25",
+      "text": "IF the company provides guest house and food facilities at the deputation site, THEN the employee is NOT entitled to any of the deputation allowances.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a condition (company providing facilities) under which an entitlement (deputation allowances) is removed. This is a clear 'IF/THEN' structure defining allowance based on a condition."
+    },
+    {
+      "clauseId": "C26",
+      "text": "Employees do NOT require to submit bills for deputation entitlements.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states what employees 'do NOT require', indicating a prohibition on the action of submitting bills. This is a clear restriction of a process."
+    },
+    {
+      "clauseId": "C27",
+      "text": "IF an employee is shifted to a location with a duration projection of more than 1 year, THEN it will be treated as a transfer.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a condition (location duration > 1 year) that, if met, triggers a specific entitlement or treatment (being considered a transfer). This is a clear 'IF/THEN' structure characteristic of conditional allowance."
+    },
+    {
+      "clauseId": "C28",
+      "text": "For relocation/transfer, the distance between two places MUST be greater than 100 KM for reimbursement eligibility.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets a minimum distance threshold (100 KM) that must be met to qualify for reimbursement. This is a quantitative restriction on eligibility, making it a limit rather than a complete prohibition or conditional allowance."
+    },
+    {
+      "clauseId": "C29",
+      "text": "During the initial 7 days of relocation/transfer, entitlements are as per the tour policy.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.9,
+      "reasoning": "The clause establishes entitlements *if* a specific condition is met (the first 7 days of relocation/transfer). It links entitlement levels to a time-bound condition, making it an allowance contingent on that condition."
+    },
+    {
+      "clauseId": "C30",
+      "text": "For Grade M1 employees, lodging allowance is Actual, boarding allowance is Actual, and travel allowance is Actual.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause simply states the allowances for a specific grade of employees. It doesn't restrict, limit, conditionally allow, or require approval; it merely defines what the allowances *are* for that group."
+    },
+    {
+      "clauseId": "C31",
+      "text": "For Grade M2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary values for allowances based on employee grade (M2). This establishes maximum amounts or caps for each allowance type, fitting the definition of a LIMIT intent."
+    },
+    {
+      "clauseId": "C32",
+      "text": "For Grade M2B employees, lodging allowance is 3000, boarding allowance is 250, and travel allowance is 125.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary values for allowances based on employee grade. This establishes maximum amounts (or fixed limits) for each allowance type, rather than prohibiting, conditionally allowing, or simply informing."
+    },
+    {
+      "clauseId": "C33",
+      "text": "For Grades M3 to M6, lodging allowance is 2000, boarding allowance is 150, and travel allowance is 100.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause sets specific monetary values (2000, 150, 100) for allowances based on grade levels (M3 to M6). This establishes maximum amounts or caps for each allowance type, fitting the definition of a LIMIT."
+    },
+    {
+      "clauseId": "C34",
+      "text": "The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states that the amounts in Table 4 are \"maximum permissible rates,\" directly setting an upper bound on allowable values. The phrase 'maximum' indicates a limit is being imposed."
+    },
+    {
+      "clauseId": "C35",
+      "text": "All expense claims MUST be supported by bills/invoices.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement and prohibiting claims without supporting documentation. This is a clear restriction on submitting expense claims."
+    },
+    {
+      "clauseId": "C36",
+      "text": "For relocation expenses towards shifting of household goods, the employee MUST provide 3 quotations, and HR will verify and approve one.",
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states that HR 'will verify and approve' a quotation, meaning the employee cannot receive relocation expenses without this authorization. The 'MUST provide' aspect also contributes to the need for approval."
+    },
+    {
+      "clauseId": "C37",
+      "text": "The maximum limit for relocation expenses towards shifting of household goods is 20,000.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states a 'maximum limit' of 20,000 for relocation expenses, directly setting an upper bound on allowable spending."
+    },
+    {
+      "clauseId": "C38",
+      "text": "For Grade M1/M2, the mode of travel is Air (Economy).",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies the *mode* of travel (Air Economy) for specific grades (M1/M2), effectively limiting the travel options to that mode for those grades. It doesn't prohibit travel, but constrains it."
+    },
+    {
+      "clauseId": "C39",
+      "text": "For Grade M2B, the mode of travel is Train (AC II) /Taxi (AC) at 10 Rs/KM.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies the allowable modes of travel and a cost limit (10 Rs/KM) for taxi travel for a specific grade (M2B). This sets boundaries on what is permitted, rather than a complete prohibition or conditional allowance."
+    },
+    {
+      "clauseId": "C40",
+      "text": "For Grade M3, the mode of travel is Train (III AC) /Bus/Taxi(AC) at 10 Rs/KM.",
+      "intent": "LIMIT",
+      "confidence": 0.95,
+      "reasoning": "The clause specifies the allowable modes of travel and a cost limit (10 Rs/KM) for a specific grade (M3). It doesn't prohibit travel, but rather defines the boundaries within which travel is permitted."
+    },
+    {
+      "clauseId": "C41",
+      "text": "For Grade M4, the mode of travel is Train (III AC)/Bus(AC) /Shared Taxi/Auto.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause simply states the allowed modes of travel for a specific grade level. It doesn't restrict, limit, or conditionally allow anything; it merely defines what is permitted. It's providing information about travel options."
+    },
+    {
+      "clauseId": "C42",
+      "text": "For Grades M5/M6, the mode of travel is Train & Bus (Sleeper)/Shared Taxi/ Auto/ Public Conveyance.",
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "reasoning": "The clause defines the acceptable modes of travel for specific grade levels (M5/M6). It doesn't restrict, limit, or conditionally allow; it simply states what is permitted. This is purely descriptive information."
+    },
+    {
+      "clauseId": "C43",
+      "text": "IF a particular class of ticket is unavailable, THEN a ticket one class down will be booked.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes an 'IF/THEN' scenario: if a specific ticket class isn't available, then a different (lower) class is permitted. This directly represents a conditional allowance of an alternative."
+    },
+    {
+      "clauseId": "C44",
+      "text": "Employees MUST send a request mail for booking a ticket to reservation@ujaas.com. The request MUST be made 1 day prior to the date of travel. The travel desk will ask for travel approval via email from the supervisor/HOD before booking.",
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states that travel approval from a supervisor/HOD is required *before* booking a ticket. This necessitates authorization before proceeding, fitting the definition of APPROVAL_REQUIRED. The 'MUST' statements also indicate requirements, but the core action needing permission is the booking itself."
+    },
+    {
+      "clauseId": "C45",
+      "text": "Employees are NOT allowed to book tickets directly unless in an emergency. IF an employee books directly from a Vendor, they MUST obtain permission from their HOD for company payment. Direct bookings require submission of the ticket and debit/credit card statement.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a restriction on direct booking but allows it *if* certain conditions are met (emergency, HOD permission, and submission of documentation). This 'IF/THEN' structure defines a conditional allowance."
+    },
+    {
+      "clauseId": "C46",
+      "text": "Request mails for booking MUST include employee name, age, designation, contact number, project code, tour purpose, place, duration, DOT, and HOD approval (or reason for absence). Eligibility for return booking needs to be mentioned.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses 'MUST' indicating mandatory requirements for booking requests. Failing to include the specified information would likely result in rejection, thus restricting the booking process. The requirement for HOD approval also acts as a restriction."
+    },
+    {
+      "clauseId": "C47",
+      "text": "IF an employee requests a specific flight/Train or Bus, they MUST state the reason for choosing it in the request mail.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause outlines a requirement (stating the reason) *if* an employee requests a specific mode of transport. This is a clear 'if/then' structure, indicating a conditional allowance of the request based on fulfilling the condition."
+    },
+    {
+      "clauseId": "C48",
+      "text": "Employees MUST send their ticket booking request at least one day before the date of journey. IF a request is made within one day (urgent booking), the reason for urgency MUST be stated.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes a standard requirement (request at least one day before) but allows for an exception (urgent booking) *if* a specific condition is met (reason for urgency stated). This is a clear IF/THEN structure."
+    },
+    {
+      "clauseId": "C49",
+      "text": "Employees are NOT allowed to request special Hotels/ Flights/ Seats/ Web Check-in.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly prohibits employees from requesting specific travel arrangements using the phrase \"NOT allowed\". This directly restricts their actions."
+    },
+    {
+      "clauseId": "C50",
+      "text": "Employees MUST submit bills within 15 days of completing their tour. IF bills are not submitted within this timeframe, a reason MUST be attached. Bills not submitted against tour advances for more than 30 days will be deducted from the next month\u2019s salary.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause establishes mandatory requirements (MUST) for bill submission and outlines penalties (deduction from salary) for non-compliance. This primarily restricts employees from delaying submissions beyond specified timeframes."
+    },
+    {
+      "clauseId": "C51",
+      "text": "Bill submission information MUST include employee name, tour code, designation, department, tour date, and bill amount, and date of submission.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. Failure to include the specified information would be a violation of policy, thus it's a restriction on acceptable bill submissions."
+    },
+    {
+      "clauseId": "C52",
+      "text": "The bill MUST have the signature of the employee and their HOD.",
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.95,
+      "reasoning": "The clause explicitly states a requirement for signatures ('MUST'), indicating that approval or permission is needed before the bill is considered valid. Both the employee and HOD signatures are required, making it an approval process."
+    },
+    {
+      "clauseId": "C53",
+      "text": "IF there is any deviation in the amounts on the bill, HOD approval with a clarification note is REQUIRED.",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause uses an 'IF/THEN' structure: IF there's a deviation, THEN HOD approval is REQUIRED. This establishes an allowance (approval) contingent on a specific condition (deviation)."
+    },
+    {
+      "clauseId": "C54",
+      "text": "IF an employee pays bills themselves, they MUST submit the bill and their credit/debit card statement (for card payments).",
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.95,
+      "reasoning": "The clause outlines a requirement (MUST submit documentation) that is triggered by a specific action (employee pays bills themselves). This is a clear 'IF/THEN' structure, indicating a conditional allowance or requirement."
+    },
+    {
+      "clauseId": "C55",
+      "text": "It is the employee\u2019s RESPONSIBILITY to obtain authentic bills.",
+      "intent": "ADVISORY",
+      "confidence": 0.85,
+      "reasoning": "The clause uses the word \"RESPONSIBILITY\", indicating a recommended action or duty rather than a prohibition, limit, or requirement. It suggests what an employee *should* do, not what they *must* or *must not* do."
+    },
+    {
+      "clauseId": "C56",
+      "text": "When submitting a bill for auto or taxi, employees MUST mention the names of the places and the distance traveled for smooth processing.",
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. Failure to mention the requested details would likely result in processing issues, effectively prohibiting reimbursement without the information."
+    }
+  ]
+}

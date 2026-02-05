@@ -1,0 +1,4624 @@
+{
+  "policies": [
+    {
+      "policyId": "POLICY_C1",
+      "name": "Policy Rule C1",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C1 enforcement"
+      },
+      "when": [
+        {
+          "fact": "travelregion",
+          "operator": "EQUALS",
+          "value": "India"
+        },
+        {
+          "fact": "travelpurpose",
+          "operator": "EQUALS",
+          "value": "official business travel"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C1",
+        "text_clarified": "This policy is applicable to all employees of the company who are required to undertake business travel within India. Applicability is limited to official business travel. M5/m6 grade employees are entitled to train & bus (sleeper) / shared taxi / auto for inter-city travel and auto, taxi (non-ac) for local travel. Local travel via auto is limited to <10 km; >10 km requires public/shared transport. For grade m2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.85,
+        "stage2_reasoning": "The clause limits the applicability of the policy to 'official business travel' specifically, defining a scope for where the policy applies. It doesn't prohibit travel, but restricts *what kind* of travel the policy covers."
+      },
+      "extracted_data": {
+        "entities": {
+          "travelRegion": "India",
+          "travelPurpose": "official business travel"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C1",
+        "when_conditions": [
+          {
+            "fact": "travelregion",
+            "operator": "EQUALS",
+            "value": "India"
+          },
+          {
+            "fact": "travelpurpose",
+            "operator": "EQUALS",
+            "value": "official business travel"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C10",
+      "name": "Policy Rule C10",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C10 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem1lodgingcategorya",
+          "operator": "EQUALS",
+          "value": "Rs. 4000"
+        },
+        {
+          "fact": "gradem1lodgingcategoryb",
+          "operator": "EQUALS",
+          "value": "Rs. 3000"
+        },
+        {
+          "fact": "boardingallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        },
+        {
+          "fact": "personalincidentalallowancelimit",
+          "operator": "EQUALS",
+          "value": "Rs. 150"
+        },
+        {
+          "fact": "personalincidentalallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C10",
+        "text_clarified": "Lodging allowances for Grade M1 employees in Category A cities are Rs. 4000, and in Category B cities are Rs. 3000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 150.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM1LodgingCategoryA": "Rs. 4000",
+          "gradeM1LodgingCategoryB": "Rs. 3000",
+          "boardingAllowance": "Actual",
+          "personalIncidentalAllowanceLimit": "Rs. 150",
+          "personalIncidentalAllowance": "Actual"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C10",
+        "when_conditions": [
+          {
+            "fact": "gradem1lodgingcategorya",
+            "operator": "EQUALS",
+            "value": "Rs. 4000"
+          },
+          {
+            "fact": "gradem1lodgingcategoryb",
+            "operator": "EQUALS",
+            "value": "Rs. 3000"
+          },
+          {
+            "fact": "boardingallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          },
+          {
+            "fact": "personalincidentalallowancelimit",
+            "operator": "EQUALS",
+            "value": "Rs. 150"
+          },
+          {
+            "fact": "personalincidentalallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C11",
+      "name": "Policy Rule C11",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C11 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem2lodgingcategorya",
+          "operator": "EQUALS",
+          "value": "Rs. 3000"
+        },
+        {
+          "fact": "gradem2lodgingcategoryb",
+          "operator": "EQUALS",
+          "value": "Rs. 2000"
+        },
+        {
+          "fact": "boardingallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        },
+        {
+          "fact": "personalincidentalallowancelimit",
+          "operator": "EQUALS",
+          "value": "Rs. 125"
+        },
+        {
+          "fact": "personalincidentalallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C11",
+        "text_clarified": "Lodging allowances for Grade M2 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 125.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits for lodging, boarding, and incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM2LodgingCategoryA": "Rs. 3000",
+          "gradeM2LodgingCategoryB": "Rs. 2000",
+          "boardingAllowance": "Actual",
+          "personalIncidentalAllowanceLimit": "Rs. 125",
+          "personalIncidentalAllowance": "Actual"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C11",
+        "when_conditions": [
+          {
+            "fact": "gradem2lodgingcategorya",
+            "operator": "EQUALS",
+            "value": "Rs. 3000"
+          },
+          {
+            "fact": "gradem2lodgingcategoryb",
+            "operator": "EQUALS",
+            "value": "Rs. 2000"
+          },
+          {
+            "fact": "boardingallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          },
+          {
+            "fact": "personalincidentalallowancelimit",
+            "operator": "EQUALS",
+            "value": "Rs. 125"
+          },
+          {
+            "fact": "personalincidentalallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C12",
+      "name": "Policy Rule C12",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C12 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem3lodgingcategorya",
+          "operator": "EQUALS",
+          "value": "Rs. 3000"
+        },
+        {
+          "fact": "gradem3lodgingcategoryb",
+          "operator": "EQUALS",
+          "value": "Rs. 2000"
+        },
+        {
+          "fact": "boardingallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        },
+        {
+          "fact": "personalincidentalallowancelimit",
+          "operator": "EQUALS",
+          "value": "Rs. 100"
+        },
+        {
+          "fact": "personalincidentalallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C12",
+        "text_clarified": "Lodging allowances for Grade M3 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 100.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits on lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM3LodgingCategoryA": "Rs. 3000",
+          "gradeM3LodgingCategoryB": "Rs. 2000",
+          "boardingAllowance": "Actual",
+          "personalIncidentalAllowanceLimit": "Rs. 100",
+          "personalIncidentalAllowance": "Actual"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C12",
+        "when_conditions": [
+          {
+            "fact": "gradem3lodgingcategorya",
+            "operator": "EQUALS",
+            "value": "Rs. 3000"
+          },
+          {
+            "fact": "gradem3lodgingcategoryb",
+            "operator": "EQUALS",
+            "value": "Rs. 2000"
+          },
+          {
+            "fact": "boardingallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          },
+          {
+            "fact": "personalincidentalallowancelimit",
+            "operator": "EQUALS",
+            "value": "Rs. 100"
+          },
+          {
+            "fact": "personalincidentalallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C13",
+      "name": "Policy Rule C13",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C13 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C13",
+        "text_clarified": "Lodging allowances for Grade M4 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 75. 'Actual' for boarding allowance means the actual expenses incurred, subject to supporting documentation. 'Actual' for personal incidental allowance means the actual expenses incurred, up to a maximum of Rs. 75, subject to supporting documentation.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C13",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C14",
+      "name": "Policy Rule C14",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C14 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C14",
+        "text_clarified": "Lodging allowances for Grade M5 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits for lodging, boarding, and personal incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C14",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C15",
+      "name": "Policy Rule C15",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C15 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C15",
+        "text_clarified": "Lodging allowances for Grade M6 employees in Category A cities are Rs. 1000, and in Category B cities are Rs. 700. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary limits for lodging, boarding, and incidental allowances based on employee grade and city category. It doesn't prohibit anything, nor is it conditional; it simply defines maximum allowances."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C15",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C16",
+      "name": "Policy Rule C16",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C16 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C16",
+        "text_clarified": "If an employee stays at a relative\u2019s or friend\u2019s place during an official tour, they will be given Rs. 250 per day as lodging reimbursement.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause outlines a specific allowance (lodging reimbursement) *if* a certain condition is met (staying with relatives/friends). This is a clear 'if-then' entitlement structure."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C16",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C17",
+      "name": "Policy Rule C17",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C17 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "PASS",
+          "operator": "EQUALS",
+          "value": "OK"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C17",
+        "text_clarified": "Employees are entitled to claim Rs. 7.0 per KM for Four Wheeler usage and Rs. 2.5 per KM for Two Wheeler usage for official work.",
+        "intent": "INFORMATIONAL",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "INFORMATIONAL",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause defines the reimbursement rates for employee travel using company or personal vehicles. It's providing information about entitlements rather than restricting, limiting, or requiring approval."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C17",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "PASS",
+              "operator": "EQUALS",
+              "value": "OK"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C18",
+      "name": "Policy Rule C18",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C18 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C18",
+        "text_clarified": "Entitlement calculation is based on a 24-hour clock. For durations of 3 to 12 hours, 50% of the daily allowance is payable. For durations of 12 to 24 hours, 100% of the daily allowance is payable.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause defines different levels of entitlement (allowance payable) *based on* the duration of time, establishing an 'if duration is X, then allowance is Y' structure."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C18",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C19",
+      "name": "Policy Rule C19",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C19 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C19",
+        "text_clarified": "IF travel duration is between 3 to 12 hours, THEN employee is entitled to 50% of their daily allowance.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states an 'IF/THEN' relationship, granting an allowance based on the duration of travel. This directly represents a conditional entitlement."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C19",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C2",
+      "name": "Policy Rule C2",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C2 enforcement"
+      },
+      "when": [
+        {
+          "fact": "tourdurationmindays",
+          "operator": "EQUALS",
+          "value": "1"
+        },
+        {
+          "fact": "tourdurationmaxdays",
+          "operator": "EQUALS",
+          "value": "15"
+        },
+        {
+          "fact": "deputationdurationmindays",
+          "operator": "EQUALS",
+          "value": "15"
+        },
+        {
+          "fact": "deputationdurationmaxdays",
+          "operator": "EQUALS",
+          "value": "1 year"
+        },
+        {
+          "fact": "transferdurationexceeds",
+          "operator": "EQUALS",
+          "value": "1 year"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "PASS",
+          "operator": "EQUALS",
+          "value": "OK"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C2",
+        "text_clarified": "Travel is classified as a 'Tour' if the duration is between 1 to 15 days (inclusive). 'Deputation' is defined as travel lasting 15 days to 1 year. 'Transfer' is defined as travel exceeding 1 year in duration. If a travel duration is greater than 15 days but less than 1 year at one location, then it will be treated as deputation. During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+        "intent": "INFORMATIONAL",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "INFORMATIONAL",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause provides definitions for different travel types ('Tour', 'Deputation', 'Transfer') based on duration. It does not restrict, limit, conditionally allow, require approval, or advise; it simply categorizes."
+      },
+      "extracted_data": {
+        "entities": {
+          "tourDurationMinDays": "1",
+          "tourDurationMaxDays": "15",
+          "deputationDurationMinDays": "15",
+          "deputationDurationMaxDays": "1 year",
+          "transferDurationExceeds": "1 year"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C2",
+        "when_conditions": [
+          {
+            "fact": "tourdurationmindays",
+            "operator": "EQUALS",
+            "value": "1"
+          },
+          {
+            "fact": "tourdurationmaxdays",
+            "operator": "EQUALS",
+            "value": "15"
+          },
+          {
+            "fact": "deputationdurationmindays",
+            "operator": "EQUALS",
+            "value": "15"
+          },
+          {
+            "fact": "deputationdurationmaxdays",
+            "operator": "EQUALS",
+            "value": "1 year"
+          },
+          {
+            "fact": "transferdurationexceeds",
+            "operator": "EQUALS",
+            "value": "1 year"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "PASS",
+              "operator": "EQUALS",
+              "value": "OK"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C20",
+      "name": "Policy Rule C20",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C20 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C20",
+        "text_clarified": "IF travel duration is between 12 to 24 hours, THEN employee is entitled to 100% of their daily allowance.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states an 'IF/THEN' relationship, granting an allowance based on the duration of travel. This directly represents a conditional entitlement."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C20",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C21",
+      "name": "Policy Rule C21",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C21 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C21",
+        "text_clarified": "All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. It restricts expense claims from being processed without supporting documentation (bills/invoices), except for specific categories. This is a clear prohibition against submitting unsupported claims."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C21",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C22",
+      "name": "Policy Rule C22",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C22 enforcement"
+      },
+      "when": [
+        {
+          "fact": "minimumtravelduration",
+          "operator": "GREATER_THAN_OR_EQUAL",
+          "value": "15 days"
+        },
+        {
+          "fact": "maximumtravelduration",
+          "operator": "LESS_THAN_OR_EQUAL",
+          "value": "1 year"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C22",
+        "text_clarified": "IF a travel duration is greater than 15 days but less than 1 year at one location, THEN it will be treated as deputation.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes a rule based on a condition (travel duration) and specifies a resulting treatment (deputation). The 'IF/THEN' structure clearly indicates a conditional allowance or categorization."
+      },
+      "extracted_data": {
+        "entities": {
+          "minimumTravelDuration": "15 days",
+          "maximumTravelDuration": "1 year"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C22",
+        "when_conditions": [
+          {
+            "fact": "minimumtravelduration",
+            "operator": "GREATER_THAN_OR_EQUAL",
+            "value": "15 days"
+          },
+          {
+            "fact": "maximumtravelduration",
+            "operator": "LESS_THAN_OR_EQUAL",
+            "value": "1 year"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C23",
+      "name": "Policy Rule C23",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C23 enforcement"
+      },
+      "when": [
+        {
+          "fact": "traveldurationrange",
+          "operator": "EQUALS",
+          "value": "1-7 days"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C23",
+        "text_clarified": "During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.9,
+        "stage2_reasoning": "The clause specifies benefits are allowed *if* the travel duration is between 1-7 days during deputation, linking entitlement to a condition."
+      },
+      "extracted_data": {
+        "entities": {
+          "travelDurationRange": "1-7 days"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C23",
+        "when_conditions": [
+          {
+            "fact": "traveldurationrange",
+            "operator": "EQUALS",
+            "value": "1-7 days"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C24",
+      "name": "Policy Rule C24",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C24 enforcement"
+      },
+      "when": [
+        {
+          "fact": "deputationdurationthreshold",
+          "operator": "EQUALS",
+          "value": "7 days"
+        },
+        {
+          "fact": "allowancesource",
+          "operator": "EQUALS",
+          "value": "Table 7"
+        },
+        {
+          "fact": "allowancedependency",
+          "operator": "EQUALS",
+          "value": "employee Grade and Category"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C24",
+        "text_clarified": "IF deputation duration exceeds 7 days, THEN allowances will be provided as per Table 7, based on employee Grade and Category.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states an 'IF/THEN' relationship: allowances are provided *if* a condition (deputation duration) is met. This directly indicates a conditional entitlement."
+      },
+      "extracted_data": {
+        "entities": {
+          "deputationDurationThreshold": "7 days",
+          "allowanceSource": "Table 7",
+          "allowanceDependency": "employee Grade and Category"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C24",
+        "when_conditions": [
+          {
+            "fact": "deputationdurationthreshold",
+            "operator": "EQUALS",
+            "value": "7 days"
+          },
+          {
+            "fact": "allowancesource",
+            "operator": "EQUALS",
+            "value": "Table 7"
+          },
+          {
+            "fact": "allowancedependency",
+            "operator": "EQUALS",
+            "value": "employee Grade and Category"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C25",
+      "name": "Policy Rule C25",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C25 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C25",
+        "text_clarified": "IF the company provides guest house and food facilities at the deputation site, THEN the employee is NOT entitled to any of the deputation allowances.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes a condition (company providing facilities) under which an entitlement (deputation allowances) is removed. This is a clear 'IF/THEN' structure defining allowance based on a condition."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C25",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C26",
+      "name": "Policy Rule C26",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C26 enforcement"
+      },
+      "when": [
+        {
+          "fact": "billsubmissionrequirement",
+          "operator": "EQUALS",
+          "value": "not required"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C26",
+        "text_clarified": "Employees do NOT require to submit bills for 'deputation' entitlements. 'Deputation' is defined as travel lasting 15 days to 1 year.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states what employees 'do NOT require', indicating a prohibition on the action of submitting bills. This is a clear restriction of a process."
+      },
+      "extracted_data": {
+        "entities": {
+          "billSubmissionRequirement": "not required"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C26",
+        "when_conditions": [
+          {
+            "fact": "billsubmissionrequirement",
+            "operator": "EQUALS",
+            "value": "not required"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C27",
+      "name": "Policy Rule C27",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C27 enforcement"
+      },
+      "when": [
+        {
+          "fact": "durationprojectionthreshold",
+          "operator": "EQUALS",
+          "value": "1 year"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C27",
+        "text_clarified": "IF an employee is shifted to a location with a duration projection of more than 1 year, THEN it will be treated as a transfer.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes a condition (location duration > 1 year) that, if met, triggers a specific entitlement or treatment (being considered a transfer). This is a clear 'IF/THEN' structure characteristic of conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {
+          "durationProjectionThreshold": "1 year"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C27",
+        "when_conditions": [
+          {
+            "fact": "durationprojectionthreshold",
+            "operator": "EQUALS",
+            "value": "1 year"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C28",
+      "name": "Policy Rule C28",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C28 enforcement"
+      },
+      "when": [
+        {
+          "fact": "minimumreimbursementdistance",
+          "operator": "GREATER_THAN_OR_EQUAL",
+          "value": "100 KM"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C28",
+        "text_clarified": "For relocation/transfer, the distance between two places MUST be greater than 100 KM for reimbursement eligibility.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets a minimum distance threshold (100 KM) that must be met to qualify for reimbursement. This is a quantitative restriction on eligibility, making it a limit rather than a complete prohibition or conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {
+          "minimumReimbursementDistance": "100 KM"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C28",
+        "when_conditions": [
+          {
+            "fact": "minimumreimbursementdistance",
+            "operator": "GREATER_THAN_OR_EQUAL",
+            "value": "100 KM"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C29",
+      "name": "Policy Rule C29",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C29 enforcement"
+      },
+      "when": [
+        {
+          "fact": "relocationduration",
+          "operator": "EQUALS",
+          "value": "7 days"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C29",
+        "text_clarified": "During the initial 7 days of relocation/transfer, entitlements are as per the tour policy.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.9,
+        "stage2_reasoning": "The clause establishes entitlements *if* a specific condition is met (the first 7 days of relocation/transfer). It links entitlement levels to a time-bound condition, making it an allowance contingent on that condition."
+      },
+      "extracted_data": {
+        "entities": {
+          "relocationDuration": "7 days"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C29",
+        "when_conditions": [
+          {
+            "fact": "relocationduration",
+            "operator": "EQUALS",
+            "value": "7 days"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C3",
+      "name": "Policy Rule C3",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C3 enforcement"
+      },
+      "when": [
+        {
+          "fact": "allowancetype",
+          "operator": "EQUALS",
+          "value": "Lodging & Boarding"
+        },
+        {
+          "fact": "tourlocation",
+          "operator": "EQUALS",
+          "value": "India"
+        },
+        {
+          "fact": "ratesource",
+          "operator": "EQUALS",
+          "value": "Table 4"
+        },
+        {
+          "fact": "ratelimitation",
+          "operator": "EQUALS",
+          "value": "maximum permissible"
+        },
+        {
+          "fact": "billrequirement",
+          "operator": "EQUALS",
+          "value": "actual bills"
+        },
+        {
+          "fact": "taxinclusion",
+          "operator": "EQUALS",
+          "value": "exclusive of taxes"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.allowance_limit",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C3",
+        "text_clarified": "Lodging & Boarding allowances will be payable to employees for tours within India, as per the limits specified in Table 4. Amounts are maximum permissible rates upon submission of actual bills and are exclusive of taxes. The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states allowances are payable 'as per the limits specified in Table 4' and defines 'maximum permissible rates'. This directly sets upper bounds on the amount employees can claim."
+      },
+      "extracted_data": {
+        "entities": {
+          "allowanceType": "Lodging & Boarding",
+          "tourLocation": "India",
+          "rateSource": "Table 4",
+          "rateLimitation": "maximum permissible",
+          "billRequirement": "actual bills",
+          "taxInclusion": "exclusive of taxes"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "VAGUE_METRICS",
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C3",
+        "when_conditions": [
+          {
+            "fact": "allowancetype",
+            "operator": "EQUALS",
+            "value": "Lodging & Boarding"
+          },
+          {
+            "fact": "tourlocation",
+            "operator": "EQUALS",
+            "value": "India"
+          },
+          {
+            "fact": "ratesource",
+            "operator": "EQUALS",
+            "value": "Table 4"
+          },
+          {
+            "fact": "ratelimitation",
+            "operator": "EQUALS",
+            "value": "maximum permissible"
+          },
+          {
+            "fact": "billrequirement",
+            "operator": "EQUALS",
+            "value": "actual bills"
+          },
+          {
+            "fact": "taxinclusion",
+            "operator": "EQUALS",
+            "value": "exclusive of taxes"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.allowance_limit",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C30",
+      "name": "Policy Rule C30",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C30 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem1lodgingallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        },
+        {
+          "fact": "gradem1boardingallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        },
+        {
+          "fact": "gradem1travelallowance",
+          "operator": "EQUALS",
+          "value": "Actual"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "PASS",
+          "operator": "EQUALS",
+          "value": "OK"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C30",
+        "text_clarified": "For Grade M1 employees, lodging allowance is Actual, boarding allowance is Actual, and travel allowance is Actual.",
+        "intent": "INFORMATIONAL",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "INFORMATIONAL",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause simply states the allowances for a specific grade of employees. It doesn't restrict, limit, conditionally allow, or require approval; it merely defines what the allowances *are* for that group."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM1LodgingAllowance": "Actual",
+          "gradeM1BoardingAllowance": "Actual",
+          "gradeM1TravelAllowance": "Actual"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C30",
+        "when_conditions": [
+          {
+            "fact": "gradem1lodgingallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          },
+          {
+            "fact": "gradem1boardingallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          },
+          {
+            "fact": "gradem1travelallowance",
+            "operator": "EQUALS",
+            "value": "Actual"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "PASS",
+              "operator": "EQUALS",
+              "value": "OK"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C31",
+      "name": "Policy Rule C31",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C31 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem2lodgingallowance",
+          "operator": "EQUALS",
+          "value": "4000"
+        },
+        {
+          "fact": "gradem2boardingallowance",
+          "operator": "EQUALS",
+          "value": "350"
+        },
+        {
+          "fact": "gradem2travelallowance",
+          "operator": "EQUALS",
+          "value": "150"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.lodging",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C31",
+        "text_clarified": "For Grade M2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary values for allowances based on employee grade (M2). This establishes maximum amounts or caps for each allowance type, fitting the definition of a LIMIT intent."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM2LodgingAllowance": "4000",
+          "gradeM2BoardingAllowance": "350",
+          "gradeM2TravelAllowance": "150"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C31",
+        "when_conditions": [
+          {
+            "fact": "gradem2lodgingallowance",
+            "operator": "EQUALS",
+            "value": "4000"
+          },
+          {
+            "fact": "gradem2boardingallowance",
+            "operator": "EQUALS",
+            "value": "350"
+          },
+          {
+            "fact": "gradem2travelallowance",
+            "operator": "EQUALS",
+            "value": "150"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.lodging",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C32",
+      "name": "Policy Rule C32",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C32 enforcement"
+      },
+      "when": [
+        {
+          "fact": "gradem2blodgingallowance",
+          "operator": "EQUALS",
+          "value": "3000"
+        },
+        {
+          "fact": "gradem2bboardingallowance",
+          "operator": "EQUALS",
+          "value": "250"
+        },
+        {
+          "fact": "gradem2btravelallowance",
+          "operator": "EQUALS",
+          "value": "125"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.lodging",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C32",
+        "text_clarified": "For Grade M2B employees, lodging allowance is 3000, boarding allowance is 250, and travel allowance is 125.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary values for allowances based on employee grade. This establishes maximum amounts (or fixed limits) for each allowance type, rather than prohibiting, conditionally allowing, or simply informing."
+      },
+      "extracted_data": {
+        "entities": {
+          "gradeM2BLodgingAllowance": "3000",
+          "gradeM2BBoardingAllowance": "250",
+          "gradeM2BTravelAllowance": "125"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C32",
+        "when_conditions": [
+          {
+            "fact": "gradem2blodgingallowance",
+            "operator": "EQUALS",
+            "value": "3000"
+          },
+          {
+            "fact": "gradem2bboardingallowance",
+            "operator": "EQUALS",
+            "value": "250"
+          },
+          {
+            "fact": "gradem2btravelallowance",
+            "operator": "EQUALS",
+            "value": "125"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.lodging",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C33",
+      "name": "Policy Rule C33",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C33 enforcement"
+      },
+      "when": [
+        {
+          "fact": "lodgingallowance",
+          "operator": "EQUALS",
+          "value": "2000"
+        },
+        {
+          "fact": "boardingallowance",
+          "operator": "EQUALS",
+          "value": "150"
+        },
+        {
+          "fact": "travelallowance",
+          "operator": "EQUALS",
+          "value": "100"
+        },
+        {
+          "fact": "applicablegrades",
+          "operator": "EQUALS",
+          "value": "M3 to M6"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.allowance_limit",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C33",
+        "text_clarified": "For Grades M3 to M6, lodging allowance is 2000, boarding allowance is 150, and travel allowance is 100.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific monetary values (2000, 150, 100) for allowances based on grade levels (M3 to M6). This establishes maximum amounts or caps for each allowance type, fitting the definition of a LIMIT."
+      },
+      "extracted_data": {
+        "entities": {
+          "lodgingAllowance": "2000",
+          "boardingAllowance": "150",
+          "travelAllowance": "100",
+          "applicableGrades": "M3 to M6"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C33",
+        "when_conditions": [
+          {
+            "fact": "lodgingallowance",
+            "operator": "EQUALS",
+            "value": "2000"
+          },
+          {
+            "fact": "boardingallowance",
+            "operator": "EQUALS",
+            "value": "150"
+          },
+          {
+            "fact": "travelallowance",
+            "operator": "EQUALS",
+            "value": "100"
+          },
+          {
+            "fact": "applicablegrades",
+            "operator": "EQUALS",
+            "value": "M3 to M6"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.allowance_limit",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C34",
+      "name": "Policy Rule C34",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C34 enforcement"
+      },
+      "when": [
+        {
+          "fact": "referencetable",
+          "operator": "EQUALS",
+          "value": "Table 4"
+        },
+        {
+          "fact": "ratetype",
+          "operator": "EQUALS",
+          "value": "maximum permissible rates"
+        },
+        {
+          "fact": "billrequirement",
+          "operator": "EQUALS",
+          "value": "actual bills"
+        },
+        {
+          "fact": "taxinclusion",
+          "operator": "EQUALS",
+          "value": "exclusive of taxes"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C34",
+        "text_clarified": "The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states that the amounts in Table 4 are \"maximum permissible rates,\" directly setting an upper bound on allowable values. The phrase 'maximum' indicates a limit is being imposed."
+      },
+      "extracted_data": {
+        "entities": {
+          "referenceTable": "Table 4",
+          "rateType": "maximum permissible rates",
+          "billRequirement": "actual bills",
+          "taxInclusion": "exclusive of taxes"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C34",
+        "when_conditions": [
+          {
+            "fact": "referencetable",
+            "operator": "EQUALS",
+            "value": "Table 4"
+          },
+          {
+            "fact": "ratetype",
+            "operator": "EQUALS",
+            "value": "maximum permissible rates"
+          },
+          {
+            "fact": "billrequirement",
+            "operator": "EQUALS",
+            "value": "actual bills"
+          },
+          {
+            "fact": "taxinclusion",
+            "operator": "EQUALS",
+            "value": "exclusive of taxes"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C35",
+      "name": "Policy Rule C35",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C35 enforcement"
+      },
+      "when": [
+        {
+          "fact": "requireddocumentation",
+          "operator": "EQUALS",
+          "value": "bills/invoices"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C35",
+        "text_clarified": "All expense claims MUST be supported by bills/invoices.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement and prohibiting claims without supporting documentation. This is a clear restriction on submitting expense claims."
+      },
+      "extracted_data": {
+        "entities": {
+          "requiredDocumentation": "bills/invoices"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C35",
+        "when_conditions": [
+          {
+            "fact": "requireddocumentation",
+            "operator": "EQUALS",
+            "value": "bills/invoices"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C36",
+      "name": "Policy Rule C36",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C36 enforcement"
+      },
+      "when": [
+        {
+          "fact": "requiredquotations",
+          "operator": "EQUALS",
+          "value": "3"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C36",
+        "text_clarified": "For relocation expenses towards shifting of household goods, the employee MUST provide 3 quotations, and HR will verify and approve one.",
+        "intent": "APPROVAL_REQUIRED",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "APPROVAL_REQUIRED",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states that HR 'will verify and approve' a quotation, meaning the employee cannot receive relocation expenses without this authorization. The 'MUST provide' aspect also contributes to the need for approval."
+      },
+      "extracted_data": {
+        "entities": {
+          "requiredQuotations": "3"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_AUTHORITY",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C36",
+        "when_conditions": [
+          {
+            "fact": "requiredquotations",
+            "operator": "EQUALS",
+            "value": "3"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C37",
+      "name": "Policy Rule C37",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C37 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C37",
+        "text_clarified": "The maximum limit for relocation expenses towards shifting of household goods is 20,000.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states a 'maximum limit' of 20,000 for relocation expenses, directly setting an upper bound on allowable spending."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C37",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C38",
+      "name": "Policy Rule C38",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C38 enforcement"
+      },
+      "when": [
+        {
+          "fact": "employeegrades",
+          "operator": "EQUALS",
+          "value": "M1/M2"
+        },
+        {
+          "fact": "travelmode",
+          "operator": "EQUALS",
+          "value": "Air (Economy)"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C38",
+        "text_clarified": "For Grade M1/M2, the mode of travel is Air (Economy).",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies the *mode* of travel (Air Economy) for specific grades (M1/M2), effectively limiting the travel options to that mode for those grades. It doesn't prohibit travel, but constrains it."
+      },
+      "extracted_data": {
+        "entities": {
+          "employeeGrades": "M1/M2",
+          "travelMode": "Air (Economy)"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C38",
+        "when_conditions": [
+          {
+            "fact": "employeegrades",
+            "operator": "EQUALS",
+            "value": "M1/M2"
+          },
+          {
+            "fact": "travelmode",
+            "operator": "EQUALS",
+            "value": "Air (Economy)"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C39",
+      "name": "Policy Rule C39",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C39 enforcement"
+      },
+      "when": [
+        {
+          "fact": "employeegrade",
+          "operator": "EQUALS",
+          "value": "M2B"
+        },
+        {
+          "fact": "travelmode",
+          "operator": "EQUALS",
+          "value": "Train (AC II) /Taxi (AC)"
+        },
+        {
+          "fact": "taxirate",
+          "operator": "EQUALS",
+          "value": "10 Rs/KM"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C39",
+        "text_clarified": "For Grade M2B, the mode of travel is Train (AC II) /Taxi (AC) at 10 Rs/KM.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies the allowable modes of travel and a cost limit (10 Rs/KM) for taxi travel for a specific grade (M2B). This sets boundaries on what is permitted, rather than a complete prohibition or conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {
+          "employeeGrade": "M2B",
+          "travelMode": "Train (AC II) /Taxi (AC)",
+          "taxiRate": "10 Rs/KM"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C39",
+        "when_conditions": [
+          {
+            "fact": "employeegrade",
+            "operator": "EQUALS",
+            "value": "M2B"
+          },
+          {
+            "fact": "travelmode",
+            "operator": "EQUALS",
+            "value": "Train (AC II) /Taxi (AC)"
+          },
+          {
+            "fact": "taxirate",
+            "operator": "EQUALS",
+            "value": "10 Rs/KM"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C4",
+      "name": "Policy Rule C4",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C4 enforcement"
+      },
+      "when": [
+        {
+          "fact": "eligiblegrades",
+          "operator": "EQUALS",
+          "value": "M1"
+        },
+        {
+          "fact": "airtravelclass",
+          "operator": "EQUALS",
+          "value": "Economy"
+        },
+        {
+          "fact": "traintravelclasses",
+          "operator": "EQUALS",
+          "value": "AC I, II"
+        },
+        {
+          "fact": "taxitravelclass",
+          "operator": "EQUALS",
+          "value": "AC"
+        },
+        {
+          "fact": "intercitytravelmodes",
+          "operator": "EQUALS",
+          "value": "Air, Train, Taxi"
+        },
+        {
+          "fact": "localtravelmodes",
+          "operator": "EQUALS",
+          "value": "Taxi"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C4",
+        "text_clarified": "Directors, CEO, COO, and Presidents (Grade M1) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Inter-city travel refers to travel between cities, while local travel is limited to <10 km via auto, and >10 km requires public/shared transport. Taxi (AC) includes hatchback/sedan cars; sedan/suv cars can be booked when traveling with clients.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies entitlements (travel allowances) *based on* specific roles/grades (Directors, CEO, etc.). This is an 'if/then' structure: IF you are in these roles, THEN you are entitled to these travel benefits."
+      },
+      "extracted_data": {
+        "entities": {
+          "eligibleGrades": "M1",
+          "airTravelClass": "Economy",
+          "trainTravelClasses": "AC I, II",
+          "taxiTravelClass": "AC",
+          "interCityTravelModes": "Air, Train, Taxi",
+          "localTravelModes": "Taxi"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C4",
+        "when_conditions": [
+          {
+            "fact": "eligiblegrades",
+            "operator": "EQUALS",
+            "value": "M1"
+          },
+          {
+            "fact": "airtravelclass",
+            "operator": "EQUALS",
+            "value": "Economy"
+          },
+          {
+            "fact": "traintravelclasses",
+            "operator": "EQUALS",
+            "value": "AC I, II"
+          },
+          {
+            "fact": "taxitravelclass",
+            "operator": "EQUALS",
+            "value": "AC"
+          },
+          {
+            "fact": "intercitytravelmodes",
+            "operator": "EQUALS",
+            "value": "Air, Train, Taxi"
+          },
+          {
+            "fact": "localtravelmodes",
+            "operator": "EQUALS",
+            "value": "Taxi"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C40",
+      "name": "Policy Rule C40",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C40 enforcement"
+      },
+      "when": [
+        {
+          "fact": "employeegrade",
+          "operator": "EQUALS",
+          "value": "M3"
+        },
+        {
+          "fact": "travelmodes",
+          "operator": "EQUALS",
+          "value": "Train (III AC) /Bus/Taxi(AC)"
+        },
+        {
+          "fact": "taxiactype",
+          "operator": "EQUALS",
+          "value": "AC"
+        },
+        {
+          "fact": "rateperkm",
+          "operator": "EQUALS",
+          "value": "10 Rs/KM"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C40",
+        "text_clarified": "For Grade M3, the mode of travel is Train (III AC) /Bus/Taxi(AC) at 10 Rs/KM.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies the allowable modes of travel and a cost limit (10 Rs/KM) for a specific grade (M3). It doesn't prohibit travel, but rather defines the boundaries within which travel is permitted."
+      },
+      "extracted_data": {
+        "entities": {
+          "employeeGrade": "M3",
+          "travelModes": "Train (III AC) /Bus/Taxi(AC)",
+          "taxiAcType": "AC",
+          "ratePerKm": "10 Rs/KM"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C40",
+        "when_conditions": [
+          {
+            "fact": "employeegrade",
+            "operator": "EQUALS",
+            "value": "M3"
+          },
+          {
+            "fact": "travelmodes",
+            "operator": "EQUALS",
+            "value": "Train (III AC) /Bus/Taxi(AC)"
+          },
+          {
+            "fact": "taxiactype",
+            "operator": "EQUALS",
+            "value": "AC"
+          },
+          {
+            "fact": "rateperkm",
+            "operator": "EQUALS",
+            "value": "10 Rs/KM"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C41",
+      "name": "Policy Rule C41",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C41 enforcement"
+      },
+      "when": [
+        {
+          "fact": "employeegrade",
+          "operator": "EQUALS",
+          "value": "M4"
+        },
+        {
+          "fact": "allowedtravelmodes",
+          "operator": "EQUALS",
+          "value": "Train (III AC)/Bus(AC) /Shared Taxi/Auto"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "PASS",
+          "operator": "EQUALS",
+          "value": "OK"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C41",
+        "text_clarified": "For Grade M4, the mode of travel is Train (III AC)/Bus(AC) /Shared Taxi/Auto.",
+        "intent": "INFORMATIONAL",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "INFORMATIONAL",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause simply states the allowed modes of travel for a specific grade level. It doesn't restrict, limit, or conditionally allow anything; it merely defines what is permitted. It's providing information about travel options."
+      },
+      "extracted_data": {
+        "entities": {
+          "employeeGrade": "M4",
+          "allowedTravelModes": "Train (III AC)/Bus(AC) /Shared Taxi/Auto"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C41",
+        "when_conditions": [
+          {
+            "fact": "employeegrade",
+            "operator": "EQUALS",
+            "value": "M4"
+          },
+          {
+            "fact": "allowedtravelmodes",
+            "operator": "EQUALS",
+            "value": "Train (III AC)/Bus(AC) /Shared Taxi/Auto"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "PASS",
+              "operator": "EQUALS",
+              "value": "OK"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C42",
+      "name": "Policy Rule C42",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C42 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "PASS",
+          "operator": "EQUALS",
+          "value": "OK"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C42",
+        "text_clarified": "For Grades M5/M6, the mode of travel is Train & Bus (Sleeper)/Shared Taxi/ Auto/ Public Conveyance.",
+        "intent": "INFORMATIONAL",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "INFORMATIONAL",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause defines the acceptable modes of travel for specific grade levels (M5/M6). It doesn't restrict, limit, or conditionally allow; it simply states what is permitted. This is purely descriptive information."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C42",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "PASS",
+              "operator": "EQUALS",
+              "value": "OK"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C43",
+      "name": "Policy Rule C43",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C43 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C43",
+        "text_clarified": "IF a particular class of ticket is unavailable, THEN a ticket one class down will be booked.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes an 'IF/THEN' scenario: if a specific ticket class isn't available, then a different (lower) class is permitted. This directly represents a conditional allowance of an alternative."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "INCOMPLETE_CONDITIONS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C43",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C44",
+      "name": "Policy Rule C44",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C44 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C44",
+        "text_clarified": "Employees MUST send a request mail for booking a ticket to reservation@ujaas.com. The request MUST be made 1 day prior to the date of travel. The travel desk will ask for travel approval via email from the supervisor/HOD before booking.",
+        "intent": "APPROVAL_REQUIRED",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "APPROVAL_REQUIRED",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states that travel approval from a supervisor/HOD is required *before* booking a ticket. This necessitates authorization before proceeding, fitting the definition of APPROVAL_REQUIRED. The 'MUST' statements also indicate requirements, but the core action needing permission is the booking itself."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_AUTHORITY",
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C44",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C45",
+      "name": "Policy Rule C45",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C45 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C45",
+        "text_clarified": "Employees are NOT allowed to book tickets directly unless in an emergency. IF an employee books directly from a Vendor, they MUST obtain permission from their HOD for company payment. Direct bookings require submission of the ticket and debit/credit card statement.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes a restriction on direct booking but allows it *if* certain conditions are met (emergency, HOD permission, and submission of documentation). This 'IF/THEN' structure defines a conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_AUTHORITY",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C45",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C46",
+      "name": "Policy Rule C46",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C46 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C46",
+        "text_clarified": "Request mails for booking MUST include employee name, age, designation, contact number, project code, tour purpose, place, duration, DOT, and HOD approval (or reason for absence). Eligibility for return booking needs to be mentioned.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses 'MUST' indicating mandatory requirements for booking requests. Failing to include the specified information would likely result in rejection, thus restricting the booking process. The requirement for HOD approval also acts as a restriction."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C46",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C47",
+      "name": "Policy Rule C47",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C47 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C47",
+        "text_clarified": "IF an employee requests a specific flight/Train or Bus, they MUST state the reason for choosing it in the request mail.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause outlines a requirement (stating the reason) *if* an employee requests a specific mode of transport. This is a clear 'if/then' structure, indicating a conditional allowance of the request based on fulfilling the condition."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C47",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C48",
+      "name": "Policy Rule C48",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C48 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C48",
+        "text_clarified": "Employees MUST send their ticket booking request at least one day before the date of journey. IF a request is made within one day (urgent booking), the reason for urgency MUST be stated.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes a standard requirement (request at least one day before) but allows for an exception (urgent booking) *if* a specific condition is met (reason for urgency stated). This is a clear IF/THEN structure."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C48",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C49",
+      "name": "Policy Rule C49",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C49 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C49",
+        "text_clarified": "Employees are NOT allowed to request special Hotels/ Flights/ Seats/ Web Check-in.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly prohibits employees from requesting specific travel arrangements using the phrase \"NOT allowed\". This directly restricts their actions."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C49",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C5",
+      "name": "Policy Rule C5",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C5 enforcement"
+      },
+      "when": [
+        {
+          "fact": "eligiblegrades",
+          "operator": "EQUALS",
+          "value": "M2"
+        },
+        {
+          "fact": "airtravelclass",
+          "operator": "EQUALS",
+          "value": "Economy"
+        },
+        {
+          "fact": "traintravelclasses",
+          "operator": "EQUALS",
+          "value": "AC I, II"
+        },
+        {
+          "fact": "taxitravelclass",
+          "operator": "EQUALS",
+          "value": "AC"
+        },
+        {
+          "fact": "taxicartypes",
+          "operator": "EQUALS",
+          "value": "hatchback/sedan"
+        },
+        {
+          "fact": "clienttravelcartypes",
+          "operator": "EQUALS",
+          "value": "Sedan/SUV"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C5",
+        "text_clarified": "VP, AVP, GM, DGM, and RM (Grade M2) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Taxi (AC) includes hatchback/sedan cars; Sedan/SUV cars can be booked when traveling with clients. For Grade M2b, the mode of travel is Train (AC II) /Taxi (AC) at 10 rs/km.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.85,
+        "stage2_reasoning": "The clause outlines travel entitlements for specific roles, but introduces a condition for a higher class of taxi based on whether they are traveling with clients. This 'if traveling with clients, then higher class taxi' structure indicates a conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {
+          "eligibleGrades": "M2",
+          "airTravelClass": "Economy",
+          "trainTravelClasses": "AC I, II",
+          "taxiTravelClass": "AC",
+          "taxiCarTypes": "hatchback/sedan",
+          "clientTravelCarTypes": "Sedan/SUV"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "INCOMPLETE_CONDITIONS",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C5",
+        "when_conditions": [
+          {
+            "fact": "eligiblegrades",
+            "operator": "EQUALS",
+            "value": "M2"
+          },
+          {
+            "fact": "airtravelclass",
+            "operator": "EQUALS",
+            "value": "Economy"
+          },
+          {
+            "fact": "traintravelclasses",
+            "operator": "EQUALS",
+            "value": "AC I, II"
+          },
+          {
+            "fact": "taxitravelclass",
+            "operator": "EQUALS",
+            "value": "AC"
+          },
+          {
+            "fact": "taxicartypes",
+            "operator": "EQUALS",
+            "value": "hatchback/sedan"
+          },
+          {
+            "fact": "clienttravelcartypes",
+            "operator": "EQUALS",
+            "value": "Sedan/SUV"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C50",
+      "name": "Policy Rule C50",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C50 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C50",
+        "text_clarified": "Employees MUST submit bills within 15 days of completing their tour. IF bills are not submitted within this timeframe, a reason MUST be attached. Bills not submitted against tour advances for more than 30 days will be deducted from the next month\u2019s salary.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause establishes mandatory requirements (MUST) for bill submission and outlines penalties (deduction from salary) for non-compliance. This primarily restricts employees from delaying submissions beyond specified timeframes."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C50",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C51",
+      "name": "Policy Rule C51",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C51 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C51",
+        "text_clarified": "Bill submission information MUST include employee name, tour code, designation, department, tour date, and bill amount, and date of submission.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. Failure to include the specified information would be a violation of policy, thus it's a restriction on acceptable bill submissions."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C51",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C52",
+      "name": "Policy Rule C52",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C52 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C52",
+        "text_clarified": "The bill MUST have the signature of the employee and their HOD.",
+        "intent": "APPROVAL_REQUIRED",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "APPROVAL_REQUIRED",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause explicitly states a requirement for signatures ('MUST'), indicating that approval or permission is needed before the bill is considered valid. Both the employee and HOD signatures are required, making it an approval process."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C52",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C53",
+      "name": "Policy Rule C53",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C53 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C53",
+        "text_clarified": "IF there is any deviation in the amounts on the bill, HOD approval with a clarification note is REQUIRED.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses an 'IF/THEN' structure: IF there's a deviation, THEN HOD approval is REQUIRED. This establishes an allowance (approval) contingent on a specific condition (deviation)."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C53",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C54",
+      "name": "Policy Rule C54",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C54 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C54",
+        "text_clarified": "IF an employee pays bills themselves, they MUST submit the bill and their credit/debit card statement (for card payments).",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause outlines a requirement (MUST submit documentation) that is triggered by a specific action (employee pays bills themselves). This is a clear 'IF/THEN' structure, indicating a conditional allowance or requirement."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "UNDEFINED_REFERENCES",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C54",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C55",
+      "name": "Policy Rule C55",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C55 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C55",
+        "text_clarified": "It is the employee\u2019s RESPONSIBILITY to obtain authentic bills.",
+        "intent": "ADVISORY",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "ADVISORY",
+        "stage2_confidence": 0.85,
+        "stage2_reasoning": "The clause uses the word \"RESPONSIBILITY\", indicating a recommended action or duty rather than a prohibition, limit, or requirement. It suggests what an employee *should* do, not what they *must* or *must not* do."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C55",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C56",
+      "name": "Policy Rule C56",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C56 enforcement"
+      },
+      "when": [],
+      "what": {
+        "constraint": {
+          "fact": "approval.required",
+          "operator": "EQUALS",
+          "value": "YES"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C56",
+        "text_clarified": "When submitting a bill for auto or taxi, employees MUST mention the names of the places and the distance traveled for smooth processing.",
+        "intent": "RESTRICTION",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "RESTRICTION",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause uses the word \"MUST\", indicating a mandatory requirement. Failure to mention the requested details would likely result in processing issues, effectively prohibiting reimbursement without the information."
+      },
+      "extracted_data": {
+        "entities": {},
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C56",
+        "when_conditions": [],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "approval.required",
+              "operator": "EQUALS",
+              "value": "YES"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C6",
+      "name": "Policy Rule C6",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C6 enforcement"
+      },
+      "when": [
+        {
+          "fact": "eligibledesignations",
+          "operator": "EQUALS",
+          "value": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)"
+        },
+        {
+          "fact": "intercitytravelmode",
+          "operator": "EQUALS",
+          "value": "Train (III AC) / Bus / Taxi (AC)"
+        },
+        {
+          "fact": "localtravelmode",
+          "operator": "EQUALS",
+          "value": "Taxi (AC)"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C6",
+        "text_clarified": "agm, sr. manager, sr. bm, rsm, manager, deputy manager, assistant manager, sr. executive, sr. engineer, asm, and bm (grade m3) are entitled to train (iii ac) / bus / taxi (ac) for inter-city travel and taxi (ac) for local travel.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies which roles *are entitled* to certain travel benefits. This is an allowance based on the condition of being in one of the listed roles."
+      },
+      "extracted_data": {
+        "entities": {
+          "eligibleDesignations": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)",
+          "interCityTravelMode": "Train (III AC) / Bus / Taxi (AC)",
+          "localTravelMode": "Taxi (AC)"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "UNDEFINED_REFERENCES",
+          "VAGUE_METRICS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C6",
+        "when_conditions": [
+          {
+            "fact": "eligibledesignations",
+            "operator": "EQUALS",
+            "value": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)"
+          },
+          {
+            "fact": "intercitytravelmode",
+            "operator": "EQUALS",
+            "value": "Train (III AC) / Bus / Taxi (AC)"
+          },
+          {
+            "fact": "localtravelmode",
+            "operator": "EQUALS",
+            "value": "Taxi (AC)"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C7",
+      "name": "Policy Rule C7",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C7 enforcement"
+      },
+      "when": [
+        {
+          "fact": "eligibleemployeegrades",
+          "operator": "EQUALS",
+          "value": "M4"
+        },
+        {
+          "fact": "intercitytravelmodes",
+          "operator": "EQUALS",
+          "value": "Train (III AC) / Bus / Taxi (AC)"
+        },
+        {
+          "fact": "localtravelmodes",
+          "operator": "EQUALS",
+          "value": "Auto, Taxi (Non-AC)"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "allowance.general",
+          "operator": "APPROVED",
+          "value": "CONDITIONAL"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C7",
+        "text_clarified": "M4 grade employees are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Auto, Taxi (Non-AC) for local travel.",
+        "intent": "CONDITIONAL_ALLOWANCE",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "CONDITIONAL_ALLOWANCE",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause specifies travel entitlements *based on* employee grade (M4). This 'if employee grade is M4, then they are allowed...' structure defines a conditional allowance."
+      },
+      "extracted_data": {
+        "entities": {
+          "eligibleEmployeeGrades": "M4",
+          "interCityTravelModes": "Train (III AC) / Bus / Taxi (AC)",
+          "localTravelModes": "Auto, Taxi (Non-AC)"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "SUBJECTIVE_LANGUAGE",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C7",
+        "when_conditions": [
+          {
+            "fact": "eligibleemployeegrades",
+            "operator": "EQUALS",
+            "value": "M4"
+          },
+          {
+            "fact": "intercitytravelmodes",
+            "operator": "EQUALS",
+            "value": "Train (III AC) / Bus / Taxi (AC)"
+          },
+          {
+            "fact": "localtravelmodes",
+            "operator": "EQUALS",
+            "value": "Auto, Taxi (Non-AC)"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "allowance.general",
+              "operator": "APPROVED",
+              "value": "CONDITIONAL"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C8",
+      "name": "Policy Rule C8",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C8 enforcement"
+      },
+      "when": [
+        {
+          "fact": "localautotravellimit",
+          "operator": "EQUALS",
+          "value": "<10 KM"
+        },
+        {
+          "fact": "intercitytravelmodes",
+          "operator": "EQUALS",
+          "value": "Train & Bus (Sleeper) / Shared Taxi / Auto"
+        },
+        {
+          "fact": "localtravelmodes",
+          "operator": "EQUALS",
+          "value": "Auto, Taxi (Non-AC)"
+        },
+        {
+          "fact": "over10kmtransport",
+          "operator": "EQUALS",
+          "value": "Public/Shared Transport"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C8",
+        "text_clarified": "M5/M6 grade employees are entitled to Train & Bus (Sleeper) / Shared Taxi / Auto for inter-city travel and Auto, Taxi (Non-AC) for local travel. Local travel via Auto is limited to <10 KM; >10 KM requires Public/Shared Transport. Taxi (AC) includes hatchback/sedan cars; sedan/suv cars can be booked when traveling with clients (as defined in Clause C5).",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.9,
+        "stage2_reasoning": "The clause sets a distance limit (10 KM) for auto travel and specifies a different mode of transport is required beyond that limit. This establishes a threshold for a specific action, fitting the definition of a LIMIT intent."
+      },
+      "extracted_data": {
+        "entities": {
+          "localAutoTravelLimit": "<10 KM",
+          "interCityTravelModes": "Train & Bus (Sleeper) / Shared Taxi / Auto",
+          "localTravelModes": "Auto, Taxi (Non-AC)",
+          "over10KmTransport": "Public/Shared Transport"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "BOUNDARY_OVERLAPS",
+          "UNDEFINED_REFERENCES",
+          "INCOMPLETE_CONDITIONS"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C8",
+        "when_conditions": [
+          {
+            "fact": "localautotravellimit",
+            "operator": "EQUALS",
+            "value": "<10 KM"
+          },
+          {
+            "fact": "intercitytravelmodes",
+            "operator": "EQUALS",
+            "value": "Train & Bus (Sleeper) / Shared Taxi / Auto"
+          },
+          {
+            "fact": "localtravelmodes",
+            "operator": "EQUALS",
+            "value": "Auto, Taxi (Non-AC)"
+          },
+          {
+            "fact": "over10kmtransport",
+            "operator": "EQUALS",
+            "value": "Public/Shared Transport"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    },
+    {
+      "policyId": "POLICY_C9",
+      "name": "Policy Rule C9",
+      "outcome": {
+        "enforcement": "enforce",
+        "message": "Policy C9 enforcement"
+      },
+      "when": [
+        {
+          "fact": "nonactaxirate",
+          "operator": "EQUALS",
+          "value": "Rs. 8/KM"
+        },
+        {
+          "fact": "actaxirate",
+          "operator": "EQUALS",
+          "value": "Rs. 10/KM"
+        }
+      ],
+      "what": {
+        "constraint": {
+          "fact": "limit.general",
+          "operator": "ENFORCED",
+          "value": "STRICT"
+        }
+      },
+      "core_attributes": {
+        "clauseId": "C9",
+        "text_clarified": "Auto/Taxi Non-AC fares are Rs. 8/KM. Taxi AC fares are Rs. 10/KM.",
+        "intent": "LIMIT",
+        "confidence_score": 0.0,
+        "source_section": ""
+      },
+      "classification": {
+        "stage2_intent": "LIMIT",
+        "stage2_confidence": 0.95,
+        "stage2_reasoning": "The clause sets specific fares (Rs. 8/KM and Rs. 10/KM) for different taxi types, effectively capping the amount charged per kilometer. It doesn't prohibit anything, nor is it a condition for allowance; it defines maximum costs."
+      },
+      "extracted_data": {
+        "entities": {
+          "nonAcTaxiRate": "Rs. 8/KM",
+          "acTaxiRate": "Rs. 10/KM"
+        },
+        "entity_names": []
+      },
+      "ambiguity_analysis": {
+        "is_ambiguous": false,
+        "ambiguity_types": [],
+        "ambiguities_fixed": [
+          "VAGUE_METRICS",
+          "UNDEFINED_REFERENCES"
+        ],
+        "original_reason": "",
+        "detection_method": "rule-based",
+        "rule_score": 0
+      },
+      "dsl_rules": {
+        "rule_id": "C9",
+        "when_conditions": [
+          {
+            "fact": "nonactaxirate",
+            "operator": "EQUALS",
+            "value": "Rs. 8/KM"
+          },
+          {
+            "fact": "actaxirate",
+            "operator": "EQUALS",
+            "value": "Rs. 10/KM"
+          }
+        ],
+        "then_outcome": {
+          "enforce": [
+            {
+              "constraint": "limit.general",
+              "operator": "ENFORCED",
+              "value": "STRICT"
+            }
+          ]
+        },
+        "enforcement_level": "enforce"
+      },
+      "rationale_metadata": {
+        "rationale_text": "",
+        "confidence_score": 0.0,
+        "ambiguities_fixed": [],
+        "source_section": ""
+      }
+    }
+  ],
+  "metadata": {
+    "generated": "2026-02-05T11:02:46.150001",
+    "total_policies": 56,
+    "format": "Consolidated Policy Normalization (Stage 8)",
+    "source_stages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "description": "Each policy contains consolidated data from all 7 processing stages"
+  }
+}

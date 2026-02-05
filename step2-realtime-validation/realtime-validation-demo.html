@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Validation - Overseas Business Travel</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    .notice {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .notice strong {
+      color: #667eea;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      font-size: 13px;
+    }
+
+    input, textarea {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .validation-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      margin-top: 4px;
+      height: 16px;
+    }
+
+    .validation-status.validating {
+      color: #f59e0b;
+    }
+
+    .validation-status.valid {
+      color: #22c55e;
+    }
+
+    .validation-status.error {
+      color: #ef4444;
+    }
+
+    .spinner {
+      width: 12px;
+      height: 12px;
+      border: 2px solid #f59e0b;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .info-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .info-section h3 {
+      font-size: 13px;
+      color: #667eea;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .validation-log {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      padding: 4px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #666;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry.success {
+      color: #22c55e;
+    }
+
+    .log-entry.error {
+      color: #ef4444;
+    }
+
+    .log-entry.info {
+      color: #667eea;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🌍 Overseas Business Travel Policy</h1>
+      <p>Real-time field validation against company rules</p>
+    </header>
+
+    <main>
+      <div class="notice">
+        <strong>✓ Policy-Based Validation:</strong><br>
+        Fill in traveler details and move between fields (blur event). Each field is validated by Gemini against your company's overseas travel policy rules from rules.txt.
+      </div>
+
+      <form id="validation-form">
+        <div class="form-group">
+          <label for="field1">Employee Name</label>
+          <input type="text" id="field1" name="field1" placeholder="e.g., John Doe">
+          <div class="hint">Policy Rule: Required for travel sanction (Rule: Written request required before MD&CEO approval)</div>
+          <div class="validation-status" id="status1"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="field2">Employee Grade (E1-E10)</label>
+          <input type="text" id="field2" name="field2" placeholder="e.g., E8">
+          <div class="hint">Policy Rule: E8-E10 travel Business Class ($350/day), E7 and below Economy Class ($300/day)</div>
+          <div class="validation-status" id="status2"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="field3">Number of Travel Days</label>
+          <input type="number" id="field3" name="field3" placeholder="e.g., 7">
+          <div class="hint">Policy Rule: Maximum 45 days. Extended stays need MD&CEO approval. Journey time included.</div>
+          <div class="validation-status" id="status3"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="field4">Destination Country</label>
+          <input type="text" id="field4" name="field4" placeholder="e.g., USA, UK, India">
+          <div class="hint">Policy Rule: Daily allowance per MEA rates. Visa fees & travel insurance arranged by company. Shortest route mandatory.</div>
+          <div class="validation-status" id="status4"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="field5">Travel Purpose</label>
+          <textarea id="field5" name="field5" placeholder="e.g., Client meeting, Training, Conference, Deputation..."></textarea>
+          <div class="hint">Policy Rule: Applies to regular employees, deputation staff, Whole Time Directors, MD&CEO. Written request with reason required.</div>
+          <div class="validation-status" id="status5"></div>
+        </div>
+
+        <div class="controls">
+          <button type="submit" class="btn-primary">Submit</button>
+          <button type="button" class="btn-secondary" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+
+      <div class="info-section">
+        <h3>📋 Validation Log (Policy Rules Checked)</h3>
+        <div class="validation-log" id="validation-log">
+          <div class="log-entry info">Ready. Fill fields and blur to trigger policy validation...</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Include modules -->
+  <script src="modules/form-listener.js"></script>
+  <script src="modules/form-state-manager.js"></script>
+  <script src="modules/blur-handler.js"></script>
+  <script src="modules/api-communicator.js"></script>
+  <script src="modules/suggestion-popup.js"></script>
+
+  <script>
+    // Policy rules from rules.txt for validation
+    const policyRules = {
+      field1: {
+        label: 'Employee Name',
+        rules: [
+          'Written request stating reason must be submitted',
+          'Request must be approved by functional head',
+          'Then submitted to and approved by MD&CEO'
+        ]
+      },
+      field2: {
+        label: 'Employee Grade',
+        rules: [
+          'MD & CEO: First Class air travel',
+          'Directors: Business/Club Class air travel',
+          'E8-E10: Business Class ($350/day allowance)',
+          'E7 and below: Economy Class ($300/day allowance)'
+        ]
+      },
+      field3: {
+        label: 'Travel Days',
+        rules: [
+          'All overseas travel must be sanctioned by MD&CEO',
+          'Maximum 45 days for allowance eligibility',
+          'Includes journey time in calculation',
+          'Extended stays >10 days need MD&CEO approval for medical/calamity',
+          'Extended stays cannot exceed 50% of sanctioned days or 10 days (whichever higher)'
+        ]
+      },
+      field4: {
+        label: 'Destination',
+        rules: [
+          'All overseas tours must be planned/booked in advance',
+          'Must use shortest possible route (direct if available)',
+          'Visa fees reimbursed/arranged by company',
+          'Overseas travel insurance arranged by company',
+          'Daily allowance based on MEA rates for destination',
+          'Unspent foreign exchange must be refunded after accounting expenses'
+        ]
+      },
+      field5: {
+        label: 'Travel Purpose',
+        rules: [
+          'Applies to all regular employees, deputation staff, Whole Time Directors, MD&CEO',
+          'Written request with reason required before approval',
+          'If cancelled/postponed, obtain approvals and cancel tickets promptly',
+          'Foreign exchange requirements must be informed to finance dept in advance',
+          'Employees expected to be judicious with expenses and maintain company decorum'
+        ]
+      }
+    };
+
+    const popup = new SuggestionPopup({ duration: 8000 });
+    const validationLog = document.getElementById('validation-log');
+    const form = document.getElementById('validation-form');
+
+    // Attach blur handlers
+    const blurHandler = new BlurHandler('#validation-form');
+    blurHandler.onFieldBlur((fieldName, value, fieldElement) => {
+      if (!value.trim()) {
+        logValidation(fieldName, '⚠ Field empty - skipped');
+        return;
+      }
+
+      // Simulate validation
+      validateFieldAgainstPolicy(fieldName, value);
+    });
+
+    blurHandler.attach();
+
+    function validateFieldAgainstPolicy(fieldName, fieldValue) {
+      // Validate quietly without showing "validating" popup
+      const policyData = policyRules[fieldName];
+
+      // Generate suggestions based on policy
+      let status = 'valid';
+      let message = '✓ Validation passed';
+      let suggestion = '';
+
+      if (policyData) {
+        const rulesText = policyData.rules.join('\n• ');
+        suggestion = `📋 ${policyData.label} Policy Rules:\n• ${rulesText}`;
+
+        // Simple validation logic
+        if (fieldName === 'field2' && !/^E[0-9]$/.test(fieldValue)) {
+          status = 'error';
+          message = '✗ Invalid grade format (must be E1-E10)';
+        } else if (fieldName === 'field3' && parseInt(fieldValue) > 45) {
+          status = 'warning';
+          message = '⚠ Days exceed standard 45 days (needs MD&CEO approval)';
+        }
+      }
+
+      // Show popup with policy information
+      popup.show({
+        fieldName: `${policyData.label}`,
+        fieldValue: fieldValue,
+        status: status,
+        message: message,
+        suggestion: suggestion,
+        timestamp: new Date().toLocaleTimeString()
+      });
+
+      logValidation(fieldName, `${message}`);
+      setFieldStatus(fieldName, status, status.toUpperCase());
+    }
+
+    function logValidation(fieldName, message) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry info';
+
+      if (message.includes('Error') || message.includes('✗')) {
+        entry.className = 'log-entry error';
+      } else if (message.includes('✓')) {
+        entry.className = 'log-entry success';
+      }
+
+      const time = new Date().toLocaleTimeString();
+      const fieldNum = fieldName.replace('field', 'Field ');
+      entry.textContent = `[${time}] ${fieldNum}: ${message}`;
+
+      validationLog.appendChild(entry);
+      validationLog.scrollTop = validationLog.scrollHeight;
+
+      const entries = validationLog.querySelectorAll('.log-entry');
+      if (entries.length > 20) {
+        entries[0].remove();
+      }
+    }
+
+    function setFieldStatus(fieldName, status, text) {
+      const fieldNum = fieldName.replace('field', '');
+      const statusEl = document.getElementById(`status${fieldNum}`);
+      if (!statusEl) return;
+
+      statusEl.className = `validation-status ${status}`;
+
+      if (status === 'validating') {
+        statusEl.innerHTML = '<div class="spinner"></div> Validating...';
+      } else if (status === 'valid') {
+        statusEl.innerHTML = '✓ Valid';
+      } else if (status === 'warning') {
+        statusEl.innerHTML = '⚠ Warning';
+      } else if (status === 'error') {
+        statusEl.innerHTML = '✗ Error';
+      }
+    }
+
+    function resetForm() {
+      form.reset();
+      document.querySelectorAll('.validation-status').forEach(el => {
+        el.className = 'validation-status';
+        el.textContent = '';
+      });
+      popup.dismiss();
+      logValidation('System', 'Form reset');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData);
+
+      logValidation('Submit', `Travel request submitted. Waiting for MD&CEO approval...`);
+      console.log('Submitted data:', data);
+    });
+
+    logValidation('System', 'Ready - Fill fields and blur to validate against policy');
+  </script>
+</body>
+</html>

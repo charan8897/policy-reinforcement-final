@@ -1,0 +1,201 @@
+[
+  {
+    "clauseId": "C1",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause broadly mentions 'expenses and entitlements' without defining what constitutes a covered expense or the specific details of entitlements. Terms like 'company's business' are subjective and lack clear boundaries. The clause also lacks specifics regarding limits on accommodation, food, and local conveyance expenses.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C2",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause is straightforward and clearly defines the scope of applicability to all employees of NAGA LIMITED. No ambiguity is present based on the provided rules.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C3",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses the term 'eligible amount' without defining what constitutes this amount. It's unclear how this amount is calculated or what factors determine eligibility. This creates ambiguity in calculating the 25% allowance. Additionally, 'relative/ friends home/ room' is somewhat subjective and doesn't define what qualifies as a 'home' or 'room'.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C4",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies on an 'eligible amount' which is not defined within the clause itself. It's unclear how this 'eligible amount' is calculated or determined, leading to potential disputes. Additionally, the term 'Senior level employee' is undefined - what constitutes a 'Senior level employee' is not specified.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C5",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies on a 'tour programme' being 'duly sanctioned' by the Reporting Manager. The term 'duly sanctioned' is subjective and lacks objective criteria. What constitutes 'duly sanctioned' is not defined, leading to potential disputes and inconsistent enforcement. Additionally, the clause doesn't specify what happens if a tour is *not* sanctioned.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_AUTHORITY",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C6",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies heavily on subjective terms without clear definitions. 'Most economical basis' is vague, as it doesn't specify what factors constitute 'economical' or provide a measurable standard. 'Consistent with the Company\u2019s interest, dignity and work requirement' are all highly subjective and open to interpretation, making consistent policy enforcement difficult. There are no objective criteria to determine if travel arrangements meet these requirements.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C7",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies on 'eligibilities fixed based on their job levels' and 'Company Policy' without defining what those eligibilities are within the clause itself. The specific entitlements are not detailed, creating ambiguity in enforcement. The phrase 'as per' introduces an undefined reference.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C8",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'original bills' is undefined. It's unclear what constitutes an 'original bill' (e.g., does it require a specific format, vendor, or level of detail?). This lack of definition creates ambiguity in policy enforcement.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C9",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'tour programme' is undefined. It's unclear what constitutes the end of the 'tour programme' and therefore when the 2-day settlement period begins. Is it the last scheduled event, the return of the traveler, or some other milestone? This lack of definition creates ambiguity in calculating the 'settlementDeadline'.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C10",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states that a travelling advance 'CANNOT be entertained IF there is any balance' in the employee's account. The term 'balance' is undefined. Does this refer to a zero balance, a positive balance, a negative balance (overdraft), or a specific minimum balance? Without defining what constitutes a 'balance', the clause is open to interpretation and inconsistent enforcement.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C11",
+    "ambiguous": false,
+    "reason": "[RULE-BASED] No entities extracted (informational clause) | Found 1 vague keywords: can (score: 25/100)",
+    "ambiguity_types": [],
+    "detection_method": "rule-based",
+    "confidence": 75
+  },
+  {
+    "clauseId": "C12",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states claims 'approved by reporting manager' shall be validated. However, it doesn't define what criteria the reporting manager uses for 'approval'. This lack of definition introduces ambiguity as to which claims are subject to validation. The term 'approved' implies a decision-making process, but the standards for that process are not outlined.",
+    "ambiguity_types": [
+      "UNDEFINED_AUTHORITY",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C13",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states what *cannot* be done, but doesn't define what *can* be done. It doesn't specify how boarding and lodging are treated individually, or if there are separate limits for each. This creates ambiguity in policy enforcement as it's unclear what the allowable claim amounts are.",
+    "ambiguity_types": [
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C14",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies on 'eligible amount' and 'bill amount' without defining how either of these amounts are calculated or determined. This lack of definition creates ambiguity in policy enforcement. It's unclear what criteria determine the 'eligible amount'.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C15",
+    "ambiguous": false,
+    "reason": "[RULE-BASED] Found open-ended language: 2 instances | Clear units specified for 4 numeric values | Some entities extracted: 1 entity (score: 25/100)",
+    "ambiguity_types": [],
+    "detection_method": "rule-based",
+    "confidence": 75
+  },
+  {
+    "clauseId": "C16",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states a maximum distance of 200 kms 'on any day'. This is ambiguous because it doesn't specify if this limit applies to a calendar day, a 24-hour period starting from the beginning of the trip, or some other definition of 'day'. This affects policy enforcement as the interpretation of 'day' could vary.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C17",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The use of 'MAY be encouraged' is subjective and doesn't define a clear outcome. It's unclear if encouragement is mandatory, optional, or under what specific conditions it will be provided. The clause doesn't specify what 'encouragement' entails (e.g., reimbursement, approval, etc.).",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C18",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'personal car travel' is undefined. It's unclear what constitutes 'personal' versus business travel. This lack of definition creates ambiguity in applying the clause. Is travel to/from work considered personal? What about incidental personal stops during a business trip? Without a definition, enforcement is subjective.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C19",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause is relatively clear. It sets a maximum daily distance for travel by personal bike. The unit 'kms' is clearly defined, and the limit of '50' is a specific numeric value. There are no subjective terms, undefined authorities, incomplete conditions, boundary overlaps, or undefined references.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C20",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause states a specific date for policy effectiveness and does not contain any ambiguous language or undefined terms. It is a clear and concise statement.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 0
+  }
+]

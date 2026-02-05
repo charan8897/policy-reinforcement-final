@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naga Limited Travel Policy - Real-time Validation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    .notice {
+      background: #eff6ff;
+      border-left: 4px solid #1e3a8a;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .notice strong {
+      color: #1e3a8a;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-section {
+      border: 1px solid #f0f0f0;
+      padding: 15px;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+
+    .form-section h3 {
+      color: #1e3a8a;
+      font-size: 13px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 15px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      font-size: 13px;
+    }
+
+    input, textarea, select {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #1e3a8a;
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .required {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #1e3a8a;
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .info-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+    }
+
+    .info-section h3 {
+      font-size: 13px;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .validation-log {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      padding: 4px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #666;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-entry.success {
+      color: #16a34a;
+    }
+
+    .log-entry.error {
+      color: #dc2626;
+    }
+
+    .log-entry.info {
+      color: #1e3a8a;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✈️ Naga Limited Travel Policy - Real-time Validation</h1>
+      <p>Dynamic Field Validation for Travel Expense Management & Policy Compliance</p>
+    </header>
+
+    <main>
+      <div class="notice">
+        <strong>📌 Notice:</strong> This form validates travel expense claims against Naga Limited Travel Policy rules. 
+        Each field is validated in real-time against applicable rules for travel sanction, advance settlement, lodging reimbursement, and claims eligibility.
+      </div>
+
+      <form id="test-form">
+
+        <!-- Employee & Travel Basics Section -->
+        <div class="form-section">
+          <h3>👤 Employee & Travel Information</h3>
+
+          <div class="form-group">
+            <label>Employee Name <span class="required">*</span></label>
+            <input type="text" name="employee_name" placeholder="e.g., Rajesh Kumar" required>
+            <div class="hint">Full name of the employee traveling</div>
+          </div>
+
+          <div class="form-group">
+            <label>Employee ID <span class="required">*</span></label>
+            <input type="text" name="employee_id" placeholder="e.g., NAGA-001" required>
+            <div class="hint">Unique employee identification number</div>
+          </div>
+
+          <div class="form-group">
+            <label>Employee Grade <span class="required">*</span></label>
+            <select name="employee.grade" required>
+              <option value="">Select grade...</option>
+              <option value="Sales">Sales</option>
+              <option value="Non Sales">Non Sales</option>
+            </select>
+            <div class="hint">Grade determines entitlements as per Claim_Eligibility_Based_On_Job_Level</div>
+          </div>
+
+          <div class="form-group">
+            <label>Travel Type <span class="required">*</span></label>
+            <select name="travel.type" required>
+              <option value="">Select type...</option>
+              <option value="official business">Official Business</option>
+              <option value="seminar">Seminar</option>
+              <option value="conference">Conference</option>
+              <option value="workshop">Workshop</option>
+              <option value="training program">Training Program</option>
+            </select>
+            <div class="hint">Travel sanction required for all types (Travel_Sanction_Required)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Travel Destination City <span class="required">*</span></label>
+            <input type="text" name="destination_city" placeholder="e.g., Mumbai, Chennai, Hyderabad" required>
+            <div class="hint">City classification (Metro, State Capital, District HQ, Other Town) affects entitlements</div>
+          </div>
+
+          <div class="form-group">
+            <label>Travel Dates (From - To) <span class="required">*</span></label>
+            <input type="text" name="travel_dates" placeholder="e.g., 2026-02-01 to 2026-02-05" required>
+            <div class="hint">Duration of travel for calculating daily allowances</div>
+          </div>
+        </div>
+
+        <!-- Travel Mode & Expense Section -->
+        <div class="form-section">
+          <h3>🚗 Travel Mode & Transportation</h3>
+
+          <div class="form-group">
+            <label>Travel Mode <span class="required">*</span></label>
+            <select name="travel.mode" required>
+              <option value="">Select mode...</option>
+              <option value="most economical">Most Economical</option>
+              <option value="flight">Flight (Economy)</option>
+              <option value="train">Train (AC)</option>
+              <option value="bus">Bus (AC)</option>
+              <option value="taxi">Taxi (AC)</option>
+            </select>
+            <div class="hint">Must be most economical & consistent with company dignity (Economical_Travel)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Total Transportation Cost</label>
+            <input type="number" name="transport_cost" placeholder="e.g., 12000" min="0">
+            <div class="hint">Total cost of all transport arrangements (flights, trains, local taxis, etc.)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Advance Amount Requested</label>
+            <input type="number" name="advance_amount_requested" placeholder="e.g., 50000" min="0">
+            <div class="hint">Advance requested for the travel - check account balance (Advance_Not_Allowed_With_Account_Balance)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Account Balance <span class="required">*</span></label>
+            <input type="number" name="employee.account.balance" placeholder="e.g., 0" min="0" required>
+            <div class="hint">Positive balance means no advance allowed (Advance_Not_Allowed_With_Account_Balance)</div>
+          </div>
+        </div>
+
+        <!-- Lodging Section -->
+        <div class="form-section">
+          <h3>🏨 Lodging & Accommodation</h3>
+
+          <div class="form-group">
+            <label>Lodging Type <span class="required">*</span></label>
+            <select name="lodging.type" required>
+              <option value="">Select type...</option>
+              <option value="hotel">Hotel</option>
+              <option value="twin sharing">Twin Sharing (1.25x multiplier)</option>
+              <option value="relative/friend's home/room">Relative/Friend's Home (25% reimbursement)</option>
+            </select>
+            <div class="hint">Twin sharing multiplier: 1.25x | Relative: 25% of eligible amount</div>
+          </div>
+
+          <div class="form-group">
+            <label>Eligible Lodging Amount</label>
+            <input type="number" name="lodging.eligible_amount" placeholder="e.g., 3000" min="0">
+            <div class="hint">Base eligible amount varies by city classification and grade</div>
+          </div>
+
+          <div class="form-group">
+            <label>Calculated Reimbursement</label>
+            <input type="number" name="lodging.reimbursement" placeholder="e.g., 3750" min="0">
+            <div class="hint">Auto-calculated: eligible × multiplier | For relative: eligible × 0.25</div>
+          </div>
+
+          <div class="form-group">
+            <label>Hotel Nights</label>
+            <input type="number" name="hotel_nights" placeholder="e.g., 3" min="0">
+            <div class="hint">Number of nights accommodations required</div>
+          </div>
+        </div>
+
+        <!-- Boarding & Claims Section -->
+        <div class="form-section">
+          <h3>🍽️ Boarding & Claims</h3>
+
+          <div class="form-group">
+            <label>Boarding Claim Amount</label>
+            <input type="number" name="boarding_claim" placeholder="e.g., 1500" min="0">
+            <div class="hint">Meals & incidentals - MUST be separate from lodging (Boarding_Lodging_Separate_Claims)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Total Claim Amount <span class="required">*</span></label>
+            <input type="number" name="travel_claim" placeholder="e.g., 28500" min="0" required>
+            <div class="hint">Sum of all expenses - must be supported by original bills (Original_Bills_Required)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Original Bills Available <span class="required">*</span></label>
+            <select name="bills.available" required>
+              <option value="">Select...</option>
+              <option value="yes">Yes - Original Bills Submitted</option>
+              <option value="no">No - Remote Area (Self-Attestation)</option>
+            </select>
+            <div class="hint">Original bills required OR remote area self-attestation (Original_Bills_Required, Claim_Without_Bills_Remote_Areas)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Bill Count (if available)</label>
+            <input type="number" name="bill_count" placeholder="e.g., 8" min="0">
+            <div class="hint">Number of original bills/receipts attached</div>
+          </div>
+
+          <div class="form-group">
+            <label>Travel Location (if remote) <span class="required">*</span></label>
+            <select name="travel.location" required>
+              <option value="">Select...</option>
+              <option value="urban">Urban/Metro Area</option>
+              <option value="remote area">Remote Area (no banking facilities)</option>
+            </select>
+            <div class="hint">Remote areas: self-attestation allowed without bills (Claim_Without_Bills_Remote_Areas)</div>
+          </div>
+        </div>
+
+        <!-- Advance Settlement Section -->
+        <div class="form-section">
+          <h3>💰 Advance & Settlement</h3>
+
+          <div class="form-group">
+            <label>Advance Received Date</label>
+            <input type="date" name="advance_received_date">
+            <div class="hint">Date when advance was credited to employee account</div>
+          </div>
+
+          <div class="form-group">
+            <label>Settlement Submitted Date</label>
+            <input type="date" name="settlement_submitted_date">
+            <div class="hint">Date when settlement was submitted after travel completion</div>
+          </div>
+
+          <div class="form-group">
+            <label>Settlement Days <span class="required">*</span></label>
+            <input type="number" name="travel.advance.settlement_days" placeholder="e.g., 2" min="0" max="30" required>
+            <div class="hint">Days between travel completion and settlement - must be <= 2 (Advance_Settlement_Timeframe)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Actual Expenses Incurred</label>
+            <input type="number" name="actual_expenses_incurred" placeholder="e.g., 25000" min="0">
+            <div class="hint">Total actual expenses - may be less than advance (refund due)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Refund/Balance Due</label>
+            <input type="number" name="refund_amount" placeholder="e.g., 0" min="0">
+            <div class="hint">Amount to be refunded if actual expenses < advance</div>
+          </div>
+        </div>
+
+        <!-- Authorization & Additional Section -->
+        <div class="form-section">
+          <h3>✅ Authorization & Notes</h3>
+
+          <div class="form-group">
+            <label>Reporting Manager Name <span class="required">*</span></label>
+            <input type="text" name="reporting_manager" placeholder="e.g., Priya Sharma" required>
+            <div class="hint">Manager must approve travel (Travel_Sanction_Required - Reporting Manager authority)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Business Purpose <span class="required">*</span></label>
+            <textarea name="business_purpose" placeholder="Describe the business purpose of this travel..." required></textarea>
+            <div class="hint">Must be directly related to business objectives - reviewed for "most economical" requirement</div>
+          </div>
+
+          <div class="form-group">
+            <label>Additional Notes / Justification</label>
+            <textarea name="additional_notes" placeholder="Any special circumstances, extenuating conditions, or additional information..."></textarea>
+            <div class="hint">For exceptions, deviations, or unique travel circumstances</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button type="submit" class="btn-primary">✓ Submit Travel Claim</button>
+          <button type="button" class="btn-secondary" onclick="resetForm()">Reset Form</button>
+        </div>
+      </form>
+
+      <div class="info-section">
+        <h3>📊 Plugin Statistics</h3>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-value" id="fields-count">0</div>
+            <div class="stat-label">Fields Monitored</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="validations-count">0</div>
+            <div class="stat-label">Validations Run</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3>📋 Validation Log</h3>
+        <div class="validation-log" id="validation-log">
+          <div class="log-entry info">Ready. Fill fields and blur to trigger validation...</div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h3>🔗 Generic Rule Indexing Flow (Naga Limited Travel Policy)</h3>
+        <div style="font-size: 12px; color: #666; line-height: 1.8;">
+          <strong style="color: #1e3a8a;">1. User Input:</strong> Fill form field and blur (leave field)<br>
+          <strong style="color: #1e3a8a;">2. Frontend:</strong> Plugin sends field_name + field_value to backend API<br>
+          <strong style="color: #1e3a8a;">3. Backend (Rule Index):</strong> Dynamic indexer extracts rules from policy based on entity types<br>
+          <strong style="color: #1e3a8a;">4. Backend (Matching):</strong> Matches rule names, conditions, and field references against context<br>
+          <strong style="color: #1e3a8a;">5. Backend (Evaluation):</strong> Evaluates conditional rules (IF statements) and constraints<br>
+          <strong style="color: #1e3a8a;">6. Backend (Decision):</strong> Returns valid/error based on rule conditions and numeric comparisons<br>
+          <strong style="color: #1e3a8a;">7. Frontend (Display):</strong> Show popup with status, message, and matched rule details<br>
+          <strong style="color: #1e3a8a;">8. Performance:</strong> ~100-200ms per validation using dynamic pattern generation<br>
+          <strong style="color: #1e3a8a;">Key Rules:</strong> Travel_Sanction_Required, Economical_Travel, Original_Bills_Required, 
+          Advance_Settlement_Timeframe, Lodging_Reimbursement_Relative_Friend, Twin_Sharing_Lodging_Reimbursement, 
+          Claim_Without_Bills_Remote_Areas, Advance_Not_Allowed_With_Account_Balance
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Include the GENERIC plugin -->
+  <script src="modules/policy-plugin-generic.js"></script>
+
+  <script>
+    function updateStats() {
+      const stats = window.getPolicyStats?.();
+      if (stats) {
+        document.getElementById('fields-count').textContent = stats.fieldsMonitored;
+        document.getElementById('validations-count').textContent = stats.validationsRun;
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('test-form').reset();
+      logValidation('System', 'Form reset');
+    }
+
+    function logValidation(level, message) {
+      const log = document.getElementById('validation-log');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${level.toLowerCase()}`;
+
+      const time = new Date().toLocaleTimeString();
+      entry.textContent = `[${time}] ${level}: ${message}`;
+
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+
+      const entries = log.querySelectorAll('.log-entry');
+      if (entries.length > 20) {
+        entries[0].remove();
+      }
+    }
+
+    document.getElementById('test-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      logValidation('Success', 'Travel Claim submitted');
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(updateStats, 500);
+      setInterval(updateStats, 2000);
+      logValidation('Info', 'Naga Limited Travel Policy Plugin ready - backend at http://localhost:5000');
+    });
+
+    console.log('%c✓ Generic Naga Limited Travel Policy Plugin Loaded!', 'color: #1e3a8a; font-size: 14px; font-weight: bold;');
+    console.log('%cConnecting to backend...', 'color: #999;');
+  </script>
+</body>
+</html>

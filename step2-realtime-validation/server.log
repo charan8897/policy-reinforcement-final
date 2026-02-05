@@ -1,0 +1,552 @@
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+[2026-01-19 15:52:45] [STARTUP] Initializing validator at startup...
+[2026-01-19 15:52:45] [INFO] Loaded 139 rule lines
+[2026-01-19 15:52:45] [INFO] Loading sentence-transformers model...
+[2026-01-19 15:52:46] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 15:52:46] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 15:52:46] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Serving Flask app 'backend_field_validator_v2'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+127.0.0.1 - - [19/Jan/2026 15:52:52] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:04] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:12] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:12] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:22] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:22] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:22] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:38] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:38] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:43] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:43] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:53:51] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+[2026-01-19 15:52:51] [STARTUP] Initializing validator at startup...
+[2026-01-19 15:52:51] [INFO] Loaded 139 rule lines
+[2026-01-19 15:52:51] [INFO] Loading sentence-transformers model...
+[2026-01-19 15:52:52] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 15:52:52] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 15:52:52] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+[2026-01-19 15:52:52] [VALIDATION] Starting for vehicle_distance=250
+[2026-01-19 15:52:52] [SEARCH] Performing grep search for vehicle_distance
+[2026-01-19 15:52:52] [FIELD_QUERY_GREP] vehicle_distance: Using grep search
+[2026-01-19 15:52:52] [GREP_RETRY] Attempt 1/3 for query: vehicle_distance 250
+[2026-01-19 15:52:52] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:52:52] [GREP_RETRY] Attempt 2/3 for query: vehicle_distance 250
+[2026-01-19 15:52:52] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:52:52] [GREP_RETRY] Attempt 3/3 for query: vehicle_distance 250
+[2026-01-19 15:52:52] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:52:52] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:52:52] [DECISION_FAST] Validating vehicle_distance=250 against found rules
+[2026-01-19 15:52:52] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_distance
+[2026-01-19 15:53:04] [VALIDATION] Starting for vehicle_distance=250
+[2026-01-19 15:53:04] [SEARCH] Performing grep search for vehicle_distance
+[2026-01-19 15:53:04] [FIELD_QUERY_GREP] vehicle_distance: Using grep search
+[2026-01-19 15:53:04] [GREP_RETRY] Attempt 1/3 for query: vehicle_distance 250
+[2026-01-19 15:53:04] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:04] [GREP_RETRY] Attempt 2/3 for query: vehicle_distance 250
+[2026-01-19 15:53:04] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:53:04] [GREP_RETRY] Attempt 3/3 for query: vehicle_distance 250
+[2026-01-19 15:53:04] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:53:04] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:04] [DECISION_FAST] Validating vehicle_distance=250 against found rules
+[2026-01-19 15:53:04] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_distance
+[2026-01-19 15:53:12] [VALIDATION] Starting for vehicle_distance=150
+[2026-01-19 15:53:12] [SEARCH] Performing grep search for vehicle_distance
+[2026-01-19 15:53:12] [FIELD_QUERY_GREP] vehicle_distance: Using grep search
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 1/3 for query: vehicle_distance 150
+[2026-01-19 15:53:12] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 2/3 for query: vehicle_distance 150
+[2026-01-19 15:53:12] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 3/3 for query: vehicle_distance 150
+[2026-01-19 15:53:12] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:53:12] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:12] [DECISION_FAST] Validating vehicle_distance=150 against found rules
+[2026-01-19 15:53:12] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_distance
+[2026-01-19 15:53:12] [VALIDATION] Starting for vehicle_distance=250
+[2026-01-19 15:53:12] [SEARCH] Performing grep search for vehicle_distance
+[2026-01-19 15:53:12] [FIELD_QUERY_GREP] vehicle_distance: Using grep search
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 1/3 for query: vehicle_distance 250
+[2026-01-19 15:53:12] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 2/3 for query: vehicle_distance 250
+[2026-01-19 15:53:12] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:53:12] [GREP_RETRY] Attempt 3/3 for query: vehicle_distance 250
+[2026-01-19 15:53:12] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:53:12] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:12] [DECISION_FAST] Validating vehicle_distance=250 against found rules
+[2026-01-19 15:53:12] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_distance
+[2026-01-19 15:53:22] [VALIDATION] Starting for employee_category=Sales
+[2026-01-19 15:53:22] [SEARCH] Performing grep search for employee_category
+[2026-01-19 15:53:22] [FIELD_QUERY_GREP] employee_category: Using grep search
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 1/3 for query: employee_category sales
+[2026-01-19 15:53:22] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 2/3 for query: employee_category sales
+[2026-01-19 15:53:22] [GREP_SUCCESS] Found 3 results on attempt 2
+[2026-01-19 15:53:22] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:22] [DECISION_FAST] Validating employee_category=Sales against found rules
+[2026-01-19 15:53:22] [VALIDATION_MATCH] Value 'Sales' found in policy rules
+[2026-01-19 15:53:22] [VALIDATION] Starting for employee_category=Non Sales
+[2026-01-19 15:53:22] [SEARCH] Performing grep search for employee_category
+[2026-01-19 15:53:22] [FIELD_QUERY_GREP] employee_category: Using grep search
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 1/3 for query: employee_category non sales
+[2026-01-19 15:53:22] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 2/3 for query: employee_category non sales
+[2026-01-19 15:53:22] [GREP_SUCCESS] Found 3 results on attempt 2
+[2026-01-19 15:53:22] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:22] [DECISION_FAST] Validating employee_category=Non Sales against found rules
+[2026-01-19 15:53:22] [VALIDATION_MATCH] Value 'Non Sales' found in policy rules
+[2026-01-19 15:53:22] [VALIDATION] Starting for lodging_amount=2500
+[2026-01-19 15:53:22] [SEARCH] Performing grep search for lodging_amount
+[2026-01-19 15:53:22] [FIELD_QUERY_GREP] lodging_amount: Using grep search
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 1/3 for query: lodging_amount 2500
+[2026-01-19 15:53:22] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 2/3 for query: lodging_amount 2500
+[2026-01-19 15:53:22] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:53:22] [GREP_RETRY] Attempt 3/3 for query: lodging_amount 2500
+[2026-01-19 15:53:22] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:53:22] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:22] [DECISION_FAST] Validating lodging_amount=2500 against found rules
+[2026-01-19 15:53:22] [VALIDATION_CATEGORICAL] Multiple rules found for lodging_amount
+[2026-01-19 15:53:38] [VALIDATION] Starting for employee_name=charan
+[2026-01-19 15:53:38] [SKIP_REGEX] General field - auto-approved
+[2026-01-19 15:53:43] [VALIDATION] Starting for employee_category=Non Sales
+[2026-01-19 15:53:43] [SEARCH] Performing grep search for employee_category
+[2026-01-19 15:53:43] [FIELD_QUERY_GREP] employee_category: Using grep search
+[2026-01-19 15:53:43] [GREP_RETRY] Attempt 1/3 for query: employee_category non sales
+[2026-01-19 15:53:43] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:43] [GREP_RETRY] Attempt 2/3 for query: employee_category non sales
+[2026-01-19 15:53:43] [GREP_SUCCESS] Found 3 results on attempt 2
+[2026-01-19 15:53:43] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:43] [DECISION_FAST] Validating employee_category=Non Sales against found rules
+[2026-01-19 15:53:43] [VALIDATION_MATCH] Value 'Non Sales' found in policy rules
+[2026-01-19 15:53:51] [VALIDATION] Starting for lodging_arrangement=hotel_bill
+[2026-01-19 15:53:51] [SEARCH] Performing grep search for lodging_arrangement
+127.0.0.1 - - [19/Jan/2026 15:53:51] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:08] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:08] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:19] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:19] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:35] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:35] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:45] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:45] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:53] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:53] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:54:56] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:55:02] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:55:02] "POST /api/validate-field HTTP/1.1" 200 -
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 15:53:51] [FIELD_QUERY_GREP] lodging_arrangement: Using grep search
+[2026-01-19 15:53:51] [GREP_RETRY] Attempt 1/3 for query: lodging_arrangement hotel_bill
+[2026-01-19 15:53:51] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:53:51] [GREP_RETRY] Attempt 2/3 for query: lodging_arrangement hotel_bill
+[2026-01-19 15:53:51] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:53:51] [GREP_RETRY] Attempt 3/3 for query: lodging_arrangement hotel_bill
+[2026-01-19 15:53:51] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:53:51] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:53:51] [DECISION_FAST] Validating lodging_arrangement=hotel_bill against found rules
+[2026-01-19 15:53:51] [VALIDATION_CATEGORICAL] Multiple rules found for lodging_arrangement
+[2026-01-19 15:54:08] [VALIDATION] Starting for lodging_amount=500000000000000
+[2026-01-19 15:54:08] [SEARCH] Performing grep search for lodging_amount
+[2026-01-19 15:54:08] [FIELD_QUERY_GREP] lodging_amount: Using grep search
+[2026-01-19 15:54:08] [GREP_RETRY] Attempt 1/3 for query: lodging_amount 500000000000000
+[2026-01-19 15:54:08] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:54:08] [GREP_RETRY] Attempt 2/3 for query: lodging_amount 500000000000000
+[2026-01-19 15:54:08] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:54:08] [GREP_RETRY] Attempt 3/3 for query: lodging_amount 500000000000000
+[2026-01-19 15:54:08] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:54:08] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:08] [DECISION_FAST] Validating lodging_amount=500000000000000 against found rules
+[2026-01-19 15:54:08] [VALIDATION_CATEGORICAL] Multiple rules found for lodging_amount
+[2026-01-19 15:54:19] [VALIDATION] Starting for boarding_arrangement=actual_bill
+[2026-01-19 15:54:19] [SEARCH] Performing grep search for boarding_arrangement
+[2026-01-19 15:54:19] [FIELD_QUERY_GREP] boarding_arrangement: Using grep search
+[2026-01-19 15:54:19] [GREP_RETRY] Attempt 1/3 for query: boarding_arrangement actual_bill
+[2026-01-19 15:54:19] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:54:19] [GREP_RETRY] Attempt 2/3 for query: boarding_arrangement actual_bill
+[2026-01-19 15:54:19] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:54:19] [GREP_RETRY] Attempt 3/3 for query: boarding_arrangement actual_bill
+[2026-01-19 15:54:19] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:54:19] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:19] [DECISION_FAST] Validating boarding_arrangement=actual_bill against found rules
+[2026-01-19 15:54:19] [VALIDATION_CATEGORICAL] Multiple rules found for boarding_arrangement
+[2026-01-19 15:54:35] [VALIDATION] Starting for vehicle_type=none
+[2026-01-19 15:54:35] [SEARCH] Performing grep search for vehicle_type
+[2026-01-19 15:54:35] [FIELD_QUERY_GREP] vehicle_type: Using grep search
+[2026-01-19 15:54:35] [GREP_RETRY] Attempt 1/3 for query: vehicle_type none
+[2026-01-19 15:54:35] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:54:35] [GREP_RETRY] Attempt 2/3 for query: vehicle_type none
+[2026-01-19 15:54:35] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:54:35] [GREP_RETRY] Attempt 3/3 for query: vehicle_type none
+[2026-01-19 15:54:35] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:54:35] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:35] [DECISION_FAST] Validating vehicle_type=none against found rules
+[2026-01-19 15:54:35] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_type
+[2026-01-19 15:54:45] [VALIDATION] Starting for vehicle_distance=120
+[2026-01-19 15:54:45] [SEARCH] Performing grep search for vehicle_distance
+[2026-01-19 15:54:45] [FIELD_QUERY_GREP] vehicle_distance: Using grep search
+[2026-01-19 15:54:45] [GREP_RETRY] Attempt 1/3 for query: vehicle_distance 120
+[2026-01-19 15:54:45] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:54:45] [GREP_RETRY] Attempt 2/3 for query: vehicle_distance 120
+[2026-01-19 15:54:45] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:54:45] [GREP_RETRY] Attempt 3/3 for query: vehicle_distance 120
+[2026-01-19 15:54:45] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:54:45] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:45] [DECISION_FAST] Validating vehicle_distance=120 against found rules
+[2026-01-19 15:54:45] [VALIDATION_CATEGORICAL] Multiple rules found for vehicle_distance
+[2026-01-19 15:54:53] [VALIDATION] Starting for advance_taken=yes
+[2026-01-19 15:54:53] [SEARCH] Performing grep search for advance_taken
+[2026-01-19 15:54:53] [FIELD_QUERY_GREP] advance_taken: Using grep search
+[2026-01-19 15:54:53] [GREP_RETRY] Attempt 1/3 for query: advance_taken yes
+[2026-01-19 15:54:53] [GREP_NO_MATCH] No results on attempt 1, retrying...
+[2026-01-19 15:54:53] [GREP_RETRY] Attempt 2/3 for query: advance_taken yes
+[2026-01-19 15:54:53] [GREP_NO_MATCH] No results on attempt 2, retrying...
+[2026-01-19 15:54:53] [GREP_RETRY] Attempt 3/3 for query: advance_taken yes
+[2026-01-19 15:54:53] [GREP_SUCCESS] Found 3 results on attempt 3
+[2026-01-19 15:54:53] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:53] [DECISION_FAST] Validating advance_taken=yes against found rules
+[2026-01-19 15:54:53] [VALIDATION_CATEGORICAL] Multiple rules found for advance_taken
+[2026-01-19 15:54:56] [VALIDATION] Starting for bills_submitted=no
+[2026-01-19 15:54:56] [SEARCH] Performing grep search for bills_submitted
+[2026-01-19 15:54:56] [FIELD_QUERY_GREP] bills_submitted: Using grep search
+[2026-01-19 15:54:56] [GREP_RETRY] Attempt 1/3 for query: bills_submitted no
+[2026-01-19 15:54:56] [GREP_SUCCESS] Found 3 results on attempt 1
+[2026-01-19 15:54:56] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:54:56] [DECISION_FAST] Validating bills_submitted=no against found rules
+[2026-01-19 15:54:56] [VALIDATION_MATCH] Value 'no' found in policy rules
+[2026-01-19 15:55:02] [VALIDATION] Starting for tour_sanctioned=no
+[2026-01-19 15:55:02] [SEARCH] Performing grep search for tour_sanctioned
+[2026-01-19 15:55:02] [FIELD_QUERY_GREP] tour_sanctioned: Using grep search
+[2026-01-19 15:55:02] [GREP_RETRY] Attempt 1/3 for query: tour_sanctioned no
+[2026-01-19 15:55:02] [GREP_SUCCESS] Found 3 results on attempt 1
+[2026-01-19 15:55:02] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:55:02] [DECISION_FAST] Validating tour_sanctioned=no against found rules
+[2026-01-19 15:55:02] [VALIDATION_MATCH] Value 'no' found in policy rules
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+127.0.0.1 - - [19/Jan/2026 15:57:21] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:57:21] "POST /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:57:28] "OPTIONS /api/validate-field HTTP/1.1" 200 -
+127.0.0.1 - - [19/Jan/2026 15:57:55] "POST /api/validate-field HTTP/1.1" 200 -
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 15:55:38] [STARTUP] Initializing validator at startup...
+[2026-01-19 15:55:38] [INFO] Loaded 139 rule lines
+[2026-01-19 15:55:38] [INFO] Loading sentence-transformers model...
+[2026-01-19 15:55:39] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 15:55:39] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 15:55:39] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+[2026-01-19 15:57:21] [VALIDATION] Starting for employee_name=charan
+[2026-01-19 15:57:21] [SKIP_REGEX] General field - auto-approved
+[2026-01-19 15:57:28] [VALIDATION] Starting for employee_category=non_sales
+[2026-01-19 15:57:28] [SEARCH] Performing semantic search for employee_category
+[2026-01-19 15:57:42] [TOKENS] API Call #1 | Input: 28 | Output: 10 | Total: 38 | Cumulative: 38
+[2026-01-19 15:57:42] [FIELD_QUERY] employee_category: `employee_category:"non_sales"`
+[2026-01-19 15:57:42] [TOKENS] API Call #2 | Input: 28 | Output: 10 | Total: 38 | Cumulative: 76
+[2026-01-19 15:57:43] [SEMANTIC_SEARCH] Query '`employee_category:"non_sales"`': Found 3 relevant rules
+[2026-01-19 15:57:43] [RULES_FOUND] Found 3 relevant rules, using top 3
+[2026-01-19 15:57:55] [TOKENS] API Call #3 | Input: 99 | Output: 194 | Total: 293 | Cumulative: 369
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:00:09] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:00:09] [INFO] Loaded 139 rule lines
+[2026-01-19 16:00:09] [INFO] Loading sentence-transformers model...
+[2026-01-19 16:00:10] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 16:00:10] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 16:00:10] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:00:21] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:00:21] [INFO] Loaded 139 rule lines
+[2026-01-19 16:00:21] [INFO] Loading sentence-transformers model...
+[2026-01-19 16:00:21] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 16:00:21] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 16:00:21] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:00:36] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:00:36] [INFO] Loaded 139 rule lines
+[2026-01-19 16:00:36] [STARTUP] ✓ Validator initialization complete - ready for requests (using LLM grep search)
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+127.0.0.1 - - [19/Jan/2026 16:02:24] "POST /api/validate-field HTTP/1.1" 200 -
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:00:49] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:00:49] [INFO] Loaded 139 rule lines
+[2026-01-19 16:00:49] [STARTUP] ✓ Validator initialization complete - ready for requests (using LLM grep search)
+
+================================================================================
+Starting Field Validation API v2 (LLM-based Grep Search with Refinement)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+Search method: Gemini → Grep → Refinement (up to 3 attempts)
+================================================================================
+
+[2026-01-19 16:02:01] [VALIDATION] Starting for employee_category=non_sales
+[2026-01-19 16:02:01] [SEARCH] Performing grep search for employee_category
+[2026-01-19 16:02:13] [GEMINI_GREP] Attempt 1: grep -i -E "employee category|non sales|non-sales" /home/hutech/Documents/docupo...
+[2026-01-19 16:02:13] [GREP_SEARCH] Command found 18 matching rules
+[2026-01-19 16:02:13] [GREP_SUCCESS] employee_category: Found 18 rules in attempt 1
+[2026-01-19 16:02:13] [RULES_FOUND] Found 18 relevant rules, using top 5
+[2026-01-19 16:02:24] [TOKENS] API Call #1 | Input: 76 | Output: 117 | Total: 193 | Cumulative: 193
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:11:59] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:11:59] [INFO] Loaded 139 rule lines
+[2026-01-19 16:11:59] [INFO] Loading sentence-transformers model...
+[2026-01-19 16:12:00] [INFO] Using existing ChromaDB collection with 139 rules
+[2026-01-19 16:12:00] [INFO] ChromaDB already has 139 rules, skipping population
+[2026-01-19 16:12:00] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:14:08] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:14:08] [INFO] Loaded 139 rule lines
+[2026-01-19 16:14:08] [ERROR] Startup initialization failed: 'FieldValidator' object has no attribute '_init_chroma_collection'
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:14:16] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:14:16] [INFO] Loaded 139 rule lines
+[2026-01-19 16:14:16] [ERROR] Startup initialization failed: 'FieldValidator' object has no attribute '_init_chroma_collection'
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:14:25] [STARTUP] Initializing validator at startup...
+[2026-01-19 16:14:25] [INFO] Loaded 139 rule lines
+[2026-01-19 16:14:25] [ERROR] Startup initialization failed: 'FieldValidator' object has no attribute '_init_chroma_collection'
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:14:34] [STARTUP] Initializing validator with PostgreSQL + pgvector...
+[2026-01-19 16:14:34] [INFO] Loaded 139 rule lines
+[2026-01-19 16:14:34] [ERROR] Failed to initialize PostgreSQL: name 'PG_HOST' is not defined
+[2026-01-19 16:14:34] [INFO] Loading SentenceTransformer model (all-MiniLM-L6-v2)...
+[2026-01-19 16:14:35] [INFO] ✓ Embedding model loaded
+[2026-01-19 16:14:35] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:14:47] [STARTUP] Initializing validator with PostgreSQL + pgvector...
+[2026-01-19 16:14:47] [INFO] Loaded 139 rule lines
+[2026-01-19 16:14:47] [ERROR] Failed to initialize PostgreSQL: name 'PG_HOST' is not defined
+[2026-01-19 16:14:47] [INFO] Loading SentenceTransformer model (all-MiniLM-L6-v2)...
+[2026-01-19 16:14:47] [INFO] ✓ Embedding model loaded
+[2026-01-19 16:14:47] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+ * Detected change in '/home/hutech/Documents/docupolicy/step2-realtime-validation/backend_field_validator_v2.py', reloading
+[2026-01-19 16:15:43] [STARTUP] Initializing validator with PostgreSQL + pgvector...
+[2026-01-19 16:15:43] [INFO] Loaded 139 rule lines
+[2026-01-19 16:15:43] [ERROR] Failed to initialize PostgreSQL: name 'PG_HOST' is not defined
+[2026-01-19 16:15:43] [INFO] Loading SentenceTransformer model (all-MiniLM-L6-v2)...
+[2026-01-19 16:15:43] [INFO] ✓ Embedding model loaded
+[2026-01-19 16:15:43] [STARTUP] ✓ Validator initialization complete - ready for requests
+
+================================================================================
+Starting Field Validation API v2 (Dynamic approach with startup init)...
+================================================================================
+Rules file: /home/hutech/Documents/docupolicy/rules.txt
+ChromaDB path: /home/hutech/Documents/docupolicy/chroma_embeddings
+================================================================================
+
+ * Restarting with watchdog (inotify)
+/home/hutech/.local/lib/python3.10/site-packages/google/api_core/_python_version_support.py:266: FutureWarning: You are using a Python version (3.10.12) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/home/hutech/.local/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+ * Debugger is active!
+ * Debugger PIN: 124-180-805

@@ -1,0 +1,1388 @@
+{
+  "metadata": {
+    "generated": "2026-02-05T11:02:45.984498",
+    "source": "stage3_entities.json + stage4_ambiguity_flags.json (context-aware)",
+    "format": "Clarified Clauses with Context & Real Ambiguity Detection",
+    "total_clauses": 56,
+    "stage": "5",
+    "new_fields": {
+      "confidence": "LLM confidence in clarification (0.0-1.0)",
+      "is_real_ambiguity": "Flag: genuine policy ambiguity (true) vs clarifiable (false)",
+      "real_ambiguity_reason": "Explanation if genuine ambiguity detected",
+      "context_used": "Search method: RULE_BASED, SEMANTIC, or NONE",
+      "search_method": "Actual search strategy used",
+      "changes_made": "List of specific clarifications made",
+      "context_found": "Whether supporting context was found in policy"
+    }
+  },
+  "clarified_clauses": [
+    {
+      "clauseId": "C1",
+      "text_original": "This policy is applicable to all employees of the company who are required to undertake business travel within India. Applicability is limited to official business travel.",
+      "text_clarified": "This policy is applicable to all employees of the company who are required to undertake business travel within India. Applicability is limited to official business travel. M5/m6 grade employees are entitled to train & bus (sleeper) / shared taxi / auto for inter-city travel and auto, taxi (non-ac) for local travel. Local travel via auto is limited to <10 km; >10 km requires public/shared transport. For grade m2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+      "ambiguity_reason": "[LLM-VERIFIED] The term 'official business travel' is subjective and lacks a clear definition. What constitutes 'official business' is not specified, leading to potential disputes over applicability. There is no definition of what types of travel expenses or activities qualify as 'official business'.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "travelRegion": "India",
+        "travelPurpose": "official business travel"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'official business travel' is not defined within the provided policy context. The policy states applicability is limited to it, but does not specify what constitutes 'official business'.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definitions from Clause C8 and C31 to provide context for travel and allowances, though they do not define 'official business travel'."
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C10",
+      "text_original": "Lodging allowances for Grade M1 employees in Category A cities are Rs. 4000, and in Category B cities are Rs. 3000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 150.",
+      "text_clarified": "Lodging allowances for Grade M1 employees in Category A cities are Rs. 4000, and in Category B cities are Rs. 3000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 150.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 150), the boarding allowance has no stated limit. This could lead to disputes and inconsistent application of the policy.",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "gradeM1LodgingCategoryA": "Rs. 4000",
+        "gradeM1LodgingCategoryB": "Rs. 3000",
+        "boardingAllowance": "Actual",
+        "personalIncidentalAllowanceLimit": "Rs. 150",
+        "personalIncidentalAllowance": "Actual"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'Actual' is used for both boarding and personal incidental allowances without any defined meaning or maximum reimbursable amount. While a limit is provided for the personal incidental allowance (up to Rs. 150), the boarding allowance has no stated limit.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C11",
+      "text_original": "Lodging allowances for Grade M2 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 125.",
+      "text_clarified": "Lodging allowances for Grade M2 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 125.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 125), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "gradeM2LodgingCategoryA": "Rs. 3000",
+        "gradeM2LodgingCategoryB": "Rs. 2000",
+        "boardingAllowance": "Actual",
+        "personalIncidentalAllowanceLimit": "Rs. 125",
+        "personalIncidentalAllowance": "Actual"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'Actual' is used for both boarding and personal incidental allowances without a defined meaning or maximum reimbursable amount. While a limit is provided for the personal incidental allowance (up to Rs. 125), the boarding allowance has no such cap. The provided context does not define 'Actual'.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C12",
+      "text_original": "Lodging allowances for Grade M3 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 100.",
+      "text_clarified": "Lodging allowances for Grade M3 employees in Category A cities are Rs. 3000, and in Category B cities are Rs. 2000. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 100.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 100), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "gradeM3LodgingCategoryA": "Rs. 3000",
+        "gradeM3LodgingCategoryB": "Rs. 2000",
+        "boardingAllowance": "Actual",
+        "personalIncidentalAllowanceLimit": "Rs. 100",
+        "personalIncidentalAllowance": "Actual"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'Actual' is used for both boarding and personal incidental allowances without a defined meaning or maximum reimbursable amount. While a limit is provided for the personal incidental allowance (up to Rs. 100), the boarding allowance has no such cap. The provided context (Clauses C10 and C11) does not provide a definition for 'Actual' beyond its usage.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C13",
+      "text_original": "Lodging allowances for Grade M4 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 75.",
+      "text_clarified": "Lodging allowances for Grade M4 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 75. 'Actual' for boarding allowance means the actual expenses incurred, subject to supporting documentation. 'Actual' for personal incidental allowance means the actual expenses incurred, up to a maximum of Rs. 75, subject to supporting documentation.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity as to the maximum amount reimbursable for these allowances. Additionally, the personal incidental allowance has an upper limit of Rs. 75, but 'Actual' is still used, implying that any amount up to Rs. 75 is reimbursable, which is unclear.",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "LIMIT",
+      "confidence": 0.9,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Defined 'Actual' for boarding allowance based on consistent usage across clauses C10, C11, and C12.",
+        "Defined 'Actual' for personal incidental allowance based on consistent usage across clauses C10, C11, and C12, and clarified the upper limit of Rs. 75."
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C14",
+      "text_original": "Lodging allowances for Grade M5 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "text_clarified": "Lodging allowances for Grade M5 employees in Category A cities are Rs. 2000, and in Category B cities are Rs. 1500. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'Actual' is used for boarding allowance without any defined limits or constraints. The policy does not provide a definition or clarification for what constitutes 'Actual' in this context, leading to ambiguity regarding the maximum reimbursable amount.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C15",
+      "text_original": "Lodging allowances for Grade M6 employees in Category A cities are Rs. 1000, and in Category B cities are Rs. 700. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "text_clarified": "Lodging allowances for Grade M6 employees in Category A cities are Rs. 1000, and in Category B cities are Rs. 700. Boarding allowance is Actual for both categories, with a personal incidental allowance of Actual up to Rs. 50.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The term 'Actual' is used for the boarding allowance without any defined limits or constraints. The policy does not specify what constitutes 'Actual' expenses for boarding.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C16",
+      "text_original": "If an employee stays at a relative\u2019s or friend\u2019s place during an official tour, they will be given Rs. 250 per day as lodging reimbursement.",
+      "text_clarified": "If an employee stays at a relative\u2019s or friend\u2019s place during an official tour, they will be given Rs. 250 per day as lodging reimbursement.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses a fixed amount (Rs. 250) without specifying a maximum duration for which this reimbursement applies. It's unclear if this is a daily reimbursement for the entire tour duration or if there's a cap on the number of days for which it can be claimed. Additionally, 'relative' and 'friend' are subjective terms.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C17",
+      "text_original": "Employees are entitled to claim Rs. 7.0 per KM for Four Wheeler usage and Rs. 2.5 per KM for Two Wheeler usage for official work.",
+      "text_clarified": "Employees are entitled to claim Rs. 7.0 per KM for Four Wheeler usage and Rs. 2.5 per KM for Two Wheeler usage for official work.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not specify any limits on the number of kilometers that can be claimed. This could lead to disputes or excessive claims if an employee travels a very large distance for official work. Also, it doesn't define what constitutes 'official work'.",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "INFORMATIONAL",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C18",
+      "text_original": "Entitlement calculation is based on a 24-hour clock. For durations of 3 to 12 hours, 50% of the daily allowance is payable. For durations of 12 to 24 hours, 100% of the daily allowance is payable.",
+      "text_clarified": "Entitlement calculation is based on a 24-hour clock. For durations of 3 to 12 hours, 50% of the daily allowance is payable. For durations of 12 to 24 hours, 100% of the daily allowance is payable.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause exhibits a boundary overlap. The duration range of 12 hours is included in both the 3-12 hour bracket (50% allowance) and the 12-24 hour bracket (100% allowance). This creates ambiguity as to which allowance applies when the duration is exactly 12 hours.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C19",
+      "text_original": "IF travel duration is between 3 to 12 hours, THEN employee is entitled to 50% of their daily allowance.",
+      "text_clarified": "IF travel duration is between 3 to 12 hours, THEN employee is entitled to 50% of their daily allowance.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses '3 to 12 hours' which is ambiguous. It's unclear whether the duration includes 3 and 12 hours, or if it's strictly between those values (e.g., 3.01 to 11.99 hours). This affects policy enforcement as it's unclear which travel durations qualify for the allowance.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C2",
+      "text_original": "Travel is classified as a 'Tour' if the duration is between 1 to 15 days (inclusive). 'Deputation' is defined as travel lasting 15 days to 1 year. 'Transfer' is defined as travel exceeding 1 year in duration.",
+      "text_clarified": "Travel is classified as a 'Tour' if the duration is between 1 to 15 days (inclusive). 'Deputation' is defined as travel lasting 15 days to 1 year. 'Transfer' is defined as travel exceeding 1 year in duration. If a travel duration is greater than 15 days but less than 1 year at one location, then it will be treated as deputation. During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause exhibits a BOUNDARY_OVERLAP ambiguity. The 'Tour' classification ends at 15 days (inclusive), while the 'Deputation' classification *starts* at 15 days. This creates ambiguity as to how travel lasting exactly 15 days is classified. It's unclear if 15 days falls into 'Tour' or 'Deputation'.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "entities": {
+        "tourDurationMinDays": "1",
+        "tourDurationMaxDays": "15",
+        "deputationDurationMinDays": "15",
+        "deputationDurationMaxDays": "1 year",
+        "transferDurationExceeds": "1 year"
+      },
+      "intent": "INFORMATIONAL",
+      "confidence": 0.95,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definition of 'deputation' from C22",
+        "Inserted definition of 'deputation' benefits from C23"
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C20",
+      "text_original": "IF travel duration is between 12 to 24 hours, THEN employee is entitled to 100% of their daily allowance.",
+      "text_clarified": "IF travel duration is between 12 to 24 hours, THEN employee is entitled to 100% of their daily allowance.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses '12 to 24 hours' which creates a boundary overlap ambiguity. It's unclear if 12 hours is included in the allowance or not. Does 'between' include the boundaries or exclude them? This affects policy enforcement.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C21",
+      "text_original": "All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.",
+      "text_clarified": "All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause states 'All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.' However, it doesn't define what constitutes a valid 'bill' or 'invoice'. This leaves room for interpretation and potential disputes. For example, are receipts acceptable, or are only formal invoices required? The definition of 'Boarding' and 'Personal incidental category' are also undefined references.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C22",
+      "text_original": "IF a travel duration is greater than 15 days but less than 1 year at one location, THEN it will be treated as deputation.",
+      "text_clarified": "IF a travel duration is greater than 15 days but less than 1 year at one location, THEN it will be treated as deputation.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause defines a duration range (15 days < duration < 1 year) to trigger a specific treatment (deputation). However, it doesn't specify what happens if the travel duration is *exactly* 15 days or *exactly* 1 year. This creates ambiguity in policy enforcement as these boundary conditions are not addressed.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS"
+      ],
+      "entities": {
+        "minimumTravelDuration": "15 days",
+        "maximumTravelDuration": "1 year"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C23",
+      "text_original": "During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+      "text_clarified": "During deputation, for 1-7 days of travel, benefits are as per the tour policy.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause references 'tour policy' without defining what constitutes the 'tour policy'. This creates ambiguity as the benefits are dependent on an undefined document or set of rules. Additionally, the clause only specifies benefits *during* the 1-7 day travel period, but doesn't specify what happens *before* or *after* that period, or for travel durations outside of that range.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "travelDurationRange": "1-7 days"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C24",
+      "text_original": "IF deputation duration exceeds 7 days, THEN allowances will be provided as per Table 7, based on employee Grade and Category.",
+      "text_clarified": "IF deputation duration exceeds 7 days, THEN allowances will be provided as per Table 7, based on employee Grade and Category.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause relies on 'Table 7' for allowance details, but the clause does not define or include 'Table 7'. This creates an undefined reference, making it impossible to enforce the policy without external information. Additionally, 'employee Grade and Category' are undefined terms within the clause itself.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "deputationDurationThreshold": "7 days",
+        "allowanceSource": "Table 7",
+        "allowanceDependency": "employee Grade and Category"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C25",
+      "text_original": "IF the company provides guest house and food facilities at the deputation site, THEN the employee is NOT entitled to any of the deputation allowances.",
+      "text_clarified": "IF the company provides guest house and food facilities at the deputation site, THEN the employee is NOT entitled to any of the deputation allowances.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses undefined terms regarding the quality or extent of 'guest house and food facilities'. It's unclear what level of facilities is required for the employee to forfeit deputation allowances. For example, is a basic room and simple meals sufficient, or are higher standards required? This lack of definition creates ambiguity.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C26",
+      "text_original": "Employees do NOT require to submit bills for deputation entitlements.",
+      "text_clarified": "Employees do NOT require to submit bills for 'deputation' entitlements. 'Deputation' is defined as travel lasting 15 days to 1 year.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause states bills are 'not required' for deputation entitlements, but doesn't specify what *is* required to claim those entitlements. It's unclear if any documentation or process is needed at all. This creates ambiguity regarding how employees can actually access their entitlements.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "billSubmissionRequirement": "not required"
+      },
+      "intent": "RESTRICTION",
+      "confidence": 0.95,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definition of 'deputation' from Clause C2"
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C27",
+      "text_original": "IF an employee is shifted to a location with a duration projection of more than 1 year, THEN it will be treated as a transfer.",
+      "text_clarified": "IF an employee is shifted to a location with a duration projection of more than 1 year, THEN it will be treated as a transfer.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause states 'more than 1 year' but doesn't specify what happens if the duration projection is *exactly* 1 year. This creates ambiguity in policy enforcement. Is a projection of precisely 1 year considered a transfer, or not? This is an incomplete condition.",
+      "ambiguity_types": [
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "durationProjectionThreshold": "1 year"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C28",
+      "text_original": "For relocation/transfer, the distance between two places MUST be greater than 100 KM for reimbursement eligibility.",
+      "text_clarified": "For relocation/transfer, the distance between two places MUST be greater than 100 KM for reimbursement eligibility.",
+      "ambiguity_reason": "",
+      "ambiguity_types": [],
+      "ambiguities_fixed": [],
+      "entities": {
+        "minimumReimbursementDistance": "100 KM"
+      },
+      "intent": "LIMIT",
+      "confidence": 1.0,
+      "is_real_ambiguity": false,
+      "context_used": "N/A",
+      "changes_made": []
+    },
+    {
+      "clauseId": "C29",
+      "text_original": "During the initial 7 days of relocation/transfer, entitlements are as per the tour policy.",
+      "text_clarified": "During the initial 7 days of relocation/transfer, entitlements are as per the tour policy.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause references 'tour policy' without defining what that policy is or providing a link to it. This creates ambiguity as the entitlements are dependent on an undefined document.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "relocationDuration": "7 days"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C3",
+      "text_original": "Lodging & Boarding allowances will be payable to employees for tours within India, as per the limits specified in Table 4. Amounts are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "text_clarified": "Lodging & Boarding allowances will be payable to employees for tours within India, as per the limits specified in Table 4. Amounts are maximum permissible rates upon submission of actual bills and are exclusive of taxes. The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause references 'Table 4' for limits but does not include the table itself or define how to access it. Additionally, 'maximum permissible rates' is subjective as it doesn't define a clear upper bound beyond what's in Table 4, which is not provided. The term 'actual bills' could be interpreted differently regarding acceptable documentation.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {
+        "allowanceType": "Lodging & Boarding",
+        "tourLocation": "India",
+        "rateSource": "Table 4",
+        "rateLimitation": "maximum permissible",
+        "billRequirement": "actual bills",
+        "taxInclusion": "exclusive of taxes"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.9,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The policy references 'Table 4' but does not provide the table itself or define how to access it. This creates ambiguity regarding the specific limits for Lodging & Boarding allowances.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definition of 'maximum permissible rates' from Clause C34"
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C30",
+      "text_original": "For Grade M1 employees, lodging allowance is Actual, boarding allowance is Actual, and travel allowance is Actual.",
+      "text_clarified": "For Grade M1 employees, lodging allowance is Actual, boarding allowance is Actual, and travel allowance is Actual.",
+      "ambiguity_reason": "[LLM-VERIFIED] The term 'Actual' is used for all allowances without specifying any limits, units, or calculation methods. This creates ambiguity as to the amount of each allowance. It's unclear if 'Actual' means actual costs incurred, a pre-defined amount, or something else.",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "gradeM1LodgingAllowance": "Actual",
+        "gradeM1BoardingAllowance": "Actual",
+        "gradeM1TravelAllowance": "Actual"
+      },
+      "intent": "INFORMATIONAL",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C31",
+      "text_original": "For Grade M2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+      "text_clarified": "For Grade M2 employees, lodging allowance is 4000, boarding allowance is 350, and travel allowance is 150.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause specifies allowances for 'Grade M2' employees but does not define what 'Grade M2' means. This is an undefined reference, making it unclear which employees are eligible for these allowances. Additionally, the currency for the allowances is not specified, leading to a vague metric.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "gradeM2LodgingAllowance": "4000",
+        "gradeM2BoardingAllowance": "350",
+        "gradeM2TravelAllowance": "150"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C32",
+      "text_original": "For Grade M2B employees, lodging allowance is 3000, boarding allowance is 250, and travel allowance is 125.",
+      "text_clarified": "For Grade M2B employees, lodging allowance is 3000, boarding allowance is 250, and travel allowance is 125.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause specifies allowances for Grade M2B employees but does not define the units for the allowance amounts (e.g., currency). It also doesn't specify the frequency of these allowances (daily, monthly, per trip, etc.). This lack of context creates ambiguity in policy enforcement.",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "gradeM2BLodgingAllowance": "3000",
+        "gradeM2BBoardingAllowance": "250",
+        "gradeM2BTravelAllowance": "125"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C33",
+      "text_original": "For Grades M3 to M6, lodging allowance is 2000, boarding allowance is 150, and travel allowance is 100.",
+      "text_clarified": "For Grades M3 to M6, lodging allowance is 2000, boarding allowance is 150, and travel allowance is 100.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause states allowances for grades 'M3 to M6' but does not specify the currency for the allowance amounts (2000, 150, 100). This lack of currency definition introduces ambiguity. It also doesn't specify the period for which these allowances apply (e.g., per day, per week, per trip).",
+      "ambiguity_types": [
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "lodgingAllowance": "2000",
+        "boardingAllowance": "150",
+        "travelAllowance": "100",
+        "applicableGrades": "M3 to M6"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C34",
+      "text_original": "The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "text_clarified": "The amount limits mentioned in Table 4 are maximum permissible rates upon submission of actual bills and are exclusive of taxes.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause refers to 'actual bills' without defining what constitutes an 'actual bill'. This could include receipts, invoices, or other documentation, and the lack of definition creates ambiguity. Additionally, 'maximum permissible rates' in Table 4 could be interpreted differently depending on the context of the bills submitted. The clause also doesn't specify what types of taxes are excluded.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {
+        "referenceTable": "Table 4",
+        "rateType": "maximum permissible rates",
+        "billRequirement": "actual bills",
+        "taxInclusion": "exclusive of taxes"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C35",
+      "text_original": "All expense claims MUST be supported by bills/invoices.",
+      "text_clarified": "All expense claims MUST be supported by bills/invoices.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause requires 'bills/invoices' but doesn't define what constitutes an acceptable bill or invoice. For example, are digital copies acceptable? What information must be present on the bill/invoice? This lack of specificity creates ambiguity in enforcement.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "requiredDocumentation": "bills/invoices"
+      },
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C36",
+      "text_original": "For relocation expenses towards shifting of household goods, the employee MUST provide 3 quotations, and HR will verify and approve one.",
+      "text_clarified": "For relocation expenses towards shifting of household goods, the employee MUST provide 3 quotations, and HR will verify and approve one.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause states HR will 'approve one' quotation, but doesn't define the criteria for approval. This leaves room for subjective decision-making and inconsistent application of the policy. There's no mention of what happens if none of the quotations are deemed acceptable by HR.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_AUTHORITY",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_AUTHORITY",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "requiredQuotations": "3"
+      },
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C37",
+      "text_original": "The maximum limit for relocation expenses towards shifting of household goods is 20,000.",
+      "text_clarified": "The maximum limit for relocation expenses towards shifting of household goods is 20,000.",
+      "ambiguity_reason": "",
+      "ambiguity_types": [],
+      "ambiguities_fixed": [],
+      "entities": {},
+      "intent": "LIMIT",
+      "confidence": 1.0,
+      "is_real_ambiguity": false,
+      "context_used": "N/A",
+      "changes_made": []
+    },
+    {
+      "clauseId": "C38",
+      "text_original": "For Grade M1/M2, the mode of travel is Air (Economy).",
+      "text_clarified": "For Grade M1/M2, the mode of travel is Air (Economy).",
+      "ambiguity_reason": "",
+      "ambiguity_types": [],
+      "ambiguities_fixed": [],
+      "entities": {
+        "employeeGrades": "M1/M2",
+        "travelMode": "Air (Economy)"
+      },
+      "intent": "LIMIT",
+      "confidence": 1.0,
+      "is_real_ambiguity": false,
+      "context_used": "N/A",
+      "changes_made": []
+    },
+    {
+      "clauseId": "C39",
+      "text_original": "For Grade M2B, the mode of travel is Train (AC II) /Taxi (AC) at 10 Rs/KM.",
+      "text_clarified": "For Grade M2B, the mode of travel is Train (AC II) /Taxi (AC) at 10 Rs/KM.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause allows for two travel modes: Train (AC II) and Taxi (AC). It's unclear under what conditions each mode is permitted. Is the employee allowed to choose, or are there specific criteria (e.g., distance, availability) that dictate the mode of travel? This lack of clarity creates ambiguity in policy enforcement.",
+      "ambiguity_types": [
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "employeeGrade": "M2B",
+        "travelMode": "Train (AC II) /Taxi (AC)",
+        "taxiRate": "10 Rs/KM"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C4",
+      "text_original": "Directors, CEO, COO, and Presidents (Grade M1) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel.",
+      "text_clarified": "Directors, CEO, COO, and Presidents (Grade M1) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Inter-city travel refers to travel between cities, while local travel is limited to <10 km via auto, and >10 km requires public/shared transport. Taxi (AC) includes hatchback/sedan cars; sedan/suv cars can be booked when traveling with clients.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not define what constitutes 'inter-city' versus 'local' travel. This distinction is crucial for determining the appropriate travel mode and class. Without a clear definition, there's room for interpretation and potential disputes. Additionally, the use of 'AC' for taxi class is not universally understood and could refer to different standards or features depending on the location.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {
+        "eligibleGrades": "M1",
+        "airTravelClass": "Economy",
+        "trainTravelClasses": "AC I, II",
+        "taxiTravelClass": "AC",
+        "interCityTravelModes": "Air, Train, Taxi",
+        "localTravelModes": "Taxi"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.9,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Added definition of 'inter-city travel' from Clause C8.",
+        "Added definition of 'local travel' from Clause C8.",
+        "Added definition of 'Taxi (AC)' from Clause C5."
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C40",
+      "text_original": "For Grade M3, the mode of travel is Train (III AC) /Bus/Taxi(AC) at 10 Rs/KM.",
+      "text_clarified": "For Grade M3, the mode of travel is Train (III AC) /Bus/Taxi(AC) at 10 Rs/KM.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not specify if the 10 Rs/KM rate applies to all travel modes (Train, Bus, and Taxi) or only to Taxi. This creates ambiguity in cost calculation. Also, the currency 'Rs' is not fully defined (e.g., Rs. Indian Rupees?).",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "employeeGrade": "M3",
+        "travelModes": "Train (III AC) /Bus/Taxi(AC)",
+        "taxiAcType": "AC",
+        "ratePerKm": "10 Rs/KM"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C41",
+      "text_original": "For Grade M4, the mode of travel is Train (III AC)/Bus(AC) /Shared Taxi/Auto.",
+      "text_clarified": "For Grade M4, the mode of travel is Train (III AC)/Bus(AC) /Shared Taxi/Auto.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause allows multiple modes of travel without specifying conditions for choosing between them. It's unclear if the employee can choose any of these options, or if there's a hierarchy or specific criteria for selection (e.g., distance, cost, availability). This lack of clarity could lead to disputes over allowable expenses.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "employeeGrade": "M4",
+        "allowedTravelModes": "Train (III AC)/Bus(AC) /Shared Taxi/Auto"
+      },
+      "intent": "INFORMATIONAL",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C42",
+      "text_original": "For Grades M5/M6, the mode of travel is Train & Bus (Sleeper)/Shared Taxi/ Auto/ Public Conveyance.",
+      "text_clarified": "For Grades M5/M6, the mode of travel is Train & Bus (Sleeper)/Shared Taxi/ Auto/ Public Conveyance.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause lists multiple modes of travel without specifying conditions for when each mode is appropriate. It's unclear what factors determine whether an employee uses a 'Train & Bus (Sleeper)', 'Shared Taxi', 'Auto', or 'Public Conveyance'. The parenthetical '(Sleeper)' further complicates this, as it only applies to the Train & Bus option, but doesn't define when sleeper class is required or permitted.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {},
+      "intent": "INFORMATIONAL",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C43",
+      "text_original": "IF a particular class of ticket is unavailable, THEN a ticket one class down will be booked.",
+      "text_clarified": "IF a particular class of ticket is unavailable, THEN a ticket one class down will be booked.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not define what constitutes a 'class' of ticket. It also doesn't specify what happens if the next class down is also unavailable, creating an incomplete conditional logic. The clause also doesn't specify if any price difference is reimbursed or handled.",
+      "ambiguity_types": [
+        "INCOMPLETE_CONDITIONS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "INCOMPLETE_CONDITIONS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C44",
+      "text_original": "Employees MUST send a request mail for booking a ticket to reservation@ujaas.com. The request MUST be made 1 day prior to the date of travel. The travel desk will ask for travel approval via email from the supervisor/HOD before booking.",
+      "text_clarified": "Employees MUST send a request mail for booking a ticket to reservation@ujaas.com. The request MUST be made 1 day prior to the date of travel. The travel desk will ask for travel approval via email from the supervisor/HOD before booking.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause contains an UNDEFINED_AUTHORITY regarding 'supervisor/HOD'. It's unclear if approval is needed from *either* a supervisor *or* the HOD, or *both*. The use of '/' implies a choice, but the policy doesn't specify which one is sufficient. Additionally, '1 day prior' is SUBJECTIVE_LANGUAGE as it doesn't specify a cutoff time. Is it 24 hours before departure, or does it allow requests up to the last minute of the day before?",
+      "ambiguity_types": [
+        "UNDEFINED_AUTHORITY",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_AUTHORITY",
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {},
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C45",
+      "text_original": "Employees are NOT allowed to book tickets directly unless in an emergency. IF an employee books directly from a Vendor, they MUST obtain permission from their HOD for company payment. Direct bookings require submission of the ticket and debit/credit card statement.",
+      "text_clarified": "Employees are NOT allowed to book tickets directly unless in an emergency. IF an employee books directly from a Vendor, they MUST obtain permission from their HOD for company payment. Direct bookings require submission of the ticket and debit/credit card statement.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause contains several ambiguities. 'Emergency' is subjective and lacks a clear definition (SUBJECTIVE_LANGUAGE). The Head of Department (HOD) is mentioned as the approving authority, but the process for obtaining permission and the criteria for approval are not defined (UNDEFINED_AUTHORITY). The clause doesn't specify what happens if the HOD denies permission, creating an incomplete conditional logic (INCOMPLETE_CONDITIONS).",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_AUTHORITY",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_AUTHORITY",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C46",
+      "text_original": "Request mails for booking MUST include employee name, age, designation, contact number, project code, tour purpose, place, duration, DOT, and HOD approval (or reason for absence). Eligibility for return booking needs to be mentioned.",
+      "text_clarified": "Request mails for booking MUST include employee name, age, designation, contact number, project code, tour purpose, place, duration, DOT, and HOD approval (or reason for absence). Eligibility for return booking needs to be mentioned.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause contains several ambiguities. 'HOD approval (or reason for absence)' is subjective and doesn't define what constitutes sufficient reason for absence. 'Eligibility for return booking needs to be mentioned' is vague and doesn't specify *how* it needs to be mentioned or what criteria define eligibility. The clause also lacks definition of 'DOT'.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C47",
+      "text_original": "IF an employee requests a specific flight/Train or Bus, they MUST state the reason for choosing it in the request mail.",
+      "text_clarified": "IF an employee requests a specific flight/Train or Bus, they MUST state the reason for choosing it in the request mail.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses the term 'specific' without defining what constitutes a 'specific' flight/train/bus. This leaves room for interpretation and potential disputes. What level of detail is required to qualify as 'specific'? Is a time preference enough, or does it need to include airline/train operator and specific class?",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C48",
+      "text_original": "Employees MUST send their ticket booking request at least one day before the date of journey. IF a request is made within one day (urgent booking), the reason for urgency MUST be stated.",
+      "text_clarified": "Employees MUST send their ticket booking request at least one day before the date of journey. IF a request is made within one day (urgent booking), the reason for urgency MUST be stated.",
+      "ambiguity_reason": "[LLM-VERIFIED] The phrase 'at least one day' is ambiguous. Does this mean 24 hours, or the entire calendar day? A request submitted at 11:59 PM the day before travel is technically 'at least one day', but may not allow sufficient processing time. The clause also lacks clarity on what happens if the reason for urgency is deemed insufficient.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C49",
+      "text_original": "Employees are NOT allowed to request special Hotels/ Flights/ Seats/ Web Check-in.",
+      "text_clarified": "Employees are NOT allowed to request special Hotels/ Flights/ Seats/ Web Check-in.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses a blanket prohibition without defining what constitutes a 'special' Hotel, Flight, Seat, or Web Check-in. The term 'special' is subjective and lacks objective boundaries, making enforcement difficult. What one employee considers 'special' another may not.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE"
+      ],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C5",
+      "text_original": "VP, AVP, GM, DGM, and RM (Grade M2) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Taxi (AC) includes hatchback/sedan cars; Sedan/SUV cars can be booked when traveling with clients.",
+      "text_clarified": "VP, AVP, GM, DGM, and RM (Grade M2) are entitled to Air (Economy) / Train (AC I, II) / Taxi (AC) for inter-city travel and Taxi (AC) for local travel. Taxi (AC) includes hatchback/sedan cars; Sedan/SUV cars can be booked when traveling with clients. For Grade M2b, the mode of travel is Train (AC II) /Taxi (AC) at 10 rs/km.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause is ambiguous due to undefined references and incomplete conditions. 'Grade M2' is an UNDEFINED_REFERENCE as it's unclear what constitutes 'Grade M2' - is it a salary band, a job title, or something else? The condition for booking Sedan/SUV cars ('when traveling with clients') is an INCOMPLETE_CONDITION. It doesn't specify what constitutes 'traveling with clients' - is it a formal business meeting, a site visit, or simply being in the same location? Also, the clause doesn't specify any limits on the number of taxi rides or the distance of travel, leading to potential VAGUE_METRICS issues.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS",
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "eligibleGrades": "M2",
+        "airTravelClass": "Economy",
+        "trainTravelClasses": "AC I, II",
+        "taxiTravelClass": "AC",
+        "taxiCarTypes": "hatchback/sedan",
+        "clientTravelCarTypes": "Sedan/SUV"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.9,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The definition of 'traveling with clients' is missing. It is unclear what constitutes 'traveling with clients' - is it a formal business meeting, a site visit, or simply being in the same location?",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definition of Grade M2b from Clause C39"
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C50",
+      "text_original": "Employees MUST submit bills within 15 days of completing their tour. IF bills are not submitted within this timeframe, a reason MUST be attached. Bills not submitted against tour advances for more than 30 days will be deducted from the next month\u2019s salary.",
+      "text_clarified": "Employees MUST submit bills within 15 days of completing their tour. IF bills are not submitted within this timeframe, a reason MUST be attached. Bills not submitted against tour advances for more than 30 days will be deducted from the next month\u2019s salary.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause contains ambiguities regarding the handling of reasons attached to late submissions and the definition of 'tour'. While a reason *must* be attached for late submissions, it's unclear what happens to the bill if a reason *is* attached. Does the bill remain unpaid, is it subject to review, or is there a grace period? Additionally, 'tour' is an UNDEFINED_REFERENCE - the clause doesn't define what constitutes a 'tour' (e.g., length, purpose, approval process).",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C51",
+      "text_original": "Bill submission information MUST include employee name, tour code, designation, department, tour date, and bill amount, and date of submission.",
+      "text_clarified": "Bill submission information MUST include employee name, tour code, designation, department, tour date, and bill amount, and date of submission.",
+      "ambiguity_reason": "",
+      "ambiguity_types": [],
+      "ambiguities_fixed": [],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 1.0,
+      "is_real_ambiguity": false,
+      "context_used": "N/A",
+      "changes_made": []
+    },
+    {
+      "clauseId": "C52",
+      "text_original": "The bill MUST have the signature of the employee and their HOD.",
+      "text_clarified": "The bill MUST have the signature of the employee and their HOD.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause requires a signature from the 'HOD' but does not define what 'HOD' means. It's an UNDEFINED_REFERENCE. It's unclear who qualifies as the Head of Department for the purpose of this signature requirement.",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "APPROVAL_REQUIRED",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C53",
+      "text_original": "IF there is any deviation in the amounts on the bill, HOD approval with a clarification note is REQUIRED.",
+      "text_clarified": "IF there is any deviation in the amounts on the bill, HOD approval with a clarification note is REQUIRED.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause uses the term 'deviation' without defining what constitutes a significant enough deviation to trigger the HOD approval requirement. A small difference in amounts could be considered a deviation, leading to inconsistent enforcement. Additionally, 'REQUIRED' is a strong term that doesn't allow for any exceptions or alternative actions if HOD approval isn't obtainable.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C54",
+      "text_original": "IF an employee pays bills themselves, they MUST submit the bill and their credit/debit card statement (for card payments).",
+      "text_clarified": "IF an employee pays bills themselves, they MUST submit the bill and their credit/debit card statement (for card payments).",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not specify what bills are eligible for reimbursement when paid by the employee. It also doesn't define what constitutes a valid 'bill' or 'credit/debit card statement'. There's no mention of a minimum or maximum bill amount, or any requirements regarding the bill's content (e.g., vendor, date, amount).",
+      "ambiguity_types": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C55",
+      "text_original": "It is the employee\u2019s RESPONSIBILITY to obtain authentic bills.",
+      "text_clarified": "It is the employee\u2019s RESPONSIBILITY to obtain authentic bills.",
+      "ambiguity_reason": "[LLM-VERIFIED] The term 'authentic' is subjective and lacks a clear, objective definition. What constitutes an 'authentic' bill is open to interpretation and could lead to disputes. There's no defined standard or process for determining authenticity.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {},
+      "intent": "ADVISORY",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C56",
+      "text_original": "When submitting a bill for auto or taxi, employees MUST mention the names of the places and the distance traveled for smooth processing.",
+      "text_clarified": "When submitting a bill for auto or taxi, employees MUST mention the names of the places and the distance traveled for smooth processing.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause requires mentioning distance traveled, but doesn't specify the unit of measurement (miles, kilometers, etc.). This lack of specificity could lead to disputes or inconsistent processing. Additionally, 'smooth processing' is subjective and doesn't define a clear outcome or standard.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "VAGUE_METRICS"
+      ],
+      "entities": {},
+      "intent": "RESTRICTION",
+      "confidence": 0.0,
+      "is_real_ambiguity": false,
+      "real_ambiguity_reason": null,
+      "context_used": "NONE",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C6",
+      "text_original": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3) are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Taxi (AC) for local travel.",
+      "text_clarified": "agm, sr. manager, sr. bm, rsm, manager, deputy manager, assistant manager, sr. executive, sr. engineer, asm, and bm (grade m3) are entitled to train (iii ac) / bus / taxi (ac) for inter-city travel and taxi (ac) for local travel.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause does not specify any limits or conditions on the use of the travel modes. For example, it doesn't state distance limitations for taxi use, or whether pre-approval is needed. The 'Train (III AC) / Bus / Taxi (AC)' phrasing implies a choice, but doesn't define criteria for *when* each mode is appropriate. Also, 'Grade M3' is an undefined reference - what constitutes Grade M3?",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "UNDEFINED_REFERENCES",
+        "VAGUE_METRICS"
+      ],
+      "entities": {
+        "eligibleDesignations": "AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)",
+        "interCityTravelMode": "Train (III AC) / Bus / Taxi (AC)",
+        "localTravelMode": "Taxi (AC)"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The definition of 'Grade M3' is missing. The policy does not define what constitutes Grade M3 employee status.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C7",
+      "text_original": "M4 grade employees are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Auto, Taxi (Non-AC) for local travel.",
+      "text_clarified": "M4 grade employees are entitled to Train (III AC) / Bus / Taxi (AC) for inter-city travel and Auto, Taxi (Non-AC) for local travel.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause allows for multiple travel modes ('Train (III AC) / Bus / Taxi (AC)' for inter-city and 'Auto, Taxi (Non-AC)' for local). It's unclear if employees can *choose* any of these modes, or if there are conditions determining which mode is authorized (e.g., distance, cost, availability). The use of '/' implies options, but doesn't define the selection criteria. This creates ambiguity in policy enforcement.",
+      "ambiguity_types": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "SUBJECTIVE_LANGUAGE",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "eligibleEmployeeGrades": "M4",
+        "interCityTravelModes": "Train (III AC) / Bus / Taxi (AC)",
+        "localTravelModes": "Auto, Taxi (Non-AC)"
+      },
+      "intent": "CONDITIONAL_ALLOWANCE",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The clause does not define the criteria for selecting between 'Train (III AC) / Bus / Taxi (AC)' for inter-city travel, or the conditions under which each mode is authorized. It also doesn't define limits for local travel via Auto or Taxi.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    },
+    {
+      "clauseId": "C8",
+      "text_original": "M5/M6 grade employees are entitled to Train & Bus (Sleeper) / Shared Taxi / Auto for inter-city travel and Auto, Taxi (Non-AC) for local travel. Local travel via Auto is limited to <10 KM; >10 KM requires Public/Shared Transport.",
+      "text_clarified": "M5/M6 grade employees are entitled to Train & Bus (Sleeper) / Shared Taxi / Auto for inter-city travel and Auto, Taxi (Non-AC) for local travel. Local travel via Auto is limited to <10 KM; >10 KM requires Public/Shared Transport. Taxi (AC) includes hatchback/sedan cars; sedan/suv cars can be booked when traveling with clients (as defined in Clause C5).",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause contains ambiguities regarding the conditions for using different modes of transport and the definition of 'local' vs. 'inter-city' travel. The use of '<10 KM' and '>10 KM' creates a boundary overlap issue, and the definition of 'Public/Shared Transport' is undefined. There's also an implicit assumption about what constitutes 'local' travel, which isn't defined.",
+      "ambiguity_types": [
+        "BOUNDARY_OVERLAPS",
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "ambiguities_fixed": [
+        "BOUNDARY_OVERLAPS",
+        "UNDEFINED_REFERENCES",
+        "INCOMPLETE_CONDITIONS"
+      ],
+      "entities": {
+        "localAutoTravelLimit": "<10 KM",
+        "interCityTravelModes": "Train & Bus (Sleeper) / Shared Taxi / Auto",
+        "localTravelModes": "Auto, Taxi (Non-AC)",
+        "over10KmTransport": "Public/Shared Transport"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.9,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The definition of 'Public/Shared Transport' is missing from the provided policy context.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [
+        "Inserted definition of Taxi (AC) from Clause C5"
+      ],
+      "context_found": true
+    },
+    {
+      "clauseId": "C9",
+      "text_original": "Auto/Taxi Non-AC fares are Rs. 8/KM. Taxi AC fares are Rs. 10/KM.",
+      "text_clarified": "Auto/Taxi Non-AC fares are Rs. 8/KM. Taxi AC fares are Rs. 10/KM.",
+      "ambiguity_reason": "[LLM-VERIFIED] The clause defines rates per kilometer but doesn't specify minimum fares, waiting charges, or any additional fees (e.g., night charges, toll fees). This lack of detail creates ambiguity in calculating the total fare. Also, it doesn't specify the currency for 'Rs.' which could be ambiguous in some contexts.",
+      "ambiguity_types": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "ambiguities_fixed": [
+        "VAGUE_METRICS",
+        "UNDEFINED_REFERENCES"
+      ],
+      "entities": {
+        "nonAcTaxiRate": "Rs. 8/KM",
+        "acTaxiRate": "Rs. 10/KM"
+      },
+      "intent": "LIMIT",
+      "confidence": 0.8,
+      "is_real_ambiguity": true,
+      "real_ambiguity_reason": "The currency for 'Rs.' is not defined within the provided policy context. Additionally, terms like 'KM', 'minimum fares', 'waiting charges', 'night charges', and 'toll fees' are not defined.",
+      "context_used": "RULE_BASED",
+      "search_method": "RULE_BASED",
+      "changes_made": [],
+      "context_found": true
+    }
+  ]
+}

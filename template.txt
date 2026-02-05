@@ -1,0 +1,367 @@
+================================================================================
+MQ5 PROGRESSIVE LEARNING SYSTEM - TEMPLATE FOR AI AGENTS
+================================================================================
+This template defines the workflow for generating MQ5 exercises with progressive
+difficulty, variant exploration, and mastery-based progression.
+
+IMPORTANT: MQ5 files contain ONLY code. All guidelines, instructions, and
+learning objectives are provided in the AI response, NOT in comments.
+
+================================================================================
+INITIALIZATION PHASE (First Time Only)
+================================================================================
+
+1. CREATE: mq5 exercise file
+   - Filename: exercise_[N]_[topic].mq5
+   - Include only mandatory #include statements
+   - Provide function signatures in LeetCode format
+   - Leave function bodies empty
+   - NO comment-based guidelines or instructions
+   
+2. CREATE: review.txt (initially empty)
+   - File will track learner progress, strengths, weaknesses, and misconceptions
+   - Updated after each completed variant or exercise
+
+================================================================================
+WORKFLOW STRUCTURE
+================================================================================
+
+STEP 1: Generate MQ5 Exercise File
+────────────────────────────────────
+File Format (CLEAN - NO GUIDELINES IN COMMENTS):
+  #property strict
+  #property version "1.00"
+  
+  #include <necessary_libraries>
+  
+  [Function signatures with empty implementations only]
+
+STEP 2: Present Exercise to Learner (IN AI RESPONSE)
+────────────────────────────────────
+AI Response contains:
+  - Exercise number and topic
+  - Difficulty level
+  - Variant type being tested
+  - Clear learning objective
+  - Specific implementation requirements
+  - What to avoid or watch out for
+  - Expected behavior
+  - Any hints needed
+
+The mq5 file itself contains ONLY the code structure.
+
+STEP 3: Learner Implements Solution
+────────────────────────────────────
+- User writes the missing code
+- Code must compile and run
+- Must demonstrate understanding of the concept
+
+STEP 4: Validate & Provide Feedback
+────────────────────────────────────
+- Check correctness of implementation
+- Identify misconceptions or errors
+- Provide targeted feedback
+- Explain any mistakes in detail
+
+STEP 5: Update review.txt
+────────────────────────────────────
+Format:
+  LEARNER PROGRESS REVIEW
+  ========================
+  
+  EXERCISE: [exercise_number]
+  TOPIC: [topic_name]
+  
+  STRENGTHS:
+  - [specific skill demonstrated]
+  
+  AREAS FOR IMPROVEMENT:
+  - [specific weakness]
+  
+  MISCONCEPTIONS ENCOUNTERED:
+  - [misconception and how it was corrected]
+  
+  VARIANTS COMPLETED:
+  - [variant_type]: [status - PASSED/NEEDS_REVIEW]
+  
+  MASTERY LEVEL: [LOW/MEDIUM/HIGH]
+  
+  RECOMMENDED NEXT VARIANT:
+  - [variant_type]
+
+STEP 6: Generate Next Variant (If Needed)
+──────────────────────────────────────────
+- Only generate next variant if current one is mastered
+- Base next variant on review.txt insights
+- Introduce new structural/behavioral/dependency dimension
+
+================================================================================
+VARIANT TYPES (MUST COMPLETE ALL BEFORE ADVANCING)
+================================================================================
+
+A. STRUCTURAL VARIANTS
+──────────────────────
+   - Method signature changes (parameter addition, return type)
+   - Access modifiers (public, private, protected)
+   - Function overrides and polymorphism
+   - Class inheritance and composition
+   
+   EXAMPLE MISCONCEPTION PER VARIANT:
+   - Incorrect parameter types passed
+   - Wrong return type handling
+   - Confusion between override and overload
+
+B. BEHAVIORAL VARIANTS
+──────────────────────
+   - Execution timing (synchronous vs asynchronous)
+   - Side effects (modifying state, market data)
+   - Initialization order and dependencies
+   - Event handling (OnTick, OnStart, OnInit)
+   
+   EXAMPLE MISCONCEPTION PER VARIANT:
+   - Using tick data from wrong time period
+   - Modifying global state without proper reset
+   - Race conditions in parallel execution
+
+C. DEPENDENCY VARIANTS
+──────────────────────
+   - Internal functions and static members
+   - Injected dependencies (function parameters)
+   - External dependencies (APIs, market data)
+   - Error handling for missing dependencies
+   
+   EXAMPLE MISCONCEPTION PER VARIANT:
+   - Assuming dependency is initialized
+   - Direct coupling instead of injection
+   - Not handling NULL/undefined cases
+
+D. FAILURE VARIANTS
+───────────────────
+   - Compilation errors (syntax, type mismatches)
+   - Runtime errors (division by zero, array bounds)
+   - Partial initialization (missing required setup)
+   - Logic errors (incorrect algorithm implementation)
+   
+   EXAMPLE MISCONCEPTION PER VARIANT:
+   - Treating warnings as non-critical
+   - Not validating input before processing
+   - Off-by-one errors in loops
+
+================================================================================
+MASTERY VALIDATION CHECKLIST
+================================================================================
+
+Before advancing to the next exercise, validate that the learner:
+
+STRUCTURAL MASTERY:
+  ☐ Can modify and extend function signatures
+  ☐ Understands access control and visibility
+  ☐ Can correctly implement inheritance patterns
+  ☐ Has corrected ALL structural misconceptions
+
+BEHAVIORAL MASTERY:
+  ☐ Understands execution flow and timing
+  ☐ Manages state changes correctly
+  ☐ Handles side effects appropriately
+  ☐ Has corrected ALL behavioral misconceptions
+
+DEPENDENCY MASTERY:
+  ☐ Can identify and inject dependencies
+  ☐ Handles missing/null dependencies
+  ☐ Understands coupling and decoupling
+  ☐ Has corrected ALL dependency misconceptions
+
+FAILURE MASTERY:
+  ☐ Can identify and fix compilation errors
+  ☐ Can diagnose and fix runtime errors
+  ☐ Validates inputs and handles edge cases
+  ☐ Has corrected ALL failure misconceptions
+
+EXPLANATION MASTERY:
+  ☐ Can explain WHY a solution works
+  ☐ Can explain what would go wrong with alternatives
+  ☐ Can articulate the underlying principles
+  ☐ Can teach the concept to someone else
+
+================================================================================
+PROGRESSION RULES
+================================================================================
+
+ADVANCEMENT CRITERIA:
+  1. All 4 variant types (Structural, Behavioral, Dependency, Failure)
+     completed and MASTERED
+  
+  2. At least 1 intentional misconception identified, corrected, and
+     explained per variant type
+  
+  3. Learner can explain the concept and demonstrate it in multiple ways
+  
+  4. review.txt shows "MASTERY LEVEL: HIGH" for current exercise
+
+NO ADVANCEMENT UNTIL:
+  ✗ Review shows gaps in understanding
+  ✗ Any variant marked as "NEEDS_REVIEW"
+  ✗ Misconceptions remain uncorrected
+  ✗ Learner cannot explain the concept
+  ✗ Code passes but reasoning is incomplete
+
+ADAPTATION RULE:
+  - If learner struggles with a variant type, generate 1-2 additional
+    practice variants of that type before moving forward
+  - Base new variants on specific gaps noted in review.txt
+
+================================================================================
+AGENT DECISION FLOWCHART
+================================================================================
+
+START
+  │
+  ├─→ IS THIS FIRST EXERCISE?
+  │   ├─→ YES: Create empty review.txt + generate exercise_1
+  │   └─→ NO: Read review.txt (contains all prior progress)
+  │
+  ├─→ CURRENT EXERCISE COMPLETE?
+  │   ├─→ NO: Continue with current variant
+  │   └─→ YES: Has all variant types been mastered?
+  │       ├─→ NO: Generate next variant of same exercise
+  │       │      (based on review.txt gaps)
+  │       │
+  │       └─→ YES: Generate next exercise
+  │              - Increase difficulty
+  │              - Build on prior concepts
+  │              - Reset variant counter
+  │
+  └─→ UPDATE review.txt WITH NEW FINDINGS
+     └─→ REPEAT
+
+================================================================================
+MQ5 FILE TEMPLATE - CLEAN CODE ONLY
+================================================================================
+
+RULE: No guidelines, no learning objectives, no instructions in MQ5 files.
+      Only function signatures and structure.
+
+Format:
+
+#property strict
+#property version "1.00"
+
+#include <Trade\Trade.mqh>
+#include <Indicators\Indicators.mqh>
+
+void FunctionName1(parameters)
+{
+   
+}
+
+bool FunctionName2(parameters)
+{
+   
+}
+
+int FunctionName3(parameters)
+{
+   
+}
+
+================================================================================
+AI RESPONSE TEMPLATE FOR EACH EXERCISE
+================================================================================
+
+When presenting an exercise, AI response should include:
+
+---
+
+EXERCISE [N]: [TOPIC NAME]
+Difficulty: [Beginner/Intermediate/Advanced]
+Variant: [Structural/Behavioral/Dependency/Failure]
+
+**Learning Objective:**
+[What the learner should understand after completing this]
+
+**Instructions:**
+1. [Specific implementation task]
+2. [Second task if applicable]
+3. [Validation requirement]
+
+**What to Watch Out For:**
+- [Common misconception #1]
+- [Common misconception #2]
+
+**Hints (Don't read until stuck):**
+- [Directional hint without giving answer]
+
+**Expected Behavior:**
+- [What correct output/behavior looks like]
+
+Here's your mq5 file to complete:
+
+[CLEAN MQ5 CODE - NO COMMENTS WITH GUIDELINES]
+
+---
+
+================================================================================
+INTERACTION PATTERNS FOR AGENTS
+================================================================================
+
+When generating exercises, ALWAYS:
+  1. Reference review.txt to understand learner level and gaps
+  2. Generate ONE variant at a time
+  3. Provide clear, testable requirements IN RESPONSE (not in code comments)
+  4. Include at least one intentional error to spot
+  5. Provide hints but not solutions
+  6. Validate ALL aspects before allowing progression
+
+When updating review.txt, ALWAYS:
+  1. Record what was learned
+  2. Record what misconceptions were encountered
+  3. Record which variants are complete
+  4. Provide specific recommendations for next variant
+  5. Update mastery assessment
+  6. Flag any areas needing additional practice
+
+When validating solutions, ALWAYS:
+  1. Check correctness
+  2. Test edge cases
+  3. Ask learner to explain reasoning
+  4. Identify underlying misconceptions
+  5. Provide corrective feedback
+
+================================================================================
+EXAMPLE SESSION FLOW
+================================================================================
+
+SESSION 1:
+  Agent: Creates empty review.txt
+  Agent: Generates exercise_1_basic_onbar.mq5 (CLEAN CODE ONLY)
+  Agent Response: Explains objective, tasks, misconceptions
+    - Structural Variant 1: Simple OnBar() function
+    - Intentional misconception: Using wrong bar index
+  Learner: Implements solution, makes the misconception error
+  Agent: Identifies error, explains it, updates review.txt
+  
+SESSION 2:
+  Agent: Reads review.txt, sees "Structural Variant 1: NEEDS_REVIEW"
+  Agent: Generates Behavioral Variant 1 (CLEAN CODE ONLY)
+  Agent Response: Explains OnTick vs OnBar timing
+    - New misconception: Mixing tick and bar logic
+  Learner: Implements, falls into trap
+  Agent: Guides correction, updates review.txt
+  
+SESSION 3:
+  Agent: Reads review.txt, checks all variants for exercise_1
+  Agent: Last variant is Failure Variant 1 (CLEAN CODE ONLY)
+    - Learner must handle missing data gracefully
+  Learner: Implements proper validation
+  Agent: Validates mastery across all 4 types
+  
+SESSION 4:
+  Agent: All variants mastered
+  Agent: Generates exercise_2 (CLEAN CODE ONLY)
+    - Increased complexity
+    - Builds on prior concepts
+    - Introduces new variant dimension
+
+================================================================================
+END TEMPLATE
+================================================================================

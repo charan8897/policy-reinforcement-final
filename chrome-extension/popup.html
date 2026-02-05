@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Validator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 4px solid #667eea;
+    }
+
+    .status-icon {
+      font-size: 20px;
+    }
+
+    .status-text {
+      flex: 1;
+    }
+
+    .status-text h3 {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .status-text p {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .section {
+      background: white;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .field-item {
+      padding: 8px;
+      background: #f9f9f9;
+      border-left: 3px solid #667eea;
+      border-radius: 3px;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    .field-name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .field-status {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .field-status.valid {
+      background: #22c55e;
+      color: white;
+    }
+
+    .field-status.error {
+      background: #ef4444;
+      color: white;
+    }
+
+    .field-status.warning {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .info-box {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: #667eea;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: white;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .toggle label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      flex: 1;
+      font-size: 12px;
+    }
+
+    .toggle input[type="checkbox"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .stat {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .api-status .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    .api-status.online .indicator {
+      background: #22c55e;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #5568d3;
+    }
+
+    #validation-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✨ Policy Validator</h1>
+      <p>Real-time field validation using AstraZeneca policy</p>
+    </header>
+
+    <div class="api-status" id="api-status">
+      <div class="indicator"></div>
+      <span>API Status: <strong id="api-status-text">Checking...</strong></span>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="fields-validated">0</div>
+        <div class="stat-label">Fields Validated</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="violations-found">0</div>
+        <div class="stat-label">Violations Found</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🔍 Extension Status</div>
+      <div class="toggle">
+        <label>
+          <input type="checkbox" id="toggle-validation" checked>
+          Enable validation on this page
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📋 Recent Validations</div>
+      <div id="validation-list"></div>
+      <div class="empty-state">No validations yet. Fill form fields to start.</div>
+    </div>
+
+    <div class="info-box">
+      <strong>ℹ️ How it works:</strong><br>
+      • Fill any form field related to travel policy<br>
+      • Blur the field (click away) to trigger validation<br>
+      • Green ✓ = Valid | Red ✗ = Violation<br>
+      • Click the badge to see detailed policy rules
+    </div>
+
+    <button id="refresh-btn">Refresh Page</button>
+    <button id="settings-btn">Settings</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

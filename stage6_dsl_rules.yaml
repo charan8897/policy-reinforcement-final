@@ -1,0 +1,725 @@
+rules:
+- rule_id: C1
+  when:
+    all:
+    - fact: travelregion
+      operator: EQUALS
+      value: India
+    - fact: travelpurpose
+      operator: EQUALS
+      value: official business travel
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C10
+  when:
+    all:
+    - fact: gradem1lodgingcategorya
+      operator: EQUALS
+      value: Rs. 4000
+    - fact: gradem1lodgingcategoryb
+      operator: EQUALS
+      value: Rs. 3000
+    - fact: boardingallowance
+      operator: EQUALS
+      value: Actual
+    - fact: personalincidentalallowancelimit
+      operator: EQUALS
+      value: Rs. 150
+    - fact: personalincidentalallowance
+      operator: EQUALS
+      value: Actual
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C11
+  when:
+    all:
+    - fact: gradem2lodgingcategorya
+      operator: EQUALS
+      value: Rs. 3000
+    - fact: gradem2lodgingcategoryb
+      operator: EQUALS
+      value: Rs. 2000
+    - fact: boardingallowance
+      operator: EQUALS
+      value: Actual
+    - fact: personalincidentalallowancelimit
+      operator: EQUALS
+      value: Rs. 125
+    - fact: personalincidentalallowance
+      operator: EQUALS
+      value: Actual
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C12
+  when:
+    all:
+    - fact: gradem3lodgingcategorya
+      operator: EQUALS
+      value: Rs. 3000
+    - fact: gradem3lodgingcategoryb
+      operator: EQUALS
+      value: Rs. 2000
+    - fact: boardingallowance
+      operator: EQUALS
+      value: Actual
+    - fact: personalincidentalallowancelimit
+      operator: EQUALS
+      value: Rs. 100
+    - fact: personalincidentalallowance
+      operator: EQUALS
+      value: Actual
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C13
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C14
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C15
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C16
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C17
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C18
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C19
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C2
+  when:
+    all:
+    - fact: tourdurationmindays
+      operator: EQUALS
+      value: '1'
+    - fact: tourdurationmaxdays
+      operator: EQUALS
+      value: '15'
+    - fact: deputationdurationmindays
+      operator: EQUALS
+      value: '15'
+    - fact: deputationdurationmaxdays
+      operator: EQUALS
+      value: 1 year
+    - fact: transferdurationexceeds
+      operator: EQUALS
+      value: 1 year
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C20
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C21
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C22
+  when:
+    all:
+    - fact: minimumtravelduration
+      operator: GREATER_THAN_OR_EQUAL
+      value: 15 days
+    - fact: maximumtravelduration
+      operator: LESS_THAN_OR_EQUAL
+      value: 1 year
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C23
+  when:
+    all:
+    - fact: traveldurationrange
+      operator: EQUALS
+      value: 1-7 days
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C24
+  when:
+    all:
+    - fact: deputationdurationthreshold
+      operator: EQUALS
+      value: 7 days
+    - fact: allowancesource
+      operator: EQUALS
+      value: Table 7
+    - fact: allowancedependency
+      operator: EQUALS
+      value: employee Grade and Category
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C25
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C26
+  when:
+    all:
+    - fact: billsubmissionrequirement
+      operator: EQUALS
+      value: not required
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C27
+  when:
+    all:
+    - fact: durationprojectionthreshold
+      operator: EQUALS
+      value: 1 year
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C28
+  when:
+    all:
+    - fact: minimumreimbursementdistance
+      operator: GREATER_THAN_OR_EQUAL
+      value: 100 KM
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C29
+  when:
+    all:
+    - fact: relocationduration
+      operator: EQUALS
+      value: 7 days
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C3
+  when:
+    all:
+    - fact: allowancetype
+      operator: EQUALS
+      value: Lodging & Boarding
+    - fact: tourlocation
+      operator: EQUALS
+      value: India
+    - fact: ratesource
+      operator: EQUALS
+      value: Table 4
+    - fact: ratelimitation
+      operator: EQUALS
+      value: maximum permissible
+    - fact: billrequirement
+      operator: EQUALS
+      value: actual bills
+    - fact: taxinclusion
+      operator: EQUALS
+      value: exclusive of taxes
+  then:
+    enforce:
+    - constraint: limit.allowance_limit
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C30
+  when:
+    all:
+    - fact: gradem1lodgingallowance
+      operator: EQUALS
+      value: Actual
+    - fact: gradem1boardingallowance
+      operator: EQUALS
+      value: Actual
+    - fact: gradem1travelallowance
+      operator: EQUALS
+      value: Actual
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C31
+  when:
+    all:
+    - fact: gradem2lodgingallowance
+      operator: EQUALS
+      value: '4000'
+    - fact: gradem2boardingallowance
+      operator: EQUALS
+      value: '350'
+    - fact: gradem2travelallowance
+      operator: EQUALS
+      value: '150'
+  then:
+    enforce:
+    - constraint: limit.lodging
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C32
+  when:
+    all:
+    - fact: gradem2blodgingallowance
+      operator: EQUALS
+      value: '3000'
+    - fact: gradem2bboardingallowance
+      operator: EQUALS
+      value: '250'
+    - fact: gradem2btravelallowance
+      operator: EQUALS
+      value: '125'
+  then:
+    enforce:
+    - constraint: limit.lodging
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C33
+  when:
+    all:
+    - fact: lodgingallowance
+      operator: EQUALS
+      value: '2000'
+    - fact: boardingallowance
+      operator: EQUALS
+      value: '150'
+    - fact: travelallowance
+      operator: EQUALS
+      value: '100'
+    - fact: applicablegrades
+      operator: EQUALS
+      value: M3 to M6
+  then:
+    enforce:
+    - constraint: limit.allowance_limit
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C34
+  when:
+    all:
+    - fact: referencetable
+      operator: EQUALS
+      value: Table 4
+    - fact: ratetype
+      operator: EQUALS
+      value: maximum permissible rates
+    - fact: billrequirement
+      operator: EQUALS
+      value: actual bills
+    - fact: taxinclusion
+      operator: EQUALS
+      value: exclusive of taxes
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C35
+  when:
+    all:
+    - fact: requireddocumentation
+      operator: EQUALS
+      value: bills/invoices
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C36
+  when:
+    all:
+    - fact: requiredquotations
+      operator: EQUALS
+      value: '3'
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C37
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C38
+  when:
+    all:
+    - fact: employeegrades
+      operator: EQUALS
+      value: M1/M2
+    - fact: travelmode
+      operator: EQUALS
+      value: Air (Economy)
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C39
+  when:
+    all:
+    - fact: employeegrade
+      operator: EQUALS
+      value: M2B
+    - fact: travelmode
+      operator: EQUALS
+      value: Train (AC II) /Taxi (AC)
+    - fact: taxirate
+      operator: EQUALS
+      value: 10 Rs/KM
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C4
+  when:
+    all:
+    - fact: eligiblegrades
+      operator: EQUALS
+      value: M1
+    - fact: airtravelclass
+      operator: EQUALS
+      value: Economy
+    - fact: traintravelclasses
+      operator: EQUALS
+      value: AC I, II
+    - fact: taxitravelclass
+      operator: EQUALS
+      value: AC
+    - fact: intercitytravelmodes
+      operator: EQUALS
+      value: Air, Train, Taxi
+    - fact: localtravelmodes
+      operator: EQUALS
+      value: Taxi
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C40
+  when:
+    all:
+    - fact: employeegrade
+      operator: EQUALS
+      value: M3
+    - fact: travelmodes
+      operator: EQUALS
+      value: Train (III AC) /Bus/Taxi(AC)
+    - fact: taxiactype
+      operator: EQUALS
+      value: AC
+    - fact: rateperkm
+      operator: EQUALS
+      value: 10 Rs/KM
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C41
+  when:
+    all:
+    - fact: employeegrade
+      operator: EQUALS
+      value: M4
+    - fact: allowedtravelmodes
+      operator: EQUALS
+      value: Train (III AC)/Bus(AC) /Shared Taxi/Auto
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C42
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: PASS
+      operator: EQUALS
+      value: OK
+- rule_id: C43
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C44
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C45
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C46
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C47
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C48
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C49
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C5
+  when:
+    all:
+    - fact: eligiblegrades
+      operator: EQUALS
+      value: M2
+    - fact: airtravelclass
+      operator: EQUALS
+      value: Economy
+    - fact: traintravelclasses
+      operator: EQUALS
+      value: AC I, II
+    - fact: taxitravelclass
+      operator: EQUALS
+      value: AC
+    - fact: taxicartypes
+      operator: EQUALS
+      value: hatchback/sedan
+    - fact: clienttravelcartypes
+      operator: EQUALS
+      value: Sedan/SUV
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C50
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C51
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C52
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C53
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C54
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C55
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C56
+  when:
+    all: []
+  then:
+    enforce:
+    - constraint: approval.required
+      operator: EQUALS
+      value: 'YES'
+- rule_id: C6
+  when:
+    all:
+    - fact: eligibledesignations
+      operator: EQUALS
+      value: AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)
+    - fact: intercitytravelmode
+      operator: EQUALS
+      value: Train (III AC) / Bus / Taxi (AC)
+    - fact: localtravelmode
+      operator: EQUALS
+      value: Taxi (AC)
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C7
+  when:
+    all:
+    - fact: eligibleemployeegrades
+      operator: EQUALS
+      value: M4
+    - fact: intercitytravelmodes
+      operator: EQUALS
+      value: Train (III AC) / Bus / Taxi (AC)
+    - fact: localtravelmodes
+      operator: EQUALS
+      value: Auto, Taxi (Non-AC)
+  then:
+    enforce:
+    - constraint: allowance.general
+      operator: APPROVED
+      value: CONDITIONAL
+- rule_id: C8
+  when:
+    all:
+    - fact: localautotravellimit
+      operator: EQUALS
+      value: <10 KM
+    - fact: intercitytravelmodes
+      operator: EQUALS
+      value: Train & Bus (Sleeper) / Shared Taxi / Auto
+    - fact: localtravelmodes
+      operator: EQUALS
+      value: Auto, Taxi (Non-AC)
+    - fact: over10kmtransport
+      operator: EQUALS
+      value: Public/Shared Transport
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT
+- rule_id: C9
+  when:
+    all:
+    - fact: nonactaxirate
+      operator: EQUALS
+      value: Rs. 8/KM
+    - fact: actaxirate
+      operator: EQUALS
+      value: Rs. 10/KM
+  then:
+    enforce:
+    - constraint: limit.general
+      operator: ENFORCED
+      value: STRICT

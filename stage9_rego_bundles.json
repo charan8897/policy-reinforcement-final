@@ -1,0 +1,533 @@
+{
+  "metadata": {
+    "generated": "2026-02-05T12:35:26.831958",
+    "stage": 9,
+    "stage_name": "dsl-to-rego",
+    "source_dsl": "/home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml",
+    "source_normalized": "/home/hutech/Documents/docupolicy/stage8_normalized_policies.json",
+    "total_policies": 1,
+    "total_rules": 56
+  },
+  "policies": [
+    {
+      "policy_name": "travel_policy",
+      "package": "data.travel_policy",
+      "description": "Enforced policy rules for travel_policy",
+      "rule_count": 56,
+      "rules": [
+        {
+          "clause_id": "C1",
+          "rego_rule_name": "allow_c1_limit",
+          "rego_code": "\n# Rule: C1\n# Intent: LIMIT\n# Ambiguous: False\nallow_c1_limit {\n    input.travelregion == \"India\"\n    input.travelpurpose == \"official business travel\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C10",
+          "rego_rule_name": "allow_c10_limit",
+          "rego_code": "\n# Rule: C10\n# Intent: LIMIT\n# Ambiguous: False\nallow_c10_limit {\n    input.gradem1lodgingcategorya == \"Rs. 4000\"\n    input.gradem1lodgingcategoryb == \"Rs. 3000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 150\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C11",
+          "rego_rule_name": "allow_c11_limit",
+          "rego_code": "\n# Rule: C11\n# Intent: LIMIT\n# Ambiguous: False\nallow_c11_limit {\n    input.gradem2lodgingcategorya == \"Rs. 3000\"\n    input.gradem2lodgingcategoryb == \"Rs. 2000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 125\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C12",
+          "rego_rule_name": "allow_c12_limit",
+          "rego_code": "\n# Rule: C12\n# Intent: LIMIT\n# Ambiguous: False\nallow_c12_limit {\n    input.gradem3lodgingcategorya == \"Rs. 3000\"\n    input.gradem3lodgingcategoryb == \"Rs. 2000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 100\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C13",
+          "rego_rule_name": "allow_c13_limit",
+          "rego_code": "\n# Rule: C13\n# Intent: LIMIT\n# Ambiguous: False\nallow_c13_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C14",
+          "rego_rule_name": "allow_c14_limit",
+          "rego_code": "\n# Rule: C14\n# Intent: LIMIT\n# Ambiguous: False\nallow_c14_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C15",
+          "rego_rule_name": "allow_c15_limit",
+          "rego_code": "\n# Rule: C15\n# Intent: LIMIT\n# Ambiguous: False\nallow_c15_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C16",
+          "rego_rule_name": "allow_c16_conditiona",
+          "rego_code": "\n# Rule: C16\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c16_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C17",
+          "rego_rule_name": "allow_c17_informatio",
+          "rego_code": "\n# Rule: C17\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c17_informatio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}",
+          "intent": "INFORMATIONAL",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C18",
+          "rego_rule_name": "allow_c18_conditiona",
+          "rego_code": "\n# Rule: C18\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c18_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C19",
+          "rego_rule_name": "allow_c19_conditiona",
+          "rego_code": "\n# Rule: C19\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c19_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C2",
+          "rego_rule_name": "allow_c2_informatio",
+          "rego_code": "\n# Rule: C2\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c2_informatio {\n    input.tourdurationmindays == 1\n    input.tourdurationmaxdays == 15\n    input.deputationdurationmindays == 15\n    input.deputationdurationmaxdays == \"1 year\"\n    input.transferdurationexceeds == \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}",
+          "intent": "INFORMATIONAL",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C20",
+          "rego_rule_name": "allow_c20_conditiona",
+          "rego_code": "\n# Rule: C20\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c20_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C21",
+          "rego_rule_name": "allow_c21_restrictio",
+          "rego_code": "\n# Rule: C21\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c21_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C22",
+          "rego_rule_name": "allow_c22_conditiona",
+          "rego_code": "\n# Rule: C22\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c22_conditiona {\n    input.minimumtravelduration >= \"15 days\"\n    input.maximumtravelduration <= \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C23",
+          "rego_rule_name": "allow_c23_conditiona",
+          "rego_code": "\n# Rule: C23\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c23_conditiona {\n    input.traveldurationrange == \"1-7 days\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C24",
+          "rego_rule_name": "allow_c24_conditiona",
+          "rego_code": "\n# Rule: C24\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c24_conditiona {\n    input.deputationdurationthreshold == \"7 days\"\n    input.allowancesource == \"Table 7\"\n    input.allowancedependency == \"employee Grade and Category\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C25",
+          "rego_rule_name": "allow_c25_conditiona",
+          "rego_code": "\n# Rule: C25\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c25_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C26",
+          "rego_rule_name": "allow_c26_restrictio",
+          "rego_code": "\n# Rule: C26\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c26_restrictio {\n    input.billsubmissionrequirement == \"not required\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C27",
+          "rego_rule_name": "allow_c27_conditiona",
+          "rego_code": "\n# Rule: C27\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c27_conditiona {\n    input.durationprojectionthreshold == \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C28",
+          "rego_rule_name": "allow_c28_limit",
+          "rego_code": "\n# Rule: C28\n# Intent: LIMIT\n# Ambiguous: False\nallow_c28_limit {\n    input.minimumreimbursementdistance >= \"100 KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C29",
+          "rego_rule_name": "allow_c29_conditiona",
+          "rego_code": "\n# Rule: C29\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c29_conditiona {\n    input.relocationduration == \"7 days\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C3",
+          "rego_rule_name": "allow_c3_limit",
+          "rego_code": "\n# Rule: C3\n# Intent: LIMIT\n# Ambiguous: False\nallow_c3_limit {\n    input.allowancetype == \"Lodging & Boarding\"\n    input.tourlocation == \"India\"\n    input.ratesource == \"Table 4\"\n    input.ratelimitation == \"maximum permissible\"\n    input.billrequirement == \"actual bills\"\n    input.taxinclusion == \"exclusive of taxes\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.allowance_limit\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C30",
+          "rego_rule_name": "allow_c30_informatio",
+          "rego_code": "\n# Rule: C30\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c30_informatio {\n    input.gradem1lodgingallowance == \"Actual\"\n    input.gradem1boardingallowance == \"Actual\"\n    input.gradem1travelallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}",
+          "intent": "INFORMATIONAL",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C31",
+          "rego_rule_name": "allow_c31_limit",
+          "rego_code": "\n# Rule: C31\n# Intent: LIMIT\n# Ambiguous: False\nallow_c31_limit {\n    input.gradem2lodgingallowance == 4000\n    input.gradem2boardingallowance == 350\n    input.gradem2travelallowance == 150\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.lodging\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C32",
+          "rego_rule_name": "allow_c32_limit",
+          "rego_code": "\n# Rule: C32\n# Intent: LIMIT\n# Ambiguous: False\nallow_c32_limit {\n    input.gradem2blodgingallowance == 3000\n    input.gradem2bboardingallowance == 250\n    input.gradem2btravelallowance == 125\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.lodging\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C33",
+          "rego_rule_name": "allow_c33_limit",
+          "rego_code": "\n# Rule: C33\n# Intent: LIMIT\n# Ambiguous: False\nallow_c33_limit {\n    input.lodgingallowance == 2000\n    input.boardingallowance == 150\n    input.travelallowance == 100\n    input.applicablegrades == \"M3 to M6\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.allowance_limit\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C34",
+          "rego_rule_name": "allow_c34_limit",
+          "rego_code": "\n# Rule: C34\n# Intent: LIMIT\n# Ambiguous: False\nallow_c34_limit {\n    input.referencetable == \"Table 4\"\n    input.ratetype == \"maximum permissible rates\"\n    input.billrequirement == \"actual bills\"\n    input.taxinclusion == \"exclusive of taxes\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C35",
+          "rego_rule_name": "allow_c35_restrictio",
+          "rego_code": "\n# Rule: C35\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c35_restrictio {\n    input.requireddocumentation == \"bills/invoices\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C36",
+          "rego_rule_name": "allow_c36_approval_r",
+          "rego_code": "\n# Rule: C36\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c36_approval_r {\n    input.requiredquotations == 3\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "APPROVAL_REQUIRED",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C37",
+          "rego_rule_name": "allow_c37_limit",
+          "rego_code": "\n# Rule: C37\n# Intent: LIMIT\n# Ambiguous: False\nallow_c37_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C38",
+          "rego_rule_name": "allow_c38_limit",
+          "rego_code": "\n# Rule: C38\n# Intent: LIMIT\n# Ambiguous: False\nallow_c38_limit {\n    input.employeegrades == \"M1/M2\"\n    input.travelmode == \"Air (Economy)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C39",
+          "rego_rule_name": "allow_c39_limit",
+          "rego_code": "\n# Rule: C39\n# Intent: LIMIT\n# Ambiguous: False\nallow_c39_limit {\n    input.employeegrade == \"M2B\"\n    input.travelmode == \"Train (AC II) /Taxi (AC)\"\n    input.taxirate == \"10 Rs/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C4",
+          "rego_rule_name": "allow_c4_conditiona",
+          "rego_code": "\n# Rule: C4\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c4_conditiona {\n    input.eligiblegrades == \"M1\"\n    input.airtravelclass == \"Economy\"\n    input.traintravelclasses == \"AC I, II\"\n    input.taxitravelclass == \"AC\"\n    input.intercitytravelmodes == \"Air, Train, Taxi\"\n    input.localtravelmodes == \"Taxi\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C40",
+          "rego_rule_name": "allow_c40_limit",
+          "rego_code": "\n# Rule: C40\n# Intent: LIMIT\n# Ambiguous: False\nallow_c40_limit {\n    input.employeegrade == \"M3\"\n    input.travelmodes == \"Train (III AC) /Bus/Taxi(AC)\"\n    input.taxiactype == \"AC\"\n    input.rateperkm == \"10 Rs/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C41",
+          "rego_rule_name": "allow_c41_informatio",
+          "rego_code": "\n# Rule: C41\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c41_informatio {\n    input.employeegrade == \"M4\"\n    input.allowedtravelmodes == \"Train (III AC)/Bus(AC) /Shared Taxi/Auto\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}",
+          "intent": "INFORMATIONAL",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C42",
+          "rego_rule_name": "allow_c42_informatio",
+          "rego_code": "\n# Rule: C42\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c42_informatio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}",
+          "intent": "INFORMATIONAL",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C43",
+          "rego_rule_name": "allow_c43_conditiona",
+          "rego_code": "\n# Rule: C43\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c43_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C44",
+          "rego_rule_name": "allow_c44_approval_r",
+          "rego_code": "\n# Rule: C44\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c44_approval_r {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "APPROVAL_REQUIRED",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C45",
+          "rego_rule_name": "allow_c45_conditiona",
+          "rego_code": "\n# Rule: C45\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c45_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C46",
+          "rego_rule_name": "allow_c46_restrictio",
+          "rego_code": "\n# Rule: C46\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c46_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C47",
+          "rego_rule_name": "allow_c47_conditiona",
+          "rego_code": "\n# Rule: C47\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c47_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C48",
+          "rego_rule_name": "allow_c48_conditiona",
+          "rego_code": "\n# Rule: C48\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c48_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C49",
+          "rego_rule_name": "allow_c49_restrictio",
+          "rego_code": "\n# Rule: C49\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c49_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C5",
+          "rego_rule_name": "allow_c5_conditiona",
+          "rego_code": "\n# Rule: C5\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c5_conditiona {\n    input.eligiblegrades == \"M2\"\n    input.airtravelclass == \"Economy\"\n    input.traintravelclasses == \"AC I, II\"\n    input.taxitravelclass == \"AC\"\n    input.taxicartypes == \"hatchback/sedan\"\n    input.clienttravelcartypes == \"Sedan/SUV\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C50",
+          "rego_rule_name": "allow_c50_restrictio",
+          "rego_code": "\n# Rule: C50\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c50_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C51",
+          "rego_rule_name": "allow_c51_restrictio",
+          "rego_code": "\n# Rule: C51\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c51_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C52",
+          "rego_rule_name": "allow_c52_approval_r",
+          "rego_code": "\n# Rule: C52\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c52_approval_r {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "APPROVAL_REQUIRED",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C53",
+          "rego_rule_name": "allow_c53_conditiona",
+          "rego_code": "\n# Rule: C53\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c53_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C54",
+          "rego_rule_name": "allow_c54_conditiona",
+          "rego_code": "\n# Rule: C54\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c54_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C55",
+          "rego_rule_name": "allow_c55_advisory",
+          "rego_code": "\n# Rule: C55\n# Intent: ADVISORY\n# Ambiguous: False\nallow_c55_advisory {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "ADVISORY",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C56",
+          "rego_rule_name": "allow_c56_restrictio",
+          "rego_code": "\n# Rule: C56\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c56_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}",
+          "intent": "RESTRICTION",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C6",
+          "rego_rule_name": "allow_c6_conditiona",
+          "rego_code": "\n# Rule: C6\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c6_conditiona {\n    input.eligibledesignations == \"AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)\"\n    input.intercitytravelmode == \"Train (III AC) / Bus / Taxi (AC)\"\n    input.localtravelmode == \"Taxi (AC)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C7",
+          "rego_rule_name": "allow_c7_conditiona",
+          "rego_code": "\n# Rule: C7\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c7_conditiona {\n    input.eligibleemployeegrades == \"M4\"\n    input.intercitytravelmodes == \"Train (III AC) / Bus / Taxi (AC)\"\n    input.localtravelmodes == \"Auto, Taxi (Non-AC)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}",
+          "intent": "CONDITIONAL_ALLOWANCE",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C8",
+          "rego_rule_name": "allow_c8_limit",
+          "rego_code": "\n# Rule: C8\n# Intent: LIMIT\n# Ambiguous: False\nallow_c8_limit {\n    input.localautotravellimit == \"<10 KM\"\n    input.intercitytravelmodes == \"Train & Bus (Sleeper) / Shared Taxi / Auto\"\n    input.localtravelmodes == \"Auto, Taxi (Non-AC)\"\n    input.over10kmtransport == \"Public/Shared Transport\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        },
+        {
+          "clause_id": "C9",
+          "rego_rule_name": "allow_c9_limit",
+          "rego_code": "\n# Rule: C9\n# Intent: LIMIT\n# Ambiguous: False\nallow_c9_limit {\n    input.nonactaxirate == \"Rs. 8/KM\"\n    input.actaxirate == \"Rs. 10/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}",
+          "intent": "LIMIT",
+          "is_ambiguous": false,
+          "action": "enforce",
+          "confidence": 0.0
+        }
+      ]
+    }
+  ],
+  "rego_code": "package travel_policy\n\n# Generated by Stage 9: DSL to Rego Converter\n# Date: 2026-02-05T12:35:26.831425\n# This file contains all policy rules converted from DSL format\n\n\n\n# Rule: C1\n# Intent: LIMIT\n# Ambiguous: False\nallow_c1_limit {\n    input.travelregion == \"India\"\n    input.travelpurpose == \"official business travel\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C10\n# Intent: LIMIT\n# Ambiguous: False\nallow_c10_limit {\n    input.gradem1lodgingcategorya == \"Rs. 4000\"\n    input.gradem1lodgingcategoryb == \"Rs. 3000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 150\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C11\n# Intent: LIMIT\n# Ambiguous: False\nallow_c11_limit {\n    input.gradem2lodgingcategorya == \"Rs. 3000\"\n    input.gradem2lodgingcategoryb == \"Rs. 2000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 125\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C12\n# Intent: LIMIT\n# Ambiguous: False\nallow_c12_limit {\n    input.gradem3lodgingcategorya == \"Rs. 3000\"\n    input.gradem3lodgingcategoryb == \"Rs. 2000\"\n    input.boardingallowance == \"Actual\"\n    input.personalincidentalallowancelimit == \"Rs. 100\"\n    input.personalincidentalallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C13\n# Intent: LIMIT\n# Ambiguous: False\nallow_c13_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C14\n# Intent: LIMIT\n# Ambiguous: False\nallow_c14_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C15\n# Intent: LIMIT\n# Ambiguous: False\nallow_c15_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C16\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c16_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C17\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c17_informatio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}\n\n# Rule: C18\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c18_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C19\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c19_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C2\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c2_informatio {\n    input.tourdurationmindays == 1\n    input.tourdurationmaxdays == 15\n    input.deputationdurationmindays == 15\n    input.deputationdurationmaxdays == \"1 year\"\n    input.transferdurationexceeds == \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}\n\n# Rule: C20\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c20_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C21\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c21_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C22\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c22_conditiona {\n    input.minimumtravelduration >= \"15 days\"\n    input.maximumtravelduration <= \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C23\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c23_conditiona {\n    input.traveldurationrange == \"1-7 days\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C24\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c24_conditiona {\n    input.deputationdurationthreshold == \"7 days\"\n    input.allowancesource == \"Table 7\"\n    input.allowancedependency == \"employee Grade and Category\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C25\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c25_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C26\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c26_restrictio {\n    input.billsubmissionrequirement == \"not required\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C27\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c27_conditiona {\n    input.durationprojectionthreshold == \"1 year\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C28\n# Intent: LIMIT\n# Ambiguous: False\nallow_c28_limit {\n    input.minimumreimbursementdistance >= \"100 KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C29\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c29_conditiona {\n    input.relocationduration == \"7 days\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C3\n# Intent: LIMIT\n# Ambiguous: False\nallow_c3_limit {\n    input.allowancetype == \"Lodging & Boarding\"\n    input.tourlocation == \"India\"\n    input.ratesource == \"Table 4\"\n    input.ratelimitation == \"maximum permissible\"\n    input.billrequirement == \"actual bills\"\n    input.taxinclusion == \"exclusive of taxes\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.allowance_limit\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C30\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c30_informatio {\n    input.gradem1lodgingallowance == \"Actual\"\n    input.gradem1boardingallowance == \"Actual\"\n    input.gradem1travelallowance == \"Actual\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}\n\n# Rule: C31\n# Intent: LIMIT\n# Ambiguous: False\nallow_c31_limit {\n    input.gradem2lodgingallowance == 4000\n    input.gradem2boardingallowance == 350\n    input.gradem2travelallowance == 150\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.lodging\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C32\n# Intent: LIMIT\n# Ambiguous: False\nallow_c32_limit {\n    input.gradem2blodgingallowance == 3000\n    input.gradem2bboardingallowance == 250\n    input.gradem2btravelallowance == 125\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.lodging\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C33\n# Intent: LIMIT\n# Ambiguous: False\nallow_c33_limit {\n    input.lodgingallowance == 2000\n    input.boardingallowance == 150\n    input.travelallowance == 100\n    input.applicablegrades == \"M3 to M6\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.allowance_limit\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C34\n# Intent: LIMIT\n# Ambiguous: False\nallow_c34_limit {\n    input.referencetable == \"Table 4\"\n    input.ratetype == \"maximum permissible rates\"\n    input.billrequirement == \"actual bills\"\n    input.taxinclusion == \"exclusive of taxes\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C35\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c35_restrictio {\n    input.requireddocumentation == \"bills/invoices\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C36\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c36_approval_r {\n    input.requiredquotations == 3\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C37\n# Intent: LIMIT\n# Ambiguous: False\nallow_c37_limit {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C38\n# Intent: LIMIT\n# Ambiguous: False\nallow_c38_limit {\n    input.employeegrades == \"M1/M2\"\n    input.travelmode == \"Air (Economy)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C39\n# Intent: LIMIT\n# Ambiguous: False\nallow_c39_limit {\n    input.employeegrade == \"M2B\"\n    input.travelmode == \"Train (AC II) /Taxi (AC)\"\n    input.taxirate == \"10 Rs/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C4\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c4_conditiona {\n    input.eligiblegrades == \"M1\"\n    input.airtravelclass == \"Economy\"\n    input.traintravelclasses == \"AC I, II\"\n    input.taxitravelclass == \"AC\"\n    input.intercitytravelmodes == \"Air, Train, Taxi\"\n    input.localtravelmodes == \"Taxi\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C40\n# Intent: LIMIT\n# Ambiguous: False\nallow_c40_limit {\n    input.employeegrade == \"M3\"\n    input.travelmodes == \"Train (III AC) /Bus/Taxi(AC)\"\n    input.taxiactype == \"AC\"\n    input.rateperkm == \"10 Rs/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C41\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c41_informatio {\n    input.employeegrade == \"M4\"\n    input.allowedtravelmodes == \"Train (III AC)/Bus(AC) /Shared Taxi/Auto\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}\n\n# Rule: C42\n# Intent: INFORMATIONAL\n# Ambiguous: False\nallow_c42_informatio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"PASS\",\n        \"status\": \"OK\"\n    }\n}\n\n# Rule: C43\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c43_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C44\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c44_approval_r {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C45\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c45_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C46\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c46_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C47\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c47_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C48\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c48_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C49\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c49_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C5\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c5_conditiona {\n    input.eligiblegrades == \"M2\"\n    input.airtravelclass == \"Economy\"\n    input.traintravelclasses == \"AC I, II\"\n    input.taxitravelclass == \"AC\"\n    input.taxicartypes == \"hatchback/sedan\"\n    input.clienttravelcartypes == \"Sedan/SUV\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C50\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c50_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C51\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c51_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C52\n# Intent: APPROVAL_REQUIRED\n# Ambiguous: False\nallow_c52_approval_r {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C53\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c53_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C54\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c54_conditiona {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C55\n# Intent: ADVISORY\n# Ambiguous: False\nallow_c55_advisory {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C56\n# Intent: RESTRICTION\n# Ambiguous: False\nallow_c56_restrictio {\n    true\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"approval.required\",\n        \"status\": \"YES\"\n    }\n}\n\n# Rule: C6\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c6_conditiona {\n    input.eligibledesignations == \"AGM, Sr. Manager, Sr. BM, RSM, Manager, Deputy Manager, Assistant Manager, Sr. Executive, Sr. Engineer, ASM, and BM (Grade M3)\"\n    input.intercitytravelmode == \"Train (III AC) / Bus / Taxi (AC)\"\n    input.localtravelmode == \"Taxi (AC)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C7\n# Intent: CONDITIONAL_ALLOWANCE\n# Ambiguous: False\nallow_c7_conditiona {\n    input.eligibleemployeegrades == \"M4\"\n    input.intercitytravelmodes == \"Train (III AC) / Bus / Taxi (AC)\"\n    input.localtravelmodes == \"Auto, Taxi (Non-AC)\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"allowance.general\",\n        \"status\": \"CONDITIONAL\"\n    }\n}\n\n# Rule: C8\n# Intent: LIMIT\n# Ambiguous: False\nallow_c8_limit {\n    input.localautotravellimit == \"<10 KM\"\n    input.intercitytravelmodes == \"Train & Bus (Sleeper) / Shared Taxi / Auto\"\n    input.localtravelmodes == \"Auto, Taxi (Non-AC)\"\n    input.over10kmtransport == \"Public/Shared Transport\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Rule: C9\n# Intent: LIMIT\n# Ambiguous: False\nallow_c9_limit {\n    input.nonactaxirate == \"Rs. 8/KM\"\n    input.actaxirate == \"Rs. 10/KM\"\n    result := {\n        \"allow\": true,\n        \"action\": \"enforce\",\n        \"constraint\": \"limit.general\",\n        \"status\": \"STRICT\"\n    }\n}\n\n# Default: Allow if no violations\nallow_default {\n    true\n}\n",
+  "statistics": {
+    "total_clauses": 56,
+    "total_rules": 56,
+    "ambiguous_rules": 0,
+    "enforce_rules": 56,
+    "warn_rules": 0
+  }
+}

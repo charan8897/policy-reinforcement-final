@@ -1,0 +1,593 @@
+[
+  {
+    "clauseId": "C1",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'official business travel' is subjective and lacks a clear definition. What constitutes 'official business' is not specified, leading to potential disputes over applicability. There is no definition of what types of travel expenses or activities qualify as 'official business'.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C2",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause exhibits a BOUNDARY_OVERLAP ambiguity. The 'Tour' classification ends at 15 days (inclusive), while the 'Deputation' classification *starts* at 15 days. This creates ambiguity as to how travel lasting exactly 15 days is classified. It's unclear if 15 days falls into 'Tour' or 'Deputation'.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C3",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause references 'Table 4' for limits but does not include the table itself or define how to access it. Additionally, 'maximum permissible rates' is subjective as it doesn't define a clear upper bound beyond what's in Table 4, which is not provided. The term 'actual bills' could be interpreted differently regarding acceptable documentation.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "VAGUE_METRICS",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C4",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not define what constitutes 'inter-city' versus 'local' travel. This distinction is crucial for determining the appropriate travel mode and class. Without a clear definition, there's room for interpretation and potential disputes. Additionally, the use of 'AC' for taxi class is not universally understood and could refer to different standards or features depending on the location.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C5",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause is ambiguous due to undefined references and incomplete conditions. 'Grade M2' is an UNDEFINED_REFERENCE as it's unclear what constitutes 'Grade M2' - is it a salary band, a job title, or something else? The condition for booking Sedan/SUV cars ('when traveling with clients') is an INCOMPLETE_CONDITION. It doesn't specify what constitutes 'traveling with clients' - is it a formal business meeting, a site visit, or simply being in the same location? Also, the clause doesn't specify any limits on the number of taxi rides or the distance of travel, leading to potential VAGUE_METRICS issues.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "INCOMPLETE_CONDITIONS",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C6",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not specify any limits or conditions on the use of the travel modes. For example, it doesn't state distance limitations for taxi use, or whether pre-approval is needed. The 'Train (III AC) / Bus / Taxi (AC)' phrasing implies a choice, but doesn't define criteria for *when* each mode is appropriate. Also, 'Grade M3' is an undefined reference - what constitutes Grade M3?",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C7",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause allows for multiple travel modes ('Train (III AC) / Bus / Taxi (AC)' for inter-city and 'Auto, Taxi (Non-AC)' for local). It's unclear if employees can *choose* any of these modes, or if there are conditions determining which mode is authorized (e.g., distance, cost, availability). The use of '/' implies options, but doesn't define the selection criteria. This creates ambiguity in policy enforcement.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C8",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause contains ambiguities regarding the conditions for using different modes of transport and the definition of 'local' vs. 'inter-city' travel. The use of '<10 KM' and '>10 KM' creates a boundary overlap issue, and the definition of 'Public/Shared Transport' is undefined. There's also an implicit assumption about what constitutes 'local' travel, which isn't defined.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS",
+      "UNDEFINED_REFERENCES",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C9",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause defines rates per kilometer but doesn't specify minimum fares, waiting charges, or any additional fees (e.g., night charges, toll fees). This lack of detail creates ambiguity in calculating the total fare. Also, it doesn't specify the currency for 'Rs.' which could be ambiguous in some contexts.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C10",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 150), the boarding allowance has no stated limit. This could lead to disputes and inconsistent application of the policy.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C11",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 125), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C12",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 100), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C13",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity as to the maximum amount reimbursable for these allowances. Additionally, the personal incidental allowance has an upper limit of Rs. 75, but 'Actual' is still used, implying that any amount up to Rs. 75 is reimbursable, which is unclear.",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C14",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C15",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C16",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses a fixed amount (Rs. 250) without specifying a maximum duration for which this reimbursement applies. It's unclear if this is a daily reimbursement for the entire tour duration or if there's a cap on the number of days for which it can be claimed. Additionally, 'relative' and 'friend' are subjective terms.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C17",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not specify any limits on the number of kilometers that can be claimed. This could lead to disputes or excessive claims if an employee travels a very large distance for official work. Also, it doesn't define what constitutes 'official work'.",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C18",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause exhibits a boundary overlap. The duration range of 12 hours is included in both the 3-12 hour bracket (50% allowance) and the 12-24 hour bracket (100% allowance). This creates ambiguity as to which allowance applies when the duration is exactly 12 hours.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C19",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses '3 to 12 hours' which is ambiguous. It's unclear whether the duration includes 3 and 12 hours, or if it's strictly between those values (e.g., 3.01 to 11.99 hours). This affects policy enforcement as it's unclear which travel durations qualify for the allowance.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C20",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses '12 to 24 hours' which creates a boundary overlap ambiguity. It's unclear if 12 hours is included in the allowance or not. Does 'between' include the boundaries or exclude them? This affects policy enforcement.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C21",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states 'All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.' However, it doesn't define what constitutes a valid 'bill' or 'invoice'. This leaves room for interpretation and potential disputes. For example, are receipts acceptable, or are only formal invoices required? The definition of 'Boarding' and 'Personal incidental category' are also undefined references.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C22",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause defines a duration range (15 days < duration < 1 year) to trigger a specific treatment (deputation). However, it doesn't specify what happens if the travel duration is *exactly* 15 days or *exactly* 1 year. This creates ambiguity in policy enforcement as these boundary conditions are not addressed.",
+    "ambiguity_types": [
+      "BOUNDARY_OVERLAPS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C23",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause references 'tour policy' without defining what constitutes the 'tour policy'. This creates ambiguity as the benefits are dependent on an undefined document or set of rules. Additionally, the clause only specifies benefits *during* the 1-7 day travel period, but doesn't specify what happens *before* or *after* that period, or for travel durations outside of that range.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C24",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause relies on 'Table 7' for allowance details, but the clause does not define or include 'Table 7'. This creates an undefined reference, making it impossible to enforce the policy without external information. Additionally, 'employee Grade and Category' are undefined terms within the clause itself.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C25",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses undefined terms regarding the quality or extent of 'guest house and food facilities'. It's unclear what level of facilities is required for the employee to forfeit deputation allowances. For example, is a basic room and simple meals sufficient, or are higher standards required? This lack of definition creates ambiguity.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C26",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states bills are 'not required' for deputation entitlements, but doesn't specify what *is* required to claim those entitlements. It's unclear if any documentation or process is needed at all. This creates ambiguity regarding how employees can actually access their entitlements.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C27",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states 'more than 1 year' but doesn't specify what happens if the duration projection is *exactly* 1 year. This creates ambiguity in policy enforcement. Is a projection of precisely 1 year considered a transfer, or not? This is an incomplete condition.",
+    "ambiguity_types": [
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C28",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause is relatively clear and straightforward. It establishes a specific distance threshold (100 KM) for relocation reimbursement eligibility. There are no subjective terms, undefined authorities, incomplete conditions, boundary overlaps, or undefined references. The metric is clearly defined with units.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C29",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause references 'tour policy' without defining what that policy is or providing a link to it. This creates ambiguity as the entitlements are dependent on an undefined document.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C30",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'Actual' is used for all allowances without specifying any limits, units, or calculation methods. This creates ambiguity as to the amount of each allowance. It's unclear if 'Actual' means actual costs incurred, a pre-defined amount, or something else.",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C31",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause specifies allowances for 'Grade M2' employees but does not define what 'Grade M2' means. This is an undefined reference, making it unclear which employees are eligible for these allowances. Additionally, the currency for the allowances is not specified, leading to a vague metric.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C32",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause specifies allowances for Grade M2B employees but does not define the units for the allowance amounts (e.g., currency). It also doesn't specify the frequency of these allowances (daily, monthly, per trip, etc.). This lack of context creates ambiguity in policy enforcement.",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C33",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states allowances for grades 'M3 to M6' but does not specify the currency for the allowance amounts (2000, 150, 100). This lack of currency definition introduces ambiguity. It also doesn't specify the period for which these allowances apply (e.g., per day, per week, per trip).",
+    "ambiguity_types": [
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C34",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause refers to 'actual bills' without defining what constitutes an 'actual bill'. This could include receipts, invoices, or other documentation, and the lack of definition creates ambiguity. Additionally, 'maximum permissible rates' in Table 4 could be interpreted differently depending on the context of the bills submitted. The clause also doesn't specify what types of taxes are excluded.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C35",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause requires 'bills/invoices' but doesn't define what constitutes an acceptable bill or invoice. For example, are digital copies acceptable? What information must be present on the bill/invoice? This lack of specificity creates ambiguity in enforcement.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C36",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause states HR will 'approve one' quotation, but doesn't define the criteria for approval. This leaves room for subjective decision-making and inconsistent application of the policy. There's no mention of what happens if none of the quotations are deemed acceptable by HR.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_AUTHORITY",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C37",
+    "ambiguous": false,
+    "reason": "[RULE-BASED] No entities extracted (informational clause) | Numeric values without clear units: 2 numbers found | Clear thresholds: 1 threshold keywords found (score: 25/100)",
+    "ambiguity_types": [],
+    "detection_method": "rule-based",
+    "confidence": 75
+  },
+  {
+    "clauseId": "C38",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause is straightforward and clearly defines the travel mode for specified employee grades. There are no subjective terms, undefined authorities, incomplete conditions, boundary overlaps, undefined references, or vague metrics.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C39",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause allows for two travel modes: Train (AC II) and Taxi (AC). It's unclear under what conditions each mode is permitted. Is the employee allowed to choose, or are there specific criteria (e.g., distance, availability) that dictate the mode of travel? This lack of clarity creates ambiguity in policy enforcement.",
+    "ambiguity_types": [
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C40",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not specify if the 10 Rs/KM rate applies to all travel modes (Train, Bus, and Taxi) or only to Taxi. This creates ambiguity in cost calculation. Also, the currency 'Rs' is not fully defined (e.g., Rs. Indian Rupees?).",
+    "ambiguity_types": [
+      "VAGUE_METRICS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C41",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause allows multiple modes of travel without specifying conditions for choosing between them. It's unclear if the employee can choose any of these options, or if there's a hierarchy or specific criteria for selection (e.g., distance, cost, availability). This lack of clarity could lead to disputes over allowable expenses.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C42",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause lists multiple modes of travel without specifying conditions for when each mode is appropriate. It's unclear what factors determine whether an employee uses a 'Train & Bus (Sleeper)', 'Shared Taxi', 'Auto', or 'Public Conveyance'. The parenthetical '(Sleeper)' further complicates this, as it only applies to the Train & Bus option, but doesn't define when sleeper class is required or permitted.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C43",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not define what constitutes a 'class' of ticket. It also doesn't specify what happens if the next class down is also unavailable, creating an incomplete conditional logic. The clause also doesn't specify if any price difference is reimbursed or handled.",
+    "ambiguity_types": [
+      "INCOMPLETE_CONDITIONS",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C44",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause contains an UNDEFINED_AUTHORITY regarding 'supervisor/HOD'. It's unclear if approval is needed from *either* a supervisor *or* the HOD, or *both*. The use of '/' implies a choice, but the policy doesn't specify which one is sufficient. Additionally, '1 day prior' is SUBJECTIVE_LANGUAGE as it doesn't specify a cutoff time. Is it 24 hours before departure, or does it allow requests up to the last minute of the day before?",
+    "ambiguity_types": [
+      "UNDEFINED_AUTHORITY",
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C45",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause contains several ambiguities. 'Emergency' is subjective and lacks a clear definition (SUBJECTIVE_LANGUAGE). The Head of Department (HOD) is mentioned as the approving authority, but the process for obtaining permission and the criteria for approval are not defined (UNDEFINED_AUTHORITY). The clause doesn't specify what happens if the HOD denies permission, creating an incomplete conditional logic (INCOMPLETE_CONDITIONS).",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_AUTHORITY",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C46",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause contains several ambiguities. 'HOD approval (or reason for absence)' is subjective and doesn't define what constitutes sufficient reason for absence. 'Eligibility for return booking needs to be mentioned' is vague and doesn't specify *how* it needs to be mentioned or what criteria define eligibility. The clause also lacks definition of 'DOT'.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C47",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses the term 'specific' without defining what constitutes a 'specific' flight/train/bus. This leaves room for interpretation and potential disputes. What level of detail is required to qualify as 'specific'? Is a time preference enough, or does it need to include airline/train operator and specific class?",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C48",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The phrase 'at least one day' is ambiguous. Does this mean 24 hours, or the entire calendar day? A request submitted at 11:59 PM the day before travel is technically 'at least one day', but may not allow sufficient processing time. The clause also lacks clarity on what happens if the reason for urgency is deemed insufficient.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C49",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses a blanket prohibition without defining what constitutes a 'special' Hotel, Flight, Seat, or Web Check-in. The term 'special' is subjective and lacks objective boundaries, making enforcement difficult. What one employee considers 'special' another may not.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C50",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause contains ambiguities regarding the handling of reasons attached to late submissions and the definition of 'tour'. While a reason *must* be attached for late submissions, it's unclear what happens to the bill if a reason *is* attached. Does the bill remain unpaid, is it subject to review, or is there a grace period? Additionally, 'tour' is an UNDEFINED_REFERENCE - the clause doesn't define what constitutes a 'tour' (e.g., length, purpose, approval process).",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "INCOMPLETE_CONDITIONS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 0
+  },
+  {
+    "clauseId": "C51",
+    "ambiguous": false,
+    "reason": "[LLM-VERIFIED] The clause lists required information for bill submission. All terms are relatively well-defined and commonly understood in a business context. There are no subjective terms, undefined authorities, incomplete conditions, boundary overlaps, undefined references, or vague metrics.",
+    "ambiguity_types": [],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C52",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause requires a signature from the 'HOD' but does not define what 'HOD' means. It's an UNDEFINED_REFERENCE. It's unclear who qualifies as the Head of Department for the purpose of this signature requirement.",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C53",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause uses the term 'deviation' without defining what constitutes a significant enough deviation to trigger the HOD approval requirement. A small difference in amounts could be considered a deviation, leading to inconsistent enforcement. Additionally, 'REQUIRED' is a strong term that doesn't allow for any exceptions or alternative actions if HOD approval isn't obtainable.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C54",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause does not specify what bills are eligible for reimbursement when paid by the employee. It also doesn't define what constitutes a valid 'bill' or 'credit/debit card statement'. There's no mention of a minimum or maximum bill amount, or any requirements regarding the bill's content (e.g., vendor, date, amount).",
+    "ambiguity_types": [
+      "UNDEFINED_REFERENCES",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C55",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The term 'authentic' is subjective and lacks a clear, objective definition. What constitutes an 'authentic' bill is open to interpretation and could lead to disputes. There's no defined standard or process for determining authenticity.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "UNDEFINED_REFERENCES"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  },
+  {
+    "clauseId": "C56",
+    "ambiguous": true,
+    "reason": "[LLM-VERIFIED] The clause requires mentioning distance traveled, but doesn't specify the unit of measurement (miles, kilometers, etc.). This lack of specificity could lead to disputes or inconsistent processing. Additionally, 'smooth processing' is subjective and doesn't define a clear outcome or standard.",
+    "ambiguity_types": [
+      "SUBJECTIVE_LANGUAGE",
+      "VAGUE_METRICS"
+    ],
+    "detection_method": "llm",
+    "rule_score": 10
+  }
+]

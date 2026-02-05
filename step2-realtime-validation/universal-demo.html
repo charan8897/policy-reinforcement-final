@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Plugin - Works on ANY Platform</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      font-size: 13px;
+    }
+
+    input, textarea, select {
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .status {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .status-item {
+      margin-bottom: 8px;
+    }
+
+    .status-item strong {
+      color: #667eea;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .storage-display {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .plugin-stats {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .forms-list {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .forms-list li {
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .forms-list strong {
+      color: #667eea;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌍 Universal Plugin Demo</h1>
+      <p>Works on ANY platform - Standard HTML, React, Vue, Angular, or any 3rd party UI</p>
+    </div>
+
+    <div class="plugin-stats">
+      <h2 style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #667eea;">Plugin Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="plugin-count">0</div>
+          <div class="stat-label">Forms Detected</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="field-count">0</div>
+          <div class="stat-label">Total Fields</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="saved-count">0</div>
+          <div class="stat-label">Forms with Data</div>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn-secondary" onclick="refreshStats()" style="margin-right: 10px;">Refresh Stats</button>
+        <button class="btn-secondary" onclick="saveAllForms()">Save All Forms</button>
+      </div>
+
+      <ul class="forms-list" id="forms-list"></ul>
+    </div>
+
+    <div class="grid">
+      <!-- Form 1: Standard HTML Form -->
+      <div class="card">
+        <h2>Form 1: Standard HTML</h2>
+        <form id="standard-form">
+          <div class="status">
+            <div class="status-item">🔍 <strong>Auto-Detected:</strong> Yes</div>
+            <div class="status-item">💾 <strong>Auto-Saving:</strong> Every 1 second</div>
+          </div>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="field1" placeholder="Enter name">
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="field2" placeholder="Enter email">
+          </div>
+
+          <div class="form-group">
+            <label>Message</label>
+            <textarea name="field3" placeholder="Enter message"></textarea>
+          </div>
+
+          <button type="button" class="btn-secondary" onclick="showFormStorage('standard-form')">View Storage</button>
+        </form>
+        <div class="storage-display" id="storage-standard-form"></div>
+      </div>
+
+      <!-- Form 2: Different Fields -->
+      <div class="card">
+        <h2>Form 2: Multiple Types</h2>
+        <form id="advanced-form">
+          <div class="status">
+            <div class="status-item">🔍 <strong>Fields:</strong> Text, Select, Checkbox</div>
+            <div class="status-item">💾 <strong>Storage:</strong> localStorage</div>
+          </div>
+
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username">
+          </div>
+
+          <div class="form-group">
+            <label>Country</label>
+            <select name="country">
+              <option value="">Select country</option>
+              <option value="US">United States</option>
+              <option value="UK">United Kingdom</option>
+              <option value="CA">Canada</option>
+              <option value="IN">India</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" name="agree" value="yes">
+              I agree to terms
+            </label>
+          </div>
+
+          <button type="button" class="btn-secondary" onclick="showFormStorage('advanced-form')">View Storage</button>
+        </form>
+        <div class="storage-display" id="storage-advanced-form"></div>
+      </div>
+
+      <!-- Form 3: Dynamic Form (added later) -->
+      <div class="card full-width">
+        <h2>Form 3: Dynamically Added Form</h2>
+        <div class="status">
+          <div class="status-item">⚡ <strong>Added after page load:</strong> This form is detected automatically</div>
+        </div>
+        <form id="dynamic-form">
+          <div class="form-group">
+            <label>Project Name</label>
+            <input type="text" name="project_name" placeholder="Enter project name">
+          </div>
+
+          <div class="form-group">
+            <label>Budget</label>
+            <input type="number" name="budget" placeholder="Enter budget">
+          </div>
+
+          <div class="form-group">
+            <label>Timeline</label>
+            <input type="date" name="timeline">
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes" placeholder="Enter project notes"></textarea>
+          </div>
+
+          <button type="button" class="btn-secondary" onclick="showFormStorage('dynamic-form')">View Storage</button>
+        </form>
+        <div class="storage-display" id="storage-dynamic-form"></div>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+      <p>Plugin Status: <strong id="plugin-status">Initializing...</strong></p>
+      <p style="margin-top: 10px;">Fill in any form → Auto-saves to localStorage → Refresh page → Data returns automatically</p>
+    </div>
+  </div>
+
+  <!-- Include modules -->
+  <script src="modules/form-listener.js"></script>
+  <script src="modules/form-state-manager.js"></script>
+  <script src="modules/universal-plugin.js"></script>
+
+  <script>
+    function updatePluginStatus() {
+      const stats = window.universalPlugin?.getStats();
+      
+      if (!stats) {
+        document.getElementById('plugin-status').textContent = 'Initializing...';
+        return;
+      }
+
+      document.getElementById('plugin-count').textContent = stats.pluginCount;
+      document.getElementById('field-count').textContent = stats.totalFields;
+      
+      const savedCount = stats.plugins.filter(p => p.hasStoredData).length;
+      document.getElementById('saved-count').textContent = savedCount;
+
+      document.getElementById('plugin-status').textContent = `Active (${stats.pluginCount} forms, ${stats.totalFields} fields)`;
+
+      // Update forms list
+      const list = document.getElementById('forms-list');
+      list.innerHTML = stats.plugins.map(p => `
+        <li>
+          <strong>${p.formId}</strong>: ${p.fieldCount} fields 
+          ${p.hasStoredData ? '✓ Has stored data' : '(no data yet)'}
+        </li>
+      `).join('');
+    }
+
+    function refreshStats() {
+      updatePluginStatus();
+    }
+
+    function showFormStorage(formId) {
+      const data = window.universalPlugin?.getFormStorageData(formId);
+      const display = document.getElementById(`storage-${formId}`);
+
+      if (!data) {
+        display.textContent = '// No data in storage yet\n// Start filling the form...';
+        return;
+      }
+
+      const formatted = JSON.stringify(data, null, 2);
+      display.textContent = formatted;
+    }
+
+    function saveAllForms() {
+      const count = window.universalPlugin?.saveAll();
+      alert(`Saved ${count} form(s) to localStorage`);
+      updatePluginStatus();
+    }
+
+    // Update stats every 2 seconds
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        updatePluginStatus();
+        setInterval(updatePluginStatus, 2000);
+      }, 500);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+{
+    "version": "1.0",
+    "description": "Generic Policy Enhancer Configuration",
+    "document_structure": {
+        "section_patterns": [
+            {
+                "pattern": "^#{1,3}\\s+.+",
+                "type": "heading"
+            },
+            {
+                "pattern": "^[A-Z][A-Z\\s]+:$",
+                "type": "section_header"
+            },
+            {
+                "pattern": "^(?:SECTION|ARTICLE|APPENDIX|ANNEXURE)[\\s:]?\\d*",
+                "type": "numbered_section"
+            },
+            {
+                "pattern": "^\\d+\\.\\s+[A-Z]",
+                "type": "numbered_item"
+            },
+            {
+                "pattern": "^[-•*]\\s+",
+                "type": "bullet_item"
+            },
+            {
+                "pattern": "^(DEFINITIONS|SCOPE|OBJECTIVE|ELIGIBILITY|EXCLUSIONS|PURPOSE|APPLICABILITY):",
+                "type": "standard_section"
+            }
+        ]
+    },
+    "entity_classification": {
+        "semantic_types": {
+            "TEMPORAL": [
+                "date",
+                "deadline",
+                "duration",
+                "timeframe",
+                "period",
+                "within",
+                "by"
+            ],
+            "QUANTITATIVE": [
+                "amount",
+                "percentage",
+                "rate",
+                "limit",
+                "threshold",
+                "count",
+                "frequency",
+                "maximum",
+                "minimum"
+            ],
+            "ACTOR": [
+                "role",
+                "person",
+                "department",
+                "authority",
+                "entity",
+                "employee",
+                "user",
+                "manager"
+            ],
+            "LOCATION": [
+                "place",
+                "location",
+                "region",
+                "site",
+                "area",
+                "city",
+                "office"
+            ],
+            "CONDITIONAL": [
+                "condition",
+                "prerequisite",
+                "requirement",
+                "criterion",
+                "eligibility"
+            ],
+            "ACTION": [
+                "action",
+                "behavior",
+                "conduct",
+                "activity",
+                "task",
+                "procedure"
+            ],
+            "STATUS": [
+                "status",
+                "state",
+                "condition",
+                "approval"
+            ]
+        }
+    },
+    "intent_patterns": {
+        "RESTRICTION": [
+            "must not",
+            "shall not",
+            "cannot",
+            "prohibited",
+            "forbidden",
+            "not allowed"
+        ],
+        "MANDATORY": [
+            "must",
+            "shall",
+            "is required to",
+            "is obligated to"
+        ],
+        "PERMISSIVE": [
+            "may",
+            "can",
+            "is permitted to",
+            "is allowed to"
+        ],
+        "ADVISORY": [
+            "should",
+            "recommended",
+            "encouraged",
+            "advised",
+            "suggested"
+        ],
+        "LIMIT": [
+            "up to",
+            "maximum",
+            "minimum",
+            "not to exceed",
+            "at most",
+            "at least"
+        ],
+        "CONDITIONAL": [
+            "if",
+            "when",
+            "unless",
+            "provided that",
+            "in the event",
+            "only if",
+            "subject to"
+        ],
+        "INFORMATIONAL": [
+            "means",
+            "refers to",
+            "is defined as",
+            "includes",
+            "this policy",
+            "this document"
+        ]
+    },
+    "ambiguity_patterns": {
+        "VAGUE_TERMS": [
+            "reasonable",
+            "appropriate",
+            "adequate",
+            "sufficient",
+            "proper",
+            "as applicable",
+            "as necessary"
+        ],
+        "UNDEFINED_REFERENCES": [
+            "the ",
+            "this ",
+            "that ",
+            "such ",
+            "applicable ",
+            "relevant "
+        ],
+        "INCOMPLETE_CONDITIONS": [
+            "if",
+            "when",
+            "unless",
+            "where",
+            "whenever"
+        ],
+        "SUBJECTIVE_LANGUAGE": [
+            "material",
+            "significant",
+            "substantial",
+            "considerable",
+            "timely",
+            "prompt"
+        ],
+        "TEMPORAL_AMBIGUITY": [
+            "immediately",
+            "forthwith",
+            "promptly",
+            "within a reasonable time",
+            "as soon as possible"
+        ]
+    },
+    "enforcement_mapping": {
+        "RESTRICTION": "enforce",
+        "MANDATORY": "enforce",
+        "LIMIT": "enforce",
+        "CONDITIONAL": "warn",
+        "PERMISSIVE": "warn",
+        "ADVISORY": "warn",
+        "INFORMATIONAL": "inform"
+    },
+    "output_options": {
+        "include_statistics": true,
+        "include_raw_sections": false,
+        "indent_size": 2
+    }
+}

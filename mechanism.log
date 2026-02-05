@@ -1,0 +1,2329 @@
+=== POLICY EXTRACTION LOG ===
+Timestamp: 2026-02-05 10:54:21.375443
+==================================================
+
+[2026-02-05 10:54:21] [INFO] Extracting PDF: /home/hutech/Downloads/Travel-Policy_3rd-feb_final.pdf
+[2026-02-05 10:54:21] [SUCCESS] PDF extracted: 429 lines, 1397 words
+[2026-02-05 10:54:21] [OUTPUT] File: /home/hutech/Documents/docupolicy/filename.txt
+
+
+=== CLAUSE EXTRACTION LOG ===
+Timestamp: 2026-02-05 10:55:24.136711
+==================================================
+
+[2026-02-05 10:54:21] [INFO] LangChain enabled for enhanced clause extraction
+[2026-02-05 10:54:21] [START] Step 1B: Clause Extraction with Elaboration
+[2026-02-05 10:54:21] [STEP] Reading policy file
+[2026-02-05 10:54:21] [SUCCESS] Policy file read: 8408 characters
+[2026-02-05 10:54:21] [STEP] Extracting clauses with LangChain (enhanced mode)
+[2026-02-05 10:54:21] [LANGCHAIN] Starting LangChain-enhanced clause extraction
+[2026-02-05 10:54:21] [CHUNKING] Split document into 3 chunks
+[2026-02-05 10:54:21] [PROCESSING] Chunk 1/3 (starting at C1)
+[2026-02-05 10:54:47] [SUCCESS] Extracted 18 clauses from chunk 1
+[2026-02-05 10:54:47] [PROCESSING] Chunk 2/3 (starting at C19)
+[2026-02-05 10:55:10] [SUCCESS] Extracted 25 clauses from chunk 2
+[2026-02-05 10:55:10] [PROCESSING] Chunk 3/3 (starting at C44)
+[2026-02-05 10:55:24] [SUCCESS] Extracted 13 clauses from chunk 3
+[2026-02-05 10:55:24] [COMPLETE] Total clauses extracted: 56
+[2026-02-05 10:55:24] [STEP] Validating clause structure
+[2026-02-05 10:55:24] [STEP] Building clause_id → text mapping
+[2026-02-05 10:55:24] [STEP] Formatting output
+[2026-02-05 10:55:24] [SUCCESS] Clauses saved to: /home/hutech/Documents/docupolicy/stage1_clauses.json
+[2026-02-05 10:55:24] [STATS] Total clauses: 56
+[2026-02-05 10:55:24] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== INTENT CLASSIFICATION LOG ===
+Timestamp: 2026-02-05 10:57:50.590733
+==================================================
+
+[2026-02-05 10:55:24] [INFO] LangChain enabled for enhanced intent classification
+[2026-02-05 10:55:24] [START] Step 2: Intent Classification
+[2026-02-05 10:55:24] [STEP] Reading clauses from Stage 1B
+[2026-02-05 10:55:24] [SUCCESS] Read 56 clauses from /home/hutech/Documents/docupolicy/stage1_clauses.json
+[2026-02-05 10:55:24] [STATS] Total clauses to classify: 56
+[2026-02-05 10:55:24] [STEP] Classifying intent with LangChain (parallel mode - 5 workers)
+[2026-02-05 10:55:24] [CLASSIFY] [1/56] Processing C1
+[2026-02-05 10:55:24] [CLASSIFY] [2/56] Processing C2
+[2026-02-05 10:55:24] [CLASSIFY] [3/56] Processing C3
+[2026-02-05 10:55:24] [CLASSIFY] [4/56] Processing C4
+[2026-02-05 10:55:24] [CLASSIFY] [5/56] Processing C5
+[2026-02-05 10:55:24] [CLASSIFY] [6/56] Processing C6
+[2026-02-05 10:55:24] [CLASSIFY] [7/56] Processing C7
+[2026-02-05 10:55:24] [CLASSIFY] [8/56] Processing C8
+[2026-02-05 10:55:26] [RESULT] C7: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:55:26] [CLASSIFY] [9/56] Processing C9
+[2026-02-05 10:55:26] [RESULT] C3: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:26] [CLASSIFY] [10/56] Processing C10
+[2026-02-05 10:55:27] [RESULT] C2: INFORMATIONAL (confidence: 0.95)
+[2026-02-05 10:55:27] [CLASSIFY] [11/56] Processing C11
+[2026-02-05 10:55:27] [RESULT] C4: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:55:27] [CLASSIFY] [12/56] Processing C12
+[2026-02-05 10:55:27] [RESULT] C6: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:55:27] [CLASSIFY] [13/56] Processing C13
+[2026-02-05 10:55:27] [RESULT] C8: LIMIT (confidence: 0.9)
+[2026-02-05 10:55:27] [CLASSIFY] [14/56] Processing C14
+[2026-02-05 10:55:27] [RESULT] C1: LIMIT (confidence: 0.85)
+[2026-02-05 10:55:27] [CLASSIFY] [15/56] Processing C15
+[2026-02-05 10:55:27] [RESULT] C5: CONDITIONAL_ALLOWANCE (confidence: 0.85)
+[2026-02-05 10:55:27] [CLASSIFY] [16/56] Processing C16
+[2026-02-05 10:55:29] [RESULT] C9: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:29] [CLASSIFY] [17/56] Processing C17
+[2026-02-05 10:55:29] [RESULT] C11: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:29] [CLASSIFY] [18/56] Processing C18
+[2026-02-05 10:55:29] [RESULT] C10: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:29] [CLASSIFY] [19/56] Processing C19
+[2026-02-05 10:55:30] [RESULT] C14: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:30] [CLASSIFY] [20/56] Processing C20
+[2026-02-05 10:55:30] [RESULT] C12: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:30] [CLASSIFY] [21/56] Processing C21
+[2026-02-05 10:55:30] [RESULT] C13: LIMIT (confidence: 0.95)
+[2026-02-05 10:55:30] [CLASSIFY] [22/56] Processing C22
+[2026-02-05 10:55:30] [RESULT] C16: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:55:30] [CLASSIFY] [23/56] Processing C23
+[2026-02-05 10:56:33] [RESULT] C15: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:33] [CLASSIFY] [24/56] Processing C24
+[2026-02-05 10:56:34] [RESULT] C17: INFORMATIONAL (confidence: 0.95)
+[2026-02-05 10:56:34] [CLASSIFY] [25/56] Processing C25
+[2026-02-05 10:56:34] [RESULT] C19: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:34] [CLASSIFY] [26/56] Processing C26
+[2026-02-05 10:56:35] [RESULT] C20: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:35] [CLASSIFY] [27/56] Processing C27
+[2026-02-05 10:56:35] [RESULT] C18: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:35] [CLASSIFY] [28/56] Processing C28
+[2026-02-05 10:56:35] [RESULT] C22: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:35] [CLASSIFY] [29/56] Processing C29
+[2026-02-05 10:56:36] [RESULT] C21: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:56:36] [CLASSIFY] [30/56] Processing C30
+[2026-02-05 10:56:36] [RESULT] C24: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:36] [CLASSIFY] [31/56] Processing C31
+[2026-02-05 10:56:36] [RESULT] C23: CONDITIONAL_ALLOWANCE (confidence: 0.9)
+[2026-02-05 10:56:36] [CLASSIFY] [32/56] Processing C32
+[2026-02-05 10:56:37] [RESULT] C26: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:56:37] [CLASSIFY] [33/56] Processing C33
+[2026-02-05 10:56:37] [RESULT] C25: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:37] [CLASSIFY] [34/56] Processing C34
+[2026-02-05 10:56:38] [RESULT] C28: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:38] [CLASSIFY] [35/56] Processing C35
+[2026-02-05 10:56:38] [RESULT] C27: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:56:38] [CLASSIFY] [36/56] Processing C36
+[2026-02-05 10:56:38] [RESULT] C30: INFORMATIONAL (confidence: 0.95)
+[2026-02-05 10:56:38] [CLASSIFY] [37/56] Processing C37
+[2026-02-05 10:56:38] [RESULT] C31: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:38] [CLASSIFY] [38/56] Processing C38
+[2026-02-05 10:56:38] [RESULT] C32: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:38] [CLASSIFY] [39/56] Processing C39
+[2026-02-05 10:56:39] [RESULT] C29: CONDITIONAL_ALLOWANCE (confidence: 0.9)
+[2026-02-05 10:56:39] [CLASSIFY] [40/56] Processing C40
+[2026-02-05 10:56:39] [RESULT] C34: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:39] [CLASSIFY] [41/56] Processing C41
+[2026-02-05 10:56:40] [RESULT] C35: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:56:40] [CLASSIFY] [42/56] Processing C42
+[2026-02-05 10:56:40] [RESULT] C33: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:40] [CLASSIFY] [43/56] Processing C43
+[2026-02-05 10:56:40] [RESULT] C36: APPROVAL_REQUIRED (confidence: 0.95)
+[2026-02-05 10:56:40] [CLASSIFY] [44/56] Processing C44
+[2026-02-05 10:56:40] [RESULT] C37: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:40] [CLASSIFY] [45/56] Processing C45
+[2026-02-05 10:56:41] [RESULT] C38: LIMIT (confidence: 0.95)
+[2026-02-05 10:56:41] [CLASSIFY] [46/56] Processing C46
+[2026-02-05 10:57:44] [RESULT] C40: LIMIT (confidence: 0.95)
+[2026-02-05 10:57:44] [CLASSIFY] [47/56] Processing C47
+[2026-02-05 10:57:44] [RESULT] C39: LIMIT (confidence: 0.95)
+[2026-02-05 10:57:44] [CLASSIFY] [48/56] Processing C48
+[2026-02-05 10:57:45] [RESULT] C42: INFORMATIONAL (confidence: 0.95)
+[2026-02-05 10:57:45] [CLASSIFY] [49/56] Processing C49
+[2026-02-05 10:57:46] [RESULT] C41: INFORMATIONAL (confidence: 0.95)
+[2026-02-05 10:57:46] [CLASSIFY] [50/56] Processing C50
+[2026-02-05 10:57:46] [RESULT] C45: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:46] [CLASSIFY] [51/56] Processing C51
+[2026-02-05 10:57:46] [RESULT] C44: APPROVAL_REQUIRED (confidence: 0.95)
+[2026-02-05 10:57:46] [CLASSIFY] [52/56] Processing C52
+[2026-02-05 10:57:46] [RESULT] C43: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:46] [CLASSIFY] [53/56] Processing C53
+[2026-02-05 10:57:47] [RESULT] C46: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:57:47] [CLASSIFY] [54/56] Processing C54
+[2026-02-05 10:57:47] [RESULT] C49: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:57:47] [CLASSIFY] [55/56] Processing C55
+[2026-02-05 10:57:47] [RESULT] C48: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:47] [CLASSIFY] [56/56] Processing C56
+[2026-02-05 10:57:48] [RESULT] C50: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:57:48] [RESULT] C47: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:48] [RESULT] C51: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:57:49] [RESULT] C52: APPROVAL_REQUIRED (confidence: 0.95)
+[2026-02-05 10:57:49] [RESULT] C54: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:49] [RESULT] C53: CONDITIONAL_ALLOWANCE (confidence: 0.95)
+[2026-02-05 10:57:50] [RESULT] C55: ADVISORY (confidence: 0.85)
+[2026-02-05 10:57:50] [RESULT] C56: RESTRICTION (confidence: 0.95)
+[2026-02-05 10:57:50] [SUCCESS] Classified 56 clauses
+[2026-02-05 10:57:50] [STEP] Formatting classified output
+[2026-02-05 10:57:50] [SUCCESS] Classified clauses saved to: /home/hutech/Documents/docupolicy/stage2_classified.json
+[2026-02-05 10:57:50] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== ENTITY EXTRACTION LOG ===
+Timestamp: 2026-02-05 10:59:02.490379
+==================================================
+
+[2026-02-05 10:57:50] [START] Step 3: Entity & Threshold Extraction
+[2026-02-05 10:57:50] [STEP] Reading classified clauses from Stage 2
+[2026-02-05 10:57:50] [SUCCESS] Read 56 classified clauses from /home/hutech/Documents/docupolicy/stage2_classified.json
+[2026-02-05 10:57:50] [INFO] Starting Stage 3: Entity Extraction (Parallel)
+[2026-02-05 10:57:50] [INFO] Configuration: max_workers=8
+[2026-02-05 10:57:50] [INFO] Extracting entities from 56 clauses with standard Gemini (parallel mode)
+[2026-02-05 10:57:52] [RESULT] C1: Extracted 2 entities: ['travelRegion', 'travelPurpose']
+[2026-02-05 10:57:52] [RESULT] C7: Extracted 3 entities: ['eligibleEmployeeGrades', 'interCityTravelModes', 'localTravelModes']
+[2026-02-05 10:57:53] [RESULT] C2: Extracted 5 entities: ['tourDurationMinDays', 'tourDurationMaxDays', 'deputationDurationMinDays', 'deputationDurationMaxDays', 'transferDurationExceeds']
+[2026-02-05 10:57:53] [RESULT] C3: Extracted 6 entities: ['allowanceType', 'tourLocation', 'rateSource', 'rateLimitation', 'billRequirement', 'taxInclusion']
+[2026-02-05 10:57:53] [RESULT] C4: Extracted 6 entities: ['eligibleGrades', 'airTravelClass', 'trainTravelClasses', 'taxiTravelClass', 'interCityTravelModes', 'localTravelModes']
+[2026-02-05 10:57:53] [RESULT] C5: Extracted 6 entities: ['eligibleGrades', 'airTravelClass', 'trainTravelClasses', 'taxiTravelClass', 'taxiCarTypes', 'clientTravelCarTypes']
+[2026-02-05 10:57:53] [RESULT] C6: Extracted 3 entities: ['eligibleDesignations', 'interCityTravelMode', 'localTravelMode']
+[2026-02-05 10:57:53] [RESULT] C8: Extracted 4 entities: ['localAutoTravelLimit', 'interCityTravelModes', 'localTravelModes', 'over10KmTransport']
+[2026-02-05 10:57:53] [WARNING] C14: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:53] [WARNING] C15: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:54] [WARNING] C16: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:54] [WARNING] C13: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:55] [RESULT] C9: Extracted 2 entities: ['nonAcTaxiRate', 'acTaxiRate']
+[2026-02-05 10:57:55] [WARNING] C17: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:55] [RESULT] C10: Extracted 5 entities: ['gradeM1LodgingCategoryA', 'gradeM1LodgingCategoryB', 'boardingAllowance', 'personalIncidentalAllowanceLimit', 'personalIncidentalAllowance']
+[2026-02-05 10:57:55] [RESULT] C11: Extracted 5 entities: ['gradeM2LodgingCategoryA', 'gradeM2LodgingCategoryB', 'boardingAllowance', 'personalIncidentalAllowanceLimit', 'personalIncidentalAllowance']
+[2026-02-05 10:57:55] [WARNING] C18: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:55] [WARNING] C19: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:56] [WARNING] C14: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:56] [WARNING] C15: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:56] [WARNING] C16: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:56] [RESULT] C12: Extracted 5 entities: ['gradeM3LodgingCategoryA', 'gradeM3LodgingCategoryB', 'boardingAllowance', 'personalIncidentalAllowanceLimit', 'personalIncidentalAllowance']
+[2026-02-05 10:57:56] [WARNING] C13: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:56] [WARNING] C20: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:57:57] [WARNING] C17: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:57] [WARNING] C18: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:58] [WARNING] C19: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:57:58] [WARNING] C20: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:00] [WARNING] C14: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:00] [WARNING] C15: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:00] [WARNING] C16: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:00] [WARNING] C13: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:01] [WARNING] C17: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:01] [WARNING] C18: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:02] [WARNING] C19: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:02] [WARNING] C20: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:08] [ERROR] C14: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 51.855205881s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 51
+}
+]
+[2026-02-05 10:58:08] [RESULT] C14: Extracted 0 entities: []
+[2026-02-05 10:58:08] [WARNING] C21: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:08] [ERROR] C15: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 51.609734135s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 51
+}
+]
+[2026-02-05 10:58:08] [RESULT] C15: Extracted 0 entities: []
+[2026-02-05 10:58:08] [ERROR] C16: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 51.518139717s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 51
+}
+]
+[2026-02-05 10:58:08] [RESULT] C16: Extracted 0 entities: []
+[2026-02-05 10:58:08] [ERROR] C13: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 51.369669446s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 51
+}
+]
+[2026-02-05 10:58:08] [RESULT] C13: Extracted 0 entities: []
+[2026-02-05 10:58:08] [WARNING] C22: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:08] [WARNING] C23: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:08] [WARNING] C24: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:09] [ERROR] C17: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 50.518834278s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 50
+}
+]
+[2026-02-05 10:58:09] [RESULT] C17: Extracted 0 entities: []
+[2026-02-05 10:58:09] [WARNING] C25: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:09] [ERROR] C18: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 50.155399462s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 50
+}
+]
+[2026-02-05 10:58:09] [RESULT] C18: Extracted 0 entities: []
+[2026-02-05 10:58:10] [WARNING] C26: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:10] [ERROR] C19: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 49.885739965s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 49
+}
+]
+[2026-02-05 10:58:10] [RESULT] C19: Extracted 0 entities: []
+[2026-02-05 10:58:10] [WARNING] C27: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:10] [WARNING] C21: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:11] [ERROR] C20: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 48.67079671s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 48
+}
+]
+[2026-02-05 10:58:11] [RESULT] C20: Extracted 0 entities: []
+[2026-02-05 10:58:11] [WARNING] C23: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:11] [WARNING] C22: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:11] [WARNING] C24: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:11] [WARNING] C28: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:11] [WARNING] C25: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:12] [WARNING] C26: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:12] [WARNING] C27: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:13] [WARNING] C28: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:14] [WARNING] C21: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:15] [WARNING] C23: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:15] [WARNING] C22: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:15] [WARNING] C24: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:15] [WARNING] C25: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:16] [WARNING] C26: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:16] [WARNING] C27: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:17] [WARNING] C28: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:22] [ERROR] C21: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 30, model: gemma-3-27b
+Please retry in 37.451645355s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 30
+}
+, retry_delay {
+  seconds: 37
+}
+]
+[2026-02-05 10:58:22] [RESULT] C21: Extracted 0 entities: []
+[2026-02-05 10:58:24] [RESULT] C29: Extracted 1 entities: ['relocationDuration']
+[2026-02-05 10:58:25] [RESULT] C23: Extracted 1 entities: ['travelDurationRange']
+[2026-02-05 10:58:25] [RESULT] C22: Extracted 2 entities: ['minimumTravelDuration', 'maximumTravelDuration']
+[2026-02-05 10:58:25] [RESULT] C25: Extracted 0 entities: []
+[2026-02-05 10:58:25] [RESULT] C24: Extracted 3 entities: ['deputationDurationThreshold', 'allowanceSource', 'allowanceDependency']
+[2026-02-05 10:58:26] [RESULT] C27: Extracted 1 entities: ['durationProjectionThreshold']
+[2026-02-05 10:58:26] [RESULT] C30: Extracted 3 entities: ['gradeM1LodgingAllowance', 'gradeM1BoardingAllowance', 'gradeM1TravelAllowance']
+[2026-02-05 10:58:27] [RESULT] C26: Extracted 1 entities: ['billSubmissionRequirement']
+[2026-02-05 10:58:27] [WARNING] C37: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:27] [RESULT] C32: Extracted 3 entities: ['gradeM2BLodgingAllowance', 'gradeM2BBoardingAllowance', 'gradeM2BTravelAllowance']
+[2026-02-05 10:58:27] [RESULT] C28: Extracted 1 entities: ['minimumReimbursementDistance']
+[2026-02-05 10:58:28] [WARNING] C38: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:28] [WARNING] C39: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:28] [RESULT] C35: Extracted 1 entities: ['requiredDocumentation']
+[2026-02-05 10:58:28] [RESULT] C31: Extracted 3 entities: ['gradeM2LodgingAllowance', 'gradeM2BoardingAllowance', 'gradeM2TravelAllowance']
+[2026-02-05 10:58:28] [WARNING] C40: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:28] [RESULT] C33: Extracted 4 entities: ['lodgingAllowance', 'boardingAllowance', 'travelAllowance', 'applicableGrades']
+[2026-02-05 10:58:28] [RESULT] C36: Extracted 1 entities: ['requiredQuotations']
+[2026-02-05 10:58:29] [RESULT] C34: Extracted 4 entities: ['referenceTable', 'rateType', 'billRequirement', 'taxInclusion']
+[2026-02-05 10:58:29] [WARNING] C41: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:29] [WARNING] C43: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:29] [WARNING] C42: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:29] [WARNING] C44: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:29] [WARNING] C37: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:31] [WARNING] C42: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:31] [WARNING] C43: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:31] [WARNING] C44: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:32] [RESULT] C38: Extracted 2 entities: ['employeeGrades', 'travelMode']
+[2026-02-05 10:58:32] [WARNING] C45: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:32] [RESULT] C39: Extracted 3 entities: ['employeeGrade', 'travelMode', 'taxiRate']
+[2026-02-05 10:58:32] [WARNING] C46: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:33] [RESULT] C41: Extracted 2 entities: ['employeeGrade', 'allowedTravelModes']
+[2026-02-05 10:58:33] [WARNING] C47: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:33] [RESULT] C40: Extracted 4 entities: ['employeeGrade', 'travelModes', 'taxiAcType', 'ratePerKm']
+[2026-02-05 10:58:33] [WARNING] C37: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:33] [WARNING] C48: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:34] [WARNING] C45: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:34] [WARNING] C46: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:35] [WARNING] C47: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:35] [WARNING] C42: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:35] [WARNING] C44: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:35] [WARNING] C43: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:35] [WARNING] C48: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:38] [WARNING] C45: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:38] [WARNING] C46: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:39] [WARNING] C47: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:40] [WARNING] C48: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:41] [ERROR] C37: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 18.190648109s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 18
+}
+]
+[2026-02-05 10:58:41] [RESULT] C37: Extracted 0 entities: []
+[2026-02-05 10:58:41] [WARNING] C49: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:43] [ERROR] C42: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.287925271s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 10:58:43] [RESULT] C42: Extracted 0 entities: []
+[2026-02-05 10:58:43] [ERROR] C44: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.251957786s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 10:58:43] [RESULT] C44: Extracted 0 entities: []
+[2026-02-05 10:58:43] [ERROR] C43: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.230587116s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 10:58:43] [RESULT] C43: Extracted 0 entities: []
+[2026-02-05 10:58:43] [WARNING] C50: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:43] [WARNING] C51: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:43] [WARNING] C52: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:44] [WARNING] C49: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:45] [WARNING] C50: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:45] [WARNING] C51: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:45] [WARNING] C52: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:46] [ERROR] C45: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 13.492010752s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 13
+}
+]
+[2026-02-05 10:58:46] [RESULT] C45: Extracted 0 entities: []
+[2026-02-05 10:58:46] [WARNING] C53: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:46] [ERROR] C46: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 13.099231474s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 13
+}
+]
+[2026-02-05 10:58:46] [RESULT] C46: Extracted 0 entities: []
+[2026-02-05 10:58:47] [WARNING] C54: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:47] [ERROR] C47: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 12.72354692s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 12
+}
+]
+[2026-02-05 10:58:47] [RESULT] C47: Extracted 0 entities: []
+[2026-02-05 10:58:47] [WARNING] C55: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:48] [WARNING] C49: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:48] [ERROR] C48: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 11.947560903s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 11
+}
+]
+[2026-02-05 10:58:48] [RESULT] C48: Extracted 0 entities: []
+[2026-02-05 10:58:48] [WARNING] C56: Rate limit hit (attempt 1/4). Waiting 2s before retry...
+[2026-02-05 10:58:48] [WARNING] C53: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:49] [WARNING] C54: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:49] [WARNING] C55: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:49] [WARNING] C50: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:50] [WARNING] C51: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:50] [WARNING] C52: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:50] [WARNING] C56: Rate limit hit (attempt 2/4). Waiting 4s before retry...
+[2026-02-05 10:58:52] [WARNING] C53: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:53] [WARNING] C54: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:53] [WARNING] C55: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:54] [WARNING] C56: Rate limit hit (attempt 3/4). Waiting 8s before retry...
+[2026-02-05 10:58:56] [ERROR] C49: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 3.926241518s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 3
+}
+]
+[2026-02-05 10:58:56] [RESULT] C49: Extracted 0 entities: []
+[2026-02-05 10:58:58] [ERROR] C50: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 2.006924308s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 2
+}
+]
+[2026-02-05 10:58:58] [RESULT] C50: Extracted 0 entities: []
+[2026-02-05 10:58:58] [ERROR] C51: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 1.951091467s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 1
+}
+]
+[2026-02-05 10:58:58] [RESULT] C51: Extracted 0 entities: []
+[2026-02-05 10:58:58] [ERROR] C52: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 1.913886883s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 1
+}
+]
+[2026-02-05 10:58:58] [RESULT] C52: Extracted 0 entities: []
+[2026-02-05 10:59:00] [ERROR] C53: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 59.210264797s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 59
+}
+]
+[2026-02-05 10:59:00] [RESULT] C53: Extracted 0 entities: []
+[2026-02-05 10:59:01] [ERROR] C54: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 58.822899978s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 58
+}
+]
+[2026-02-05 10:59:01] [RESULT] C54: Extracted 0 entities: []
+[2026-02-05 10:59:01] [ERROR] C55: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 58.448928408s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 58
+}
+]
+[2026-02-05 10:59:01] [RESULT] C55: Extracted 0 entities: []
+[2026-02-05 10:59:02] [ERROR] C56: Failed after 4 retry attempts. ResourceExhausted: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 57.574131114s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 57
+}
+]
+[2026-02-05 10:59:02] [RESULT] C56: Extracted 0 entities: []
+[2026-02-05 10:59:02] [SUCCESS] Extracted entities from 56 clauses
+[2026-02-05 10:59:02] [STEP] Calculating entity statistics
+[2026-02-05 10:59:02] [STEP] Formatting entity extraction output
+[2026-02-05 10:59:02] [SUCCESS] Extracted entities saved to: /home/hutech/Documents/docupolicy/stage3_entities.json
+[2026-02-05 10:59:02] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== STAGE 4: AMBIGUITY DETECTION LOG ===
+Timestamp: 2026-02-05 11:02:32.828192
+==================================================
+
+[2026-02-05 10:59:02] [INFO] LangChain enabled for enhanced ambiguity detection
+[2026-02-05 10:59:02] [INFO] Starting Stage 4: Ambiguity Detection
+[2026-02-05 10:59:02] [INFO] Analyzing 56 clauses with LangChain (parallel mode - 5 workers)
+[2026-02-05 10:59:36] [AMBIGUOUS] C1: [LLM-VERIFIED] The term 'official business travel' is subjective and lacks a clear definition. What constitutes 'official business' is not specified, leading to potential disputes over applicability. There is no definition of what types of travel expenses or activities qualify as 'official business'.
+[2026-02-05 10:59:37] [AMBIGUOUS] C4: [LLM-VERIFIED] The clause does not define what constitutes 'inter-city' versus 'local' travel. This distinction is crucial for determining the appropriate travel mode and class. Without a clear definition, there's room for interpretation and potential disputes. Additionally, the use of 'AC' for taxi class is not universally understood and could refer to different standards or features depending on the location.
+[2026-02-05 10:59:37] [AMBIGUOUS] C8: [LLM-VERIFIED] The clause contains ambiguities regarding the conditions for using different modes of transport and the definition of 'local' vs. 'inter-city' travel. The use of '<10 KM' and '>10 KM' creates a boundary overlap issue, and the definition of 'Public/Shared Transport' is undefined. There's also an implicit assumption about what constitutes 'local' travel, which isn't defined.
+[2026-02-05 10:59:37] [AMBIGUOUS] C2: [LLM-VERIFIED] The clause exhibits a BOUNDARY_OVERLAP ambiguity. The 'Tour' classification ends at 15 days (inclusive), while the 'Deputation' classification *starts* at 15 days. This creates ambiguity as to how travel lasting exactly 15 days is classified. It's unclear if 15 days falls into 'Tour' or 'Deputation'.
+[2026-02-05 10:59:37] [AMBIGUOUS] C7: [LLM-VERIFIED] The clause allows for multiple travel modes ('Train (III AC) / Bus / Taxi (AC)' for inter-city and 'Auto, Taxi (Non-AC)' for local). It's unclear if employees can *choose* any of these modes, or if there are conditions determining which mode is authorized (e.g., distance, cost, availability). The use of '/' implies options, but doesn't define the selection criteria. This creates ambiguity in policy enforcement.
+[2026-02-05 10:59:37] [AMBIGUOUS] C3: [LLM-VERIFIED] The clause references 'Table 4' for limits but does not include the table itself or define how to access it. Additionally, 'maximum permissible rates' is subjective as it doesn't define a clear upper bound beyond what's in Table 4, which is not provided. The term 'actual bills' could be interpreted differently regarding acceptable documentation.
+[2026-02-05 10:59:37] [AMBIGUOUS] C5: [LLM-VERIFIED] The clause is ambiguous due to undefined references and incomplete conditions. 'Grade M2' is an UNDEFINED_REFERENCE as it's unclear what constitutes 'Grade M2' - is it a salary band, a job title, or something else? The condition for booking Sedan/SUV cars ('when traveling with clients') is an INCOMPLETE_CONDITION. It doesn't specify what constitutes 'traveling with clients' - is it a formal business meeting, a site visit, or simply being in the same location? Also, the clause doesn't specify any limits on the number of taxi rides or the distance of travel, leading to potential VAGUE_METRICS issues.
+[2026-02-05 10:59:37] [AMBIGUOUS] C6: [LLM-VERIFIED] The clause does not specify any limits or conditions on the use of the travel modes. For example, it doesn't state distance limitations for taxi use, or whether pre-approval is needed. The 'Train (III AC) / Bus / Taxi (AC)' phrasing implies a choice, but doesn't define criteria for *when* each mode is appropriate. Also, 'Grade M3' is an undefined reference - what constitutes Grade M3?
+[2026-02-05 10:59:39] [AMBIGUOUS] C9: [LLM-VERIFIED] The clause defines rates per kilometer but doesn't specify minimum fares, waiting charges, or any additional fees (e.g., night charges, toll fees). This lack of detail creates ambiguity in calculating the total fare. Also, it doesn't specify the currency for 'Rs.' which could be ambiguous in some contexts.
+[2026-02-05 10:59:40] [AMBIGUOUS] C10: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 150), the boarding allowance has no stated limit. This could lead to disputes and inconsistent application of the policy.
+[2026-02-05 10:59:40] [AMBIGUOUS] C11: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 125), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.
+[2026-02-05 10:59:40] [AMBIGUOUS] C12: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining what 'Actual' means. This creates ambiguity regarding the maximum reimbursable amounts. While a limit is provided for the personal incidental allowance (up to Rs. 100), the boarding allowance has no such cap. This could lead to disputes and inconsistent application of the policy.
+[2026-02-05 10:59:41] [AMBIGUOUS] C16: [LLM-VERIFIED] The clause uses a fixed amount (Rs. 250) without specifying a maximum duration for which this reimbursement applies. It's unclear if this is a daily reimbursement for the entire tour duration or if there's a cap on the number of days for which it can be claimed. Additionally, 'relative' and 'friend' are subjective terms.
+[2026-02-05 10:59:41] [AMBIGUOUS] C13: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity as to the maximum amount reimbursable for these allowances. Additionally, the personal incidental allowance has an upper limit of Rs. 75, but 'Actual' is still used, implying that any amount up to Rs. 75 is reimbursable, which is unclear.
+[2026-02-05 10:59:41] [AMBIGUOUS] C14: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.
+[2026-02-05 11:00:43] [AMBIGUOUS] C15: [LLM-VERIFIED] The clause uses 'Actual' for both boarding and personal incidental allowances without defining any limits or constraints. This creates ambiguity regarding the maximum reimbursable amounts. While a cap of Rs. 50 is provided for the personal incidental allowance, the boarding allowance has no such limit. This could lead to disputes and inconsistent application of the policy.
+[2026-02-05 11:00:45] [AMBIGUOUS] C17: [LLM-VERIFIED] The clause does not specify any limits on the number of kilometers that can be claimed. This could lead to disputes or excessive claims if an employee travels a very large distance for official work. Also, it doesn't define what constitutes 'official work'.
+[2026-02-05 11:00:46] [AMBIGUOUS] C20: [LLM-VERIFIED] The clause uses '12 to 24 hours' which creates a boundary overlap ambiguity. It's unclear if 12 hours is included in the allowance or not. Does 'between' include the boundaries or exclude them? This affects policy enforcement.
+[2026-02-05 11:00:46] [AMBIGUOUS] C18: [LLM-VERIFIED] The clause exhibits a boundary overlap. The duration range of 12 hours is included in both the 3-12 hour bracket (50% allowance) and the 12-24 hour bracket (100% allowance). This creates ambiguity as to which allowance applies when the duration is exactly 12 hours.
+[2026-02-05 11:00:46] [AMBIGUOUS] C19: [LLM-VERIFIED] The clause uses '3 to 12 hours' which is ambiguous. It's unclear whether the duration includes 3 and 12 hours, or if it's strictly between those values (e.g., 3.01 to 11.99 hours). This affects policy enforcement as it's unclear which travel durations qualify for the allowance.
+[2026-02-05 11:00:47] [AMBIGUOUS] C24: [LLM-VERIFIED] The clause relies on 'Table 7' for allowance details, but the clause does not define or include 'Table 7'. This creates an undefined reference, making it impossible to enforce the policy without external information. Additionally, 'employee Grade and Category' are undefined terms within the clause itself.
+[2026-02-05 11:00:47] [AMBIGUOUS] C21: [LLM-VERIFIED] The clause states 'All expense claims (except Boarding and Personal incidental category) MUST be supported by bills/invoices.' However, it doesn't define what constitutes a valid 'bill' or 'invoice'. This leaves room for interpretation and potential disputes. For example, are receipts acceptable, or are only formal invoices required? The definition of 'Boarding' and 'Personal incidental category' are also undefined references.
+[2026-02-05 11:00:47] [AMBIGUOUS] C23: [LLM-VERIFIED] The clause references 'tour policy' without defining what constitutes the 'tour policy'. This creates ambiguity as the benefits are dependent on an undefined document or set of rules. Additionally, the clause only specifies benefits *during* the 1-7 day travel period, but doesn't specify what happens *before* or *after* that period, or for travel durations outside of that range.
+[2026-02-05 11:00:47] [AMBIGUOUS] C22: [LLM-VERIFIED] The clause defines a duration range (15 days < duration < 1 year) to trigger a specific treatment (deputation). However, it doesn't specify what happens if the travel duration is *exactly* 15 days or *exactly* 1 year. This creates ambiguity in policy enforcement as these boundary conditions are not addressed.
+[2026-02-05 11:00:48] [AMBIGUOUS] C25: [LLM-VERIFIED] The clause uses undefined terms regarding the quality or extent of 'guest house and food facilities'. It's unclear what level of facilities is required for the employee to forfeit deputation allowances. For example, is a basic room and simple meals sufficient, or are higher standards required? This lack of definition creates ambiguity.
+[2026-02-05 11:00:49] [AMBIGUOUS] C26: [LLM-VERIFIED] The clause states bills are 'not required' for deputation entitlements, but doesn't specify what *is* required to claim those entitlements. It's unclear if any documentation or process is needed at all. This creates ambiguity regarding how employees can actually access their entitlements.
+[2026-02-05 11:00:49] [CLEAR] C28: Clear, no ambiguity
+[2026-02-05 11:00:49] [AMBIGUOUS] C27: [LLM-VERIFIED] The clause states 'more than 1 year' but doesn't specify what happens if the duration projection is *exactly* 1 year. This creates ambiguity in policy enforcement. Is a projection of precisely 1 year considered a transfer, or not? This is an incomplete condition.
+[2026-02-05 11:00:49] [AMBIGUOUS] C29: [LLM-VERIFIED] The clause references 'tour policy' without defining what that policy is or providing a link to it. This creates ambiguity as the entitlements are dependent on an undefined document.
+[2026-02-05 11:00:49] [CLEAR] C37: Clear, no ambiguity
+[2026-02-05 11:00:50] [AMBIGUOUS] C30: [LLM-VERIFIED] The term 'Actual' is used for all allowances without specifying any limits, units, or calculation methods. This creates ambiguity as to the amount of each allowance. It's unclear if 'Actual' means actual costs incurred, a pre-defined amount, or something else.
+[2026-02-05 11:00:50] [AMBIGUOUS] C31: [LLM-VERIFIED] The clause specifies allowances for 'Grade M2' employees but does not define what 'Grade M2' means. This is an undefined reference, making it unclear which employees are eligible for these allowances. Additionally, the currency for the allowances is not specified, leading to a vague metric.
+[2026-02-05 11:00:50] [AMBIGUOUS] C32: [LLM-VERIFIED] The clause specifies allowances for Grade M2B employees but does not define the units for the allowance amounts (e.g., currency). It also doesn't specify the frequency of these allowances (daily, monthly, per trip, etc.). This lack of context creates ambiguity in policy enforcement.
+[2026-02-05 11:01:54] [AMBIGUOUS] C35: [LLM-VERIFIED] The clause requires 'bills/invoices' but doesn't define what constitutes an acceptable bill or invoice. For example, are digital copies acceptable? What information must be present on the bill/invoice? This lack of specificity creates ambiguity in enforcement.
+[2026-02-05 11:01:54] [CLEAR] C38: Clear, no ambiguity
+[2026-02-05 11:01:54] [AMBIGUOUS] C33: [LLM-VERIFIED] The clause states allowances for grades 'M3 to M6' but does not specify the currency for the allowance amounts (2000, 150, 100). This lack of currency definition introduces ambiguity. It also doesn't specify the period for which these allowances apply (e.g., per day, per week, per trip).
+[2026-02-05 11:01:54] [AMBIGUOUS] C34: [LLM-VERIFIED] The clause refers to 'actual bills' without defining what constitutes an 'actual bill'. This could include receipts, invoices, or other documentation, and the lack of definition creates ambiguity. Additionally, 'maximum permissible rates' in Table 4 could be interpreted differently depending on the context of the bills submitted. The clause also doesn't specify what types of taxes are excluded.
+[2026-02-05 11:01:55] [AMBIGUOUS] C36: [LLM-VERIFIED] The clause states HR will 'approve one' quotation, but doesn't define the criteria for approval. This leaves room for subjective decision-making and inconsistent application of the policy. There's no mention of what happens if none of the quotations are deemed acceptable by HR.
+[2026-02-05 11:01:55] [AMBIGUOUS] C39: [LLM-VERIFIED] The clause allows for two travel modes: Train (AC II) and Taxi (AC). It's unclear under what conditions each mode is permitted. Is the employee allowed to choose, or are there specific criteria (e.g., distance, availability) that dictate the mode of travel? This lack of clarity creates ambiguity in policy enforcement.
+[2026-02-05 11:01:55] [AMBIGUOUS] C40: [LLM-VERIFIED] The clause does not specify if the 10 Rs/KM rate applies to all travel modes (Train, Bus, and Taxi) or only to Taxi. This creates ambiguity in cost calculation. Also, the currency 'Rs' is not fully defined (e.g., Rs. Indian Rupees?).
+[2026-02-05 11:01:56] [AMBIGUOUS] C41: [LLM-VERIFIED] The clause allows multiple modes of travel without specifying conditions for choosing between them. It's unclear if the employee can choose any of these options, or if there's a hierarchy or specific criteria for selection (e.g., distance, cost, availability). This lack of clarity could lead to disputes over allowable expenses.
+[2026-02-05 11:01:57] [AMBIGUOUS] C43: [LLM-VERIFIED] The clause does not define what constitutes a 'class' of ticket. It also doesn't specify what happens if the next class down is also unavailable, creating an incomplete conditional logic. The clause also doesn't specify if any price difference is reimbursed or handled.
+[2026-02-05 11:01:58] [AMBIGUOUS] C42: [LLM-VERIFIED] The clause lists multiple modes of travel without specifying conditions for when each mode is appropriate. It's unclear what factors determine whether an employee uses a 'Train & Bus (Sleeper)', 'Shared Taxi', 'Auto', or 'Public Conveyance'. The parenthetical '(Sleeper)' further complicates this, as it only applies to the Train & Bus option, but doesn't define when sleeper class is required or permitted.
+[2026-02-05 11:01:58] [AMBIGUOUS] C45: [LLM-VERIFIED] The clause contains several ambiguities. 'Emergency' is subjective and lacks a clear definition (SUBJECTIVE_LANGUAGE). The Head of Department (HOD) is mentioned as the approving authority, but the process for obtaining permission and the criteria for approval are not defined (UNDEFINED_AUTHORITY). The clause doesn't specify what happens if the HOD denies permission, creating an incomplete conditional logic (INCOMPLETE_CONDITIONS).
+[2026-02-05 11:01:58] [AMBIGUOUS] C46: [LLM-VERIFIED] The clause contains several ambiguities. 'HOD approval (or reason for absence)' is subjective and doesn't define what constitutes sufficient reason for absence. 'Eligibility for return booking needs to be mentioned' is vague and doesn't specify *how* it needs to be mentioned or what criteria define eligibility. The clause also lacks definition of 'DOT'.
+[2026-02-05 11:01:58] [AMBIGUOUS] C44: [LLM-VERIFIED] The clause contains an UNDEFINED_AUTHORITY regarding 'supervisor/HOD'. It's unclear if approval is needed from *either* a supervisor *or* the HOD, or *both*. The use of '/' implies a choice, but the policy doesn't specify which one is sufficient. Additionally, '1 day prior' is SUBJECTIVE_LANGUAGE as it doesn't specify a cutoff time. Is it 24 hours before departure, or does it allow requests up to the last minute of the day before?
+[2026-02-05 11:01:58] [AMBIGUOUS] C47: [LLM-VERIFIED] The clause uses the term 'specific' without defining what constitutes a 'specific' flight/train/bus. This leaves room for interpretation and potential disputes. What level of detail is required to qualify as 'specific'? Is a time preference enough, or does it need to include airline/train operator and specific class?
+[2026-02-05 11:01:59] [AMBIGUOUS] C48: [LLM-VERIFIED] The phrase 'at least one day' is ambiguous. Does this mean 24 hours, or the entire calendar day? A request submitted at 11:59 PM the day before travel is technically 'at least one day', but may not allow sufficient processing time. The clause also lacks clarity on what happens if the reason for urgency is deemed insufficient.
+[2026-02-05 11:01:59] [AMBIGUOUS] C49: [LLM-VERIFIED] The clause uses a blanket prohibition without defining what constitutes a 'special' Hotel, Flight, Seat, or Web Check-in. The term 'special' is subjective and lacks objective boundaries, making enforcement difficult. What one employee considers 'special' another may not.
+[2026-02-05 11:02:00] [CLEAR] C51: Clear, no ambiguity
+[2026-02-05 11:02:00] [AMBIGUOUS] C52: [LLM-VERIFIED] The clause requires a signature from the 'HOD' but does not define what 'HOD' means. It's an UNDEFINED_REFERENCE. It's unclear who qualifies as the Head of Department for the purpose of this signature requirement.
+[2026-02-05 11:02:01] [AMBIGUOUS] C50: [LLM-VERIFIED] The clause contains ambiguities regarding the handling of reasons attached to late submissions and the definition of 'tour'. While a reason *must* be attached for late submissions, it's unclear what happens to the bill if a reason *is* attached. Does the bill remain unpaid, is it subject to review, or is there a grace period? Additionally, 'tour' is an UNDEFINED_REFERENCE - the clause doesn't define what constitutes a 'tour' (e.g., length, purpose, approval process).
+[2026-02-05 11:02:01] [AMBIGUOUS] C53: [LLM-VERIFIED] The clause uses the term 'deviation' without defining what constitutes a significant enough deviation to trigger the HOD approval requirement. A small difference in amounts could be considered a deviation, leading to inconsistent enforcement. Additionally, 'REQUIRED' is a strong term that doesn't allow for any exceptions or alternative actions if HOD approval isn't obtainable.
+[2026-02-05 11:02:32] [AMBIGUOUS] C55: [LLM-VERIFIED] The term 'authentic' is subjective and lacks a clear, objective definition. What constitutes an 'authentic' bill is open to interpretation and could lead to disputes. There's no defined standard or process for determining authenticity.
+[2026-02-05 11:02:32] [AMBIGUOUS] C54: [LLM-VERIFIED] The clause does not specify what bills are eligible for reimbursement when paid by the employee. It also doesn't define what constitutes a valid 'bill' or 'credit/debit card statement'. There's no mention of a minimum or maximum bill amount, or any requirements regarding the bill's content (e.g., vendor, date, amount).
+[2026-02-05 11:02:32] [AMBIGUOUS] C56: [LLM-VERIFIED] The clause requires mentioning distance traveled, but doesn't specify the unit of measurement (miles, kilometers, etc.). This lack of specificity could lead to disputes or inconsistent processing. Additionally, 'smooth processing' is subjective and doesn't define a clear outcome or standard.
+[2026-02-05 11:02:32] [SUMMARY] Ambiguous clauses: 52/56
+[2026-02-05 11:02:32] [SUCCESS] Ambiguity flags saved to: /home/hutech/Documents/docupolicy/stage4_ambiguity_flags.json
+[2026-02-05 11:02:32] [OUTPUT] Total clauses analyzed: 56
+[2026-02-05 11:02:32] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== STAGE 5: AMBIGUITY CLARIFICATION WITH CONTEXT LOG ===
+Timestamp: 2026-02-05 11:02:45.991724
+============================================================
+
+[2026-02-05 11:02:32] [START] Stage 5: Ambiguity Clarification with Context Search
+[2026-02-05 11:02:32] [CONFIG] Workers=8, Batch Size=3
+[2026-02-05 11:02:32] [INFO] Processing 56 clauses
+[2026-02-05 11:02:32] [PROCESSING] C1: Searching context for 2 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C1: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C2: Searching context for 1 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C2: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C3: Searching context for 3 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C3: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C4: Searching context for 2 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C4: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C5: Searching context for 3 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C5: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C6: Searching context for 3 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C6: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C7: Searching context for 2 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C7: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:32] [PROCESSING] C8: Searching context for 3 ambiguities...
+[2026-02-05 11:02:32] [CLARIFYING] C8: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:37] [SUCCESS] C6: Processed (confidence: 0.80)
+[2026-02-05 11:02:37] [PROCESSING] C9: Searching context for 2 ambiguities...
+[2026-02-05 11:02:37] [CLARIFYING] C9: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:37] [COMPLETE] Progress: 1/56
+[2026-02-05 11:02:37] [SUCCESS] C3: Processed (confidence: 0.90)
+[2026-02-05 11:02:37] [PROCESSING] C10: Searching context for 2 ambiguities...
+[2026-02-05 11:02:37] [CLARIFYING] C10: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:37] [COMPLETE] Progress: 2/56
+[2026-02-05 11:02:37] [SUCCESS] C7: Processed (confidence: 0.80)
+[2026-02-05 11:02:37] [PROCESSING] C11: Searching context for 2 ambiguities...
+[2026-02-05 11:02:37] [CLARIFYING] C11: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:37] [COMPLETE] Progress: 3/56
+[2026-02-05 11:02:38] [SUCCESS] C2: Processed (confidence: 0.95)
+[2026-02-05 11:02:38] [PROCESSING] C12: Searching context for 2 ambiguities...
+[2026-02-05 11:02:38] [CLARIFYING] C12: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:38] [COMPLETE] Progress: 4/56
+[2026-02-05 11:02:38] [SUCCESS] C5: Processed (confidence: 0.90)
+[2026-02-05 11:02:38] [PROCESSING] C13: Searching context for 1 ambiguities...
+[2026-02-05 11:02:38] [CLARIFYING] C13: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:38] [SUCCESS] C4: Processed (confidence: 0.90)
+[2026-02-05 11:02:38] [PROCESSING] C14: Searching context for 1 ambiguities...
+[2026-02-05 11:02:38] [CLARIFYING] C14: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:38] [COMPLETE] Progress: 5/56
+[2026-02-05 11:02:38] [COMPLETE] Progress: 6/56
+[2026-02-05 11:02:39] [SUCCESS] C8: Processed (confidence: 0.90)
+[2026-02-05 11:02:39] [PROCESSING] C15: Searching context for 1 ambiguities...
+[2026-02-05 11:02:39] [CLARIFYING] C15: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:39] [COMPLETE] Progress: 7/56
+[2026-02-05 11:02:39] [SUCCESS] C1: Processed (confidence: 0.80)
+[2026-02-05 11:02:39] [PROCESSING] C16: Searching context for 2 ambiguities...
+[2026-02-05 11:02:39] [CLARIFYING] C16: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:39] [COMPLETE] Progress: 8/56
+[2026-02-05 11:02:40] [ERROR] C16: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:40] [PROCESSING] C17: Searching context for 2 ambiguities...
+[2026-02-05 11:02:40] [CLARIFYING] C17: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:40] [COMPLETE] Progress: 9/56
+[2026-02-05 11:02:40] [ERROR] C17: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:40] [PROCESSING] C18: Searching context for 1 ambiguities...
+[2026-02-05 11:02:40] [CLARIFYING] C18: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:40] [COMPLETE] Progress: 10/56
+[2026-02-05 11:02:40] [ERROR] C18: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:40] [PROCESSING] C19: Searching context for 1 ambiguities...
+[2026-02-05 11:02:40] [CLARIFYING] C19: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:40] [COMPLETE] Progress: 11/56
+[2026-02-05 11:02:41] [ERROR] C19: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:41] [PROCESSING] C20: Searching context for 1 ambiguities...
+[2026-02-05 11:02:41] [CLARIFYING] C20: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:41] [COMPLETE] Progress: 12/56
+[2026-02-05 11:02:41] [ERROR] C20: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:41] [PROCESSING] C21: Searching context for 2 ambiguities...
+[2026-02-05 11:02:41] [CLARIFYING] C21: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:41] [COMPLETE] Progress: 13/56
+[2026-02-05 11:02:41] [SUCCESS] C10: Processed (confidence: 0.80)
+[2026-02-05 11:02:41] [PROCESSING] C22: Searching context for 1 ambiguities...
+[2026-02-05 11:02:41] [CLARIFYING] C22: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:41] [COMPLETE] Progress: 14/56
+[2026-02-05 11:02:41] [ERROR] C21: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:41] [PROCESSING] C23: Searching context for 1 ambiguities...
+[2026-02-05 11:02:41] [CLARIFYING] C23: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:41] [COMPLETE] Progress: 15/56
+[2026-02-05 11:02:42] [ERROR] C22: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:42] [PROCESSING] C24: Searching context for 1 ambiguities...
+[2026-02-05 11:02:42] [CLARIFYING] C24: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:42] [COMPLETE] Progress: 16/56
+[2026-02-05 11:02:42] [ERROR] C23: Processing failed: 429 Resource has been exhausted (e.g. check quota).
+[2026-02-05 11:02:42] [PROCESSING] C25: Searching context for 2 ambiguities...
+[2026-02-05 11:02:42] [CLARIFYING] C25: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:42] [COMPLETE] Progress: 17/56
+[2026-02-05 11:02:42] [ERROR] C24: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 17.451355934s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 17
+}
+]
+[2026-02-05 11:02:42] [PROCESSING] C26: Searching context for 1 ambiguities...
+[2026-02-05 11:02:42] [CLARIFYING] C26: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:42] [COMPLETE] Progress: 18/56
+[2026-02-05 11:02:42] [ERROR] C25: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 17.427545969s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 17
+}
+]
+[2026-02-05 11:02:42] [PROCESSING] C27: Searching context for 1 ambiguities...
+[2026-02-05 11:02:42] [CLARIFYING] C27: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:42] [COMPLETE] Progress: 19/56
+[2026-02-05 11:02:42] [SUCCESS] C11: Processed (confidence: 0.80)
+[2026-02-05 11:02:42] [SKIP] C28: No ambiguities detected
+[2026-02-05 11:02:42] [PROCESSING] C29: Searching context for 1 ambiguities...
+[2026-02-05 11:02:42] [CLARIFYING] C29: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:42] [COMPLETE] Progress: 20/56
+[2026-02-05 11:02:42] [COMPLETE] Progress: 21/56
+[2026-02-05 11:02:43] [ERROR] C27: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.840686706s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C30: Searching context for 1 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C30: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 22/56
+[2026-02-05 11:02:43] [ERROR] C29: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.840567121s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C31: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C31: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 23/56
+[2026-02-05 11:02:43] [SUCCESS] C12: Processed (confidence: 0.80)
+[2026-02-05 11:02:43] [PROCESSING] C32: Searching context for 1 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C32: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 24/56
+[2026-02-05 11:02:43] [ERROR] C30: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.71862919s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C33: Searching context for 1 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C33: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 25/56
+[2026-02-05 11:02:43] [ERROR] C31: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.520122649s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C34: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C34: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [ERROR] C32: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.534593093s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C35: Searching context for 1 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C35: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 26/56
+[2026-02-05 11:02:43] [COMPLETE] Progress: 27/56
+[2026-02-05 11:02:43] [ERROR] C33: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.513127676s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C36: Searching context for 3 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C36: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 28/56
+[2026-02-05 11:02:43] [ERROR] C34: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.398221084s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [SKIP] C37: No ambiguities detected
+[2026-02-05 11:02:43] [SKIP] C38: No ambiguities detected
+[2026-02-05 11:02:43] [PROCESSING] C39: Searching context for 1 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C39: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 29/56
+[2026-02-05 11:02:43] [COMPLETE] Progress: 30/56
+[2026-02-05 11:02:43] [COMPLETE] Progress: 31/56
+[2026-02-05 11:02:43] [ERROR] C39: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.217823153s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C40: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C40: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [ERROR] C36: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.241766441s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C41: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C41: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 32/56
+[2026-02-05 11:02:43] [COMPLETE] Progress: 33/56
+[2026-02-05 11:02:43] [ERROR] C35: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.21647209s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C42: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C42: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 34/56
+[2026-02-05 11:02:43] [SUCCESS] C14: Processed (confidence: 0.80)
+[2026-02-05 11:02:43] [PROCESSING] C43: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C43: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 35/56
+[2026-02-05 11:02:43] [ERROR] C40: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 16.095366234s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 16
+}
+]
+[2026-02-05 11:02:43] [PROCESSING] C44: Searching context for 2 ambiguities...
+[2026-02-05 11:02:43] [CLARIFYING] C44: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:43] [COMPLETE] Progress: 36/56
+[2026-02-05 11:02:44] [ERROR] C42: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.93453533s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C45: Searching context for 3 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C45: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 37/56
+[2026-02-05 11:02:44] [ERROR] C41: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.92724363s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C46: Searching context for 3 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C46: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 38/56
+[2026-02-05 11:02:44] [ERROR] C44: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.921575144s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C47: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C47: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 39/56
+[2026-02-05 11:02:44] [ERROR] C43: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.916510917s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C48: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C48: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 40/56
+[2026-02-05 11:02:44] [ERROR] C45: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.868041079s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C49: Searching context for 1 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C49: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 41/56
+[2026-02-05 11:02:44] [SUCCESS] C9: Processed (confidence: 0.80)
+[2026-02-05 11:02:44] [PROCESSING] C50: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C50: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 42/56
+[2026-02-05 11:02:44] [SUCCESS] C15: Processed (confidence: 0.80)
+[2026-02-05 11:02:44] [SKIP] C51: No ambiguities detected
+[2026-02-05 11:02:44] [PROCESSING] C52: Searching context for 1 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C52: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 43/56
+[2026-02-05 11:02:44] [COMPLETE] Progress: 44/56
+[2026-02-05 11:02:44] [ERROR] C46: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.693434595s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C53: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C53: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 45/56
+[2026-02-05 11:02:44] [ERROR] C47: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.679779618s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C54: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C54: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 46/56
+[2026-02-05 11:02:44] [ERROR] C48: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.668606973s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C55: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C55: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 47/56
+[2026-02-05 11:02:44] [ERROR] C50: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.630446628s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [PROCESSING] C56: Searching context for 2 ambiguities...
+[2026-02-05 11:02:44] [CLARIFYING] C56: Generating clarified text using RULE_BASED...
+[2026-02-05 11:02:44] [COMPLETE] Progress: 48/56
+[2026-02-05 11:02:44] [ERROR] C53: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.592000081s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [COMPLETE] Progress: 49/56
+[2026-02-05 11:02:44] [ERROR] C52: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.524018884s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [COMPLETE] Progress: 50/56
+[2026-02-05 11:02:44] [ERROR] C49: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.524238818s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [COMPLETE] Progress: 51/56
+[2026-02-05 11:02:44] [ERROR] C54: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.437145299s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [COMPLETE] Progress: 52/56
+[2026-02-05 11:02:44] [ERROR] C56: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.418699735s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [ERROR] C55: Processing failed: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 15000, model: gemma-3-27b
+Please retry in 15.419521169s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemma-3-27b"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+  quota_value: 15000
+}
+, retry_delay {
+  seconds: 15
+}
+]
+[2026-02-05 11:02:44] [COMPLETE] Progress: 53/56
+[2026-02-05 11:02:44] [COMPLETE] Progress: 54/56
+[2026-02-05 11:02:44] [SUCCESS] C13: Processed (confidence: 0.90)
+[2026-02-05 11:02:44] [COMPLETE] Progress: 55/56
+[2026-02-05 11:02:45] [SUCCESS] C26: Processed (confidence: 0.95)
+[2026-02-05 11:02:45] [COMPLETE] Progress: 56/56
+[2026-02-05 11:02:45] [SUCCESS] Saved to: /home/hutech/Documents/docupolicy/stage5_clarified_clauses.json
+[2026-02-05 11:02:45] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== STAGE 6: DSL GENERATION LOG ===
+Timestamp: 2026-02-05 11:02:46.064739
+==================================================
+
+[2026-02-05 11:02:45] [INFO] LangChain enabled for dynamic DSL generation
+[2026-02-05 11:02:45] [INFO] Starting Stage 6: Fast DSL Generation with Indexing
+[2026-02-05 11:02:45] [INFO] Building clause index for 56 clauses
+[2026-02-05 11:02:45] [INFO] Generating DSL for 56 clauses (indexed approach)
+[2026-02-05 11:02:45] [PROCESSING] C1: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C1 for C1
+[2026-02-05 11:02:45] [INDEXED] C1: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C1: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C10: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C10 for C10
+[2026-02-05 11:02:45] [INDEXED] C10: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C10: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C11: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C10 for C11
+[2026-02-05 11:02:45] [INDEXED] C11: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C11: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C12: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C10 for C12
+[2026-02-05 11:02:45] [INDEXED] C12: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C12: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C13: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C13: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C13: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C14: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C14: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C14: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C15: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C15: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C15: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C16: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C16: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C16: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C17: Generating DSL (INFORMATIONAL) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C17: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C17: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C18: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C18: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C18: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C19: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C19: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C19: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C2: Generating DSL (INFORMATIONAL) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C2 for C2
+[2026-02-05 11:02:45] [INDEXED] C2: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C2: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C20: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C20: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C20: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C21: Generating DSL (RESTRICTION) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C21: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C21: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C22: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C22 for C22
+[2026-02-05 11:02:45] [INDEXED] C22: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C22: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C23: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C23 for C23
+[2026-02-05 11:02:45] [INDEXED] C23: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C23: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C24: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C24 for C24
+[2026-02-05 11:02:45] [INDEXED] C24: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C24: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C25: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C25: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C25: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C26: Generating DSL (RESTRICTION) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C26 for C26
+[2026-02-05 11:02:45] [INDEXED] C26: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C26: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C27: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C27 for C27
+[2026-02-05 11:02:45] [INDEXED] C27: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C27: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C28: Generating DSL (LIMIT) - ambiguities_fixed: 0/0
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C28 for C28
+[2026-02-05 11:02:45] [INDEXED] C28: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C28: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C29: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C29 for C29
+[2026-02-05 11:02:45] [INDEXED] C29: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C29: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C3: Generating DSL (LIMIT) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C3 for C3
+[2026-02-05 11:02:45] [INDEXED] C3: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C3: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C30: Generating DSL (INFORMATIONAL) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C30: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C30: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C31: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C31: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C31: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C32: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C32: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C32: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C33: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C33 for C33
+[2026-02-05 11:02:45] [INDEXED] C33: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C33: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C34: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C34 for C34
+[2026-02-05 11:02:45] [INDEXED] C34: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C34: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C35: Generating DSL (RESTRICTION) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C35 for C35
+[2026-02-05 11:02:45] [INDEXED] C35: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C35: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C36: Generating DSL (APPROVAL_REQUIRED) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C36 for C36
+[2026-02-05 11:02:45] [INDEXED] C36: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C36: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C37: Generating DSL (LIMIT) - ambiguities_fixed: 0/0
+[2026-02-05 11:02:45] [SMART_DEFAULT] C37: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C37: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C38: Generating DSL (LIMIT) - ambiguities_fixed: 0/0
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C38 for C38
+[2026-02-05 11:02:45] [INDEXED] C38: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C38: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C39: Generating DSL (LIMIT) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C39 for C39
+[2026-02-05 11:02:45] [INDEXED] C39: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C39: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C4: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C4 for C4
+[2026-02-05 11:02:45] [INDEXED] C4: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C4: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C40: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C40 for C40
+[2026-02-05 11:02:45] [INDEXED] C40: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C40: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C41: Generating DSL (INFORMATIONAL) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C41 for C41
+[2026-02-05 11:02:45] [INDEXED] C41: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C41: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C42: Generating DSL (INFORMATIONAL) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C42: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C42: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C43: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C43: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C43: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C44: Generating DSL (APPROVAL_REQUIRED) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C44: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C44: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C45: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:45] [SMART_DEFAULT] C45: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C45: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C46: Generating DSL (RESTRICTION) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:45] [SMART_DEFAULT] C46: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C46: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C47: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C47: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C47: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C48: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C48: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C48: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C49: Generating DSL (RESTRICTION) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C49: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C49: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C5: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:45] [INDEX_HIT] Found similar clause C5 for C5
+[2026-02-05 11:02:45] [INDEXED] C5: Fast DSL generated
+[2026-02-05 11:02:45] [GENERATED] C5: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C50: Generating DSL (RESTRICTION) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C50: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C50: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C51: Generating DSL (RESTRICTION) - ambiguities_fixed: 0/0
+[2026-02-05 11:02:45] [SMART_DEFAULT] C51: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C51: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C52: Generating DSL (APPROVAL_REQUIRED) - ambiguities_fixed: 1/1
+[2026-02-05 11:02:45] [SMART_DEFAULT] C52: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C52: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C53: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C53: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C53: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C54: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C54: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C54: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C55: Generating DSL (ADVISORY) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C55: Creating smart default rule
+[2026-02-05 11:02:45] [GENERATED] C55: DSL rule created
+[2026-02-05 11:02:45] [PROCESSING] C56: Generating DSL (RESTRICTION) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:45] [SMART_DEFAULT] C56: Creating smart default rule
+[2026-02-05 11:02:46] [GENERATED] C56: DSL rule created
+[2026-02-05 11:02:46] [PROCESSING] C6: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:46] [INDEX_HIT] Found similar clause C6 for C6
+[2026-02-05 11:02:46] [INDEXED] C6: Fast DSL generated
+[2026-02-05 11:02:46] [GENERATED] C6: DSL rule created
+[2026-02-05 11:02:46] [PROCESSING] C7: Generating DSL (CONDITIONAL_ALLOWANCE) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:46] [INDEX_HIT] Found similar clause C7 for C7
+[2026-02-05 11:02:46] [INDEXED] C7: Fast DSL generated
+[2026-02-05 11:02:46] [GENERATED] C7: DSL rule created
+[2026-02-05 11:02:46] [PROCESSING] C8: Generating DSL (LIMIT) - ambiguities_fixed: 3/3
+[2026-02-05 11:02:46] [INDEX_HIT] Found similar clause C8 for C8
+[2026-02-05 11:02:46] [INDEXED] C8: Fast DSL generated
+[2026-02-05 11:02:46] [GENERATED] C8: DSL rule created
+[2026-02-05 11:02:46] [PROCESSING] C9: Generating DSL (LIMIT) - ambiguities_fixed: 2/2
+[2026-02-05 11:02:46] [INDEX_HIT] Found similar clause C9 for C9
+[2026-02-05 11:02:46] [INDEXED] C9: Fast DSL generated
+[2026-02-05 11:02:46] [GENERATED] C9: DSL rule created
+[2026-02-05 11:02:46] [SUCCESS] DSL generation complete: 56 rules generated using indexed approach
+[2026-02-05 11:02:46] [SUCCESS] DSL rules saved to: /home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml
+[2026-02-05 11:02:46] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== STAGE 8: NORMALIZED POLICY GENERATION LOG ===
+Timestamp: 2026-02-05 11:02:46.162662
+==================================================
+
+[2026-02-05 11:02:46] [INFO] Loaded 56 clarified clauses from /home/hutech/Documents/docupolicy/stage5_clarified_clauses.json
+[2026-02-05 11:02:46] [INFO] Using fast rule-based metadata extraction (LLM disabled)
+[2026-02-05 11:02:46] [INFO] Starting Stage 8: Consolidated Policy Normalization
+[2026-02-05 11:02:46] [WARNING] Stage 4 load failed: 'list' object has no attribute 'get'
+[2026-02-05 11:02:46] [WARNING] Stage 7 load failed: expected str, bytes or os.PathLike object, not NoneType
+[2026-02-05 11:02:46] [INFO] Built stage map for 56 clauses
+[2026-02-05 11:02:46] [INFO] Consolidating 56 clauses from all stages
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C1: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C10: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C11: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C12: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C13: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C14: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C15: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C16: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C17: INFORMATIONAL
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C18: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C19: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C2: INFORMATIONAL
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C20: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C21: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C22: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C23: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C24: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C25: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C26: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C27: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C28: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C29: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C3: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C30: INFORMATIONAL
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C31: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C32: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C33: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C34: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C35: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C36: APPROVAL_REQUIRED
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C37: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C38: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C39: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C4: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C40: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C41: INFORMATIONAL
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C42: INFORMATIONAL
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C43: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C44: APPROVAL_REQUIRED
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C45: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C46: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C47: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C48: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C49: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C5: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C50: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C51: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C52: APPROVAL_REQUIRED
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C53: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C54: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C55: ADVISORY
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C56: RESTRICTION
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C6: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C7: CONDITIONAL_ALLOWANCE
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C8: LIMIT
+[2026-02-05 11:02:46] [CONSOLIDATED] Clause C9: LIMIT
+[2026-02-05 11:02:46] [SUCCESS] Consolidated 56 clauses
+[2026-02-05 11:02:46] [SUCCESS] Consolidated policies saved to: /home/hutech/Documents/docupolicy/stage8_normalized_policies.json
+[2026-02-05 11:02:46] [WARNING] MongoDB storage failed: MongoDB disabled
+
+
+=== STAGE 9: DSL TO REGO CONVERSION LOG ===
+Timestamp: 2026-02-05 11:02:46.229623
+============================================================
+
+[2026-02-05 11:02:46] [INFO] [Stage 9] RegoGenerator initialized
+[2026-02-05 11:02:46] [START] [Stage 9] Stage 9: DSL to Rego Conversion
+[2026-02-05 11:02:46] [STEP] [Stage 9] Reading DSL rules
+[2026-02-05 11:02:46] [SUCCESS] [Stage 9] Read 56 DSL rules from /home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml
+[2026-02-05 11:02:46] [STEP] [Stage 9] Reading normalized policies
+[2026-02-05 11:02:46] [SUCCESS] [Stage 9] Read 56 normalized policies from /home/hutech/Documents/docupolicy/stage8_normalized_policies.json
+[2026-02-05 11:02:46] [STEP] [Stage 9] Merging DSL rules with normalized policies
+[2026-02-05 11:02:46] [MERGE] [Stage 9] Extracted 56 DSL rules
+[2026-02-05 11:02:46] [MERGE] [Stage 9] Merged into 56 clause records
+[2026-02-05 11:02:46] [STEP] [Stage 9] Generating Rego bundles
+[2026-02-05 11:02:46] [GENERATE] [Stage 9] Generating Rego bundles from merged data
+[2026-02-05 11:02:46] [POLICY] [Stage 9] Generated 56 Rego rules for policy: travel_policy
+[2026-02-05 11:02:46] [STEP] [Stage 9] Saving Rego bundles to file
+[2026-02-05 11:02:46] [SUCCESS] [Stage 9] Rego bundles saved to /home/hutech/Documents/docupolicy/stage9_rego_bundles.json
+[2026-02-05 11:02:46] [WARNING] [Stage 9] MongoDB storage failed: MongoDB disabled
+[2026-02-05 11:02:46] [SUCCESS] [Stage 9] Stage 9 completed successfully
+[2026-02-05 11:02:46] [STATS] [Stage 9] Generated Rego bundles with 56 rules
+
+
+=== STAGE 10: OPA BUNDLE STORAGE LOG ===
+Timestamp: 2026-02-05 12:22:23.510269
+============================================================
+
+[2026-02-05 12:22:23] [INFO] OPA Bundle Storage initialized at: /home/hutech/Documents/docupolicy/opa_bundles
+[2026-02-05 12:22:23] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:22:23] [STEP] Generating OPA bundle structure
+[2026-02-05 12:22:23] [SUCCESS] Generated bundle structure with 56 rules organized by 1 intent categories
+[2026-02-05 12:22:23] [STEP] Creating OPA manifest
+[2026-02-05 12:22:23] [SUCCESS] Generated semantic version: 1.0.0
+[2026-02-05 12:22:23] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:22:23] [SUCCESS] Calculated bundle hash: 5bacca303eec46f1...
+[2026-02-05 12:22:23] [SUCCESS] Calculated bundle hash: 5bacca303eec46f1...
+[2026-02-05 12:22:23] [SUCCESS] Bundle integrity verified
+[2026-02-05 12:22:23] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:22:23] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:22:23] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:22:23] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:22:23] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:22:23] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:22:23] [STEP] Cleaning up old versions (keeping 3)
+[2026-02-05 12:22:23] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:22:23] [START] Stage 10: OPA Bundle Storage & Management
+[2026-02-05 12:22:23] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:22:23] [STEP] Generating OPA bundle structure
+[2026-02-05 12:22:23] [SUCCESS] Generated bundle structure with 56 rules organized by 1 intent categories
+[2026-02-05 12:22:23] [STEP] Creating OPA manifest
+[2026-02-05 12:22:23] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:22:23] [SUCCESS] Calculated bundle hash: cefc1eb3923f309f...
+[2026-02-05 12:22:23] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:22:23] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:22:23] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:22:23] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:22:23] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:22:23] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:22:23] [DEBUG] MongoDB storage disabled
+[2026-02-05 12:22:23] [STEP] Cleaning up old versions (keeping 5)
+[2026-02-05 12:22:23] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:22:23] [SUCCESS] Stage 10 processing complete
+
+
+=== STAGE 10: OPA BUNDLE STORAGE LOG ===
+Timestamp: 2026-02-05 12:30:20.413146
+============================================================
+
+[2026-02-05 12:30:20] [INFO] OPA Bundle Storage initialized at: /home/hutech/Documents/docupolicy/opa_bundles
+[2026-02-05 12:30:20] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:30:20] [STEP] Generating OPA bundle structure
+[2026-02-05 12:30:20] [SUCCESS] Generated bundle structure with 56 rules organized by 1 intent categories
+[2026-02-05 12:30:20] [STEP] Creating OPA manifest
+[2026-02-05 12:30:20] [SUCCESS] Generated semantic version: 1.0.0
+[2026-02-05 12:30:20] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:30:20] [SUCCESS] Calculated bundle hash: c6ea965ef05d7330...
+[2026-02-05 12:30:20] [SUCCESS] Calculated bundle hash: c6ea965ef05d7330...
+[2026-02-05 12:30:20] [SUCCESS] Bundle integrity verified
+[2026-02-05 12:30:20] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:30:20] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:30:20] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:30:20] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:30:20] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:30:20] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:30:20] [STEP] Cleaning up old versions (keeping 3)
+[2026-02-05 12:30:20] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:30:20] [START] Stage 10: OPA Bundle Storage & Management
+[2026-02-05 12:30:20] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:30:20] [STEP] Generating OPA bundle structure
+[2026-02-05 12:30:20] [SUCCESS] Generated bundle structure with 56 rules organized by 1 intent categories
+[2026-02-05 12:30:20] [STEP] Creating OPA manifest
+[2026-02-05 12:30:20] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:30:20] [SUCCESS] Calculated bundle hash: 3c2c34528f369e5a...
+[2026-02-05 12:30:20] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:30:20] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:30:20] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:30:20] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:30:20] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:30:20] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:30:20] [DEBUG] MongoDB storage disabled
+[2026-02-05 12:30:20] [STEP] Cleaning up old versions (keeping 5)
+[2026-02-05 12:30:20] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:30:20] [SUCCESS] Stage 10 processing complete
+
+
+=== STAGE 10: OPA BUNDLE STORAGE LOG ===
+Timestamp: 2026-02-05 12:35:37.098854
+============================================================
+
+[2026-02-05 12:35:37] [INFO] OPA Bundle Storage initialized at: /home/hutech/Documents/docupolicy/opa_bundles
+[2026-02-05 12:35:37] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:35:37] [STEP] Generating OPA bundle structure
+[2026-02-05 12:35:37] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:35:37] [STEP] Creating OPA manifest
+[2026-02-05 12:35:37] [SUCCESS] Generated semantic version: 1.0.0
+[2026-02-05 12:35:37] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:35:37] [SUCCESS] Calculated bundle hash: 458c2efb2360adb2...
+[2026-02-05 12:35:37] [SUCCESS] Calculated bundle hash: 458c2efb2360adb2...
+[2026-02-05 12:35:37] [SUCCESS] Bundle integrity verified
+[2026-02-05 12:35:37] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:35:37] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:35:37] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:35:37] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:35:37] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:35:37] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:35:37] [STEP] Cleaning up old versions (keeping 3)
+[2026-02-05 12:35:37] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:35:37] [START] Stage 10: OPA Bundle Storage & Management
+[2026-02-05 12:35:37] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:35:37] [STEP] Generating OPA bundle structure
+[2026-02-05 12:35:37] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:35:37] [STEP] Creating OPA manifest
+[2026-02-05 12:35:37] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:35:37] [SUCCESS] Calculated bundle hash: 74281717bbab2d34...
+[2026-02-05 12:35:37] [STEP] Persisting bundle to filesystem
+[2026-02-05 12:35:37] [SUCCESS] Wrote manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:35:37] [SUCCESS] Wrote bundle metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:35:37] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:35:37] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data.json
+[2026-02-05 12:35:37] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:35:37] [DEBUG] MongoDB storage disabled
+[2026-02-05 12:35:37] [STEP] Cleaning up old versions (keeping 5)
+[2026-02-05 12:35:37] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:35:37] [SUCCESS] Stage 10 processing complete
+
+
+=== STAGE 10: OPA BUNDLE STORAGE LOG ===
+Timestamp: 2026-02-05 12:39:38.595874
+============================================================
+
+[2026-02-05 12:39:38] [INFO] OPA Bundle Storage initialized at: /home/hutech/Documents/docupolicy/opa_bundles
+[2026-02-05 12:39:38] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:39:38] [STEP] Generating OPA bundle structure
+[2026-02-05 12:39:38] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:39:38] [STEP] Creating OPA manifest
+[2026-02-05 12:39:38] [SUCCESS] Generated semantic version: 1.0.0
+[2026-02-05 12:39:38] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:39:38] [SUCCESS] Calculated bundle hash: 1ab85efde987449e...
+[2026-02-05 12:39:38] [SUCCESS] Calculated bundle hash: 1ab85efde987449e...
+[2026-02-05 12:39:38] [SUCCESS] Bundle integrity verified
+[2026-02-05 12:39:38] [STEP] Persisting bundle to filesystem (OPA standard format)
+[2026-02-05 12:39:38] [SUCCESS] Wrote OPA manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:39:38] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:39:38] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data/policies.json
+[2026-02-05 12:39:38] [SUCCESS] Wrote extended metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:39:38] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:39:38] [STEP] Cleaning up old versions (keeping 3)
+[2026-02-05 12:39:38] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:39:38] [START] Stage 10: OPA Bundle Storage & Management
+[2026-02-05 12:39:38] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:39:38] [STEP] Generating OPA bundle structure
+[2026-02-05 12:39:38] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:39:38] [STEP] Creating OPA manifest
+[2026-02-05 12:39:38] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:39:38] [SUCCESS] Calculated bundle hash: 63992b908fea0588...
+[2026-02-05 12:39:38] [STEP] Persisting bundle to filesystem (OPA standard format)
+[2026-02-05 12:39:38] [SUCCESS] Wrote OPA manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/.manifest
+[2026-02-05 12:39:38] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/policies/main.rego
+[2026-02-05 12:39:38] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/data/policies.json
+[2026-02-05 12:39:38] [SUCCESS] Wrote extended metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0/bundle_metadata.json
+[2026-02-05 12:39:38] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.0
+[2026-02-05 12:39:38] [DEBUG] MongoDB storage disabled
+[2026-02-05 12:39:38] [STEP] Cleaning up old versions (keeping 5)
+[2026-02-05 12:39:38] [SUCCESS] Cleanup complete: deleted 0, kept 1
+[2026-02-05 12:39:38] [SUCCESS] Stage 10 processing complete
+
+
+=== STAGE 10: OPA BUNDLE STORAGE LOG ===
+Timestamp: 2026-02-05 12:39:49.950445
+============================================================
+
+[2026-02-05 12:39:49] [INFO] OPA Bundle Storage initialized at: /home/hutech/Documents/docupolicy/opa_bundles
+[2026-02-05 12:39:49] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:39:49] [STEP] Generating OPA bundle structure
+[2026-02-05 12:39:49] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:39:49] [STEP] Creating OPA manifest
+[2026-02-05 12:39:49] [SUCCESS] Generated semantic version: 1.0.1
+[2026-02-05 12:39:49] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:39:49] [SUCCESS] Calculated bundle hash: 7543b77fd40f1200...
+[2026-02-05 12:39:49] [SUCCESS] Calculated bundle hash: 7543b77fd40f1200...
+[2026-02-05 12:39:49] [SUCCESS] Bundle integrity verified
+[2026-02-05 12:39:49] [STEP] Persisting bundle to filesystem (OPA standard format)
+[2026-02-05 12:39:49] [SUCCESS] Wrote OPA manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/.manifest
+[2026-02-05 12:39:49] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/policies/main.rego
+[2026-02-05 12:39:49] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/data/policies.json
+[2026-02-05 12:39:49] [SUCCESS] Wrote extended metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/bundle_metadata.json
+[2026-02-05 12:39:49] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1
+[2026-02-05 12:39:49] [STEP] Cleaning up old versions (keeping 3)
+[2026-02-05 12:39:49] [SUCCESS] Cleanup complete: deleted 0, kept 2
+[2026-02-05 12:39:49] [START] Stage 10: OPA Bundle Storage & Management
+[2026-02-05 12:39:49] [SUCCESS] Read stage9 output: 1 policies
+[2026-02-05 12:39:49] [STEP] Generating OPA bundle structure
+[2026-02-05 12:39:49] [SUCCESS] Generated bundle structure with 56 rules organized by 6 intent categories
+[2026-02-05 12:39:49] [STEP] Creating OPA manifest
+[2026-02-05 12:39:49] [SUCCESS] Created manifest with 56 rules
+[2026-02-05 12:39:49] [SUCCESS] Calculated bundle hash: 8c69be27ec2e5de2...
+[2026-02-05 12:39:49] [STEP] Persisting bundle to filesystem (OPA standard format)
+[2026-02-05 12:39:49] [SUCCESS] Wrote OPA manifest: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/.manifest
+[2026-02-05 12:39:49] [SUCCESS] Wrote Rego policies: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/policies/main.rego
+[2026-02-05 12:39:49] [SUCCESS] Wrote data bundle: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/data/policies.json
+[2026-02-05 12:39:49] [SUCCESS] Wrote extended metadata: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1/bundle_metadata.json
+[2026-02-05 12:39:49] [SUCCESS] Bundle persisted to: /home/hutech/Documents/docupolicy/opa_bundles/1.0.1
+[2026-02-05 12:39:49] [DEBUG] MongoDB storage disabled
+[2026-02-05 12:39:49] [STEP] Cleaning up old versions (keeping 5)
+[2026-02-05 12:39:49] [SUCCESS] Cleanup complete: deleted 0, kept 2
+[2026-02-05 12:39:49] [SUCCESS] Stage 10 processing complete

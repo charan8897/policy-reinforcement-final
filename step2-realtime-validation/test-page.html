@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1: Form Input Listener - Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 30px;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    main {
+      background: white;
+      padding: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    /* Form styling */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+      grid-column: 1 / -1;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Console / Debug section */
+    .debug-section {
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .debug-section h3 {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .console {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 12px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 250px;
+      overflow-y: auto;
+      line-height: 1.5;
+      border: 1px solid #333;
+    }
+
+    .console-line {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .console-time {
+      color: #888;
+      flex-shrink: 0;
+    }
+
+    .console-level {
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    .level-success { color: #4ade80; }
+    .level-info { color: #60a5fa; }
+    .level-error { color: #f87171; }
+    .level-warn { color: #fbbf24; }
+
+    .console-msg {
+      flex: 1;
+      word-break: break-all;
+    }
+
+    /* Field values display */
+    .field-values {
+      background: #f0f7ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .field-values h3 {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .field-item {
+      background: white;
+      padding: 10px;
+      border-radius: 4px;
+      border-left: 3px solid #667eea;
+    }
+
+    .field-name {
+      color: #667eea;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .field-value {
+      color: #333;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin-top: 4px;
+      word-break: break-all;
+    }
+
+    .field-value.empty {
+      color: #999;
+      font-style: italic;
+    }
+
+    /* Statistics */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .btn-success {
+      background: #4ade80;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #22c55e;
+    }
+
+    .btn-danger {
+      background: #f87171;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ef4444;
+    }
+
+    /* Footer */
+    footer {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      color: #666;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    footer code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Status indicator */
+    .status {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status.listening {
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    .status.idle {
+      background: #fbbf24;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔍 Module 1: Form Input Listener</h1>
+      <p>Test the FormInputListener module with an interactive form. Type in any field to see real-time event capture and callback execution.</p>
+    </header>
+
+    <main>
+      <!-- Section 1: Status -->
+      <div class="section">
+        <h2>Status</h2>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-value"><span class="status listening"></span><span id="listener-status">Pending</span></div>
+            <div class="stat-label">Listener Status</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="field-count">0</div>
+            <div class="stat-label">Fields Detected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="event-count">0</div>
+            <div class="stat-label">Events Fired</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="callback-count">0</div>
+            <div class="stat-label">Callbacks Executed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Test Form with 8 Fields -->
+      <div class="section">
+        <h2>Test Form (8 Fields)</h2>
+        <form id="test-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="field1">Field 1: Name (Text)</label>
+              <input type="text" id="field1" name="field1" placeholder="Enter your full name" />
+            </div>
+
+            <div class="form-group">
+              <label for="field2">Field 2: Email (Email)</label>
+              <input type="email" id="field2" name="field2" placeholder="you@example.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="field3">Field 3: Age (Number)</label>
+              <input type="number" id="field3" name="field3" placeholder="Enter your age" />
+            </div>
+
+            <div class="form-group">
+              <label for="field4">Field 4: Phone (Tel)</label>
+              <input type="tel" id="field4" name="field4" placeholder="123-456-7890" />
+            </div>
+
+            <div class="form-group">
+              <label for="field5">Field 5: Date (Date)</label>
+              <input type="date" id="field5" name="field5" />
+            </div>
+
+            <div class="form-group">
+              <label for="field6">Field 6: Department (Text)</label>
+              <input type="text" id="field6" name="field6" placeholder="e.g., Engineering" />
+            </div>
+
+            <div class="form-group">
+              <label for="field7">Field 7: Comments (Textarea)</label>
+              <textarea id="field7" name="field7" placeholder="Write your comments here..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="field8">Field 8: Reference (Text)</label>
+              <input type="text" id="field8" name="field8" placeholder="Reference code" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Section 3: Control Buttons -->
+      <div class="section">
+        <h2>Controls</h2>
+        <div class="button-group">
+          <button class="btn-primary" id="btn-attach">Attach Listeners</button>
+          <button class="btn-secondary" id="btn-detach">Detach Listeners</button>
+          <button class="btn-secondary" id="btn-reset">Reset Form</button>
+          <button class="btn-danger" id="btn-clear-log">Clear Console</button>
+        </div>
+      </div>
+
+      <!-- Section 4: Field Values Display -->
+      <div class="section">
+        <h2>Current Field Values</h2>
+        <div class="field-values">
+          <h3>Real-time Field State</h3>
+          <div class="field-grid" id="field-values-grid">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Console/Debug Output -->
+      <div class="section">
+        <h2>Event Logs (Real-time Console)</h2>
+        <div class="debug-section">
+          <h3>Event Capture & Callback Execution Log</h3>
+          <div class="console" id="console-output">
+            <div class="console-line">
+              <span class="console-time">Ready</span>
+              <span class="console-level level-info">[INFO]</span>
+              <span class="console-msg">Click "Attach Listeners" to start monitoring form fields</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: localStorage Storage (Module 2) -->
+      <div class="section">
+        <h2>localStorage Storage (Module 2: State Persistence)</h2>
+        <div class="debug-section">
+          <h3>Stored Data in Browser</h3>
+          <div class="button-group">
+            <button class="btn-secondary" id="btn-save-state">Save State to Storage</button>
+            <button class="btn-secondary" id="btn-load-state">Load State from Storage</button>
+            <button class="btn-danger" id="btn-clear-storage">Clear Storage</button>
+          </div>
+          <div class="console" id="storage-output">
+            <div class="console-line">
+              <span class="console-time">Ready</span>
+              <span class="console-level level-info">[INFO]</span>
+              <span class="console-msg">Click "Save State to Storage" to persist form data to browser localStorage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7: Storage Data Display -->
+      <div class="section">
+        <h2>Current Storage Data</h2>
+        <div class="field-values">
+          <h3>Data Saved in localStorage (survives page refresh)</h3>
+          <div class="console" id="storage-data-display">
+            <div class="console-line">
+              <span class="console-level level-info">[INFO]</span>
+              <span class="console-msg">No data in storage yet. Fill form and click "Save State to Storage"</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>📖 <strong>How to Test:</strong></p>
+      <ul style="margin-top: 10px; text-align: left;">
+        <li>1. Click <strong>"Attach Listeners"</strong> to start monitoring</li>
+        <li>2. Type in any of the 8 fields and watch events fire in the console</li>
+        <li>3. Open your browser's Developer Tools (F12) → Console to see additional logs</li>
+        <li>4. Field values update in real-time below the form</li>
+        <li>5. Check the event count and callback execution count at the top</li>
+      </ul>
+    </footer>
+  </div>
+
+  <!-- Include the modules -->
+  <script src="modules/form-listener.js"></script>
+  <script src="modules/form-state-manager.js"></script>
+  
+  <script>
+    // =========================================================================
+    // Test Page: Interactive Demo of FormInputListener
+    // =========================================================================
+
+    class TestPage {
+      constructor() {
+        this.listener = null;
+        this.stateManager = null;
+        this.eventCount = 0;
+        this.callbackCount = 0;
+        this.logs = [];
+        this.storageLogs = [];
+        this.fieldValues = {};
+
+        this.bindElements();
+        this.setupEventHandlers();
+        this.initializeStateManager();
+      }
+
+      bindElements() {
+        this.elements = {
+          btnAttach: document.getElementById('btn-attach'),
+          btnDetach: document.getElementById('btn-detach'),
+          btnReset: document.getElementById('btn-reset'),
+          btnClearLog: document.getElementById('btn-clear-log'),
+          btnSaveState: document.getElementById('btn-save-state'),
+          btnLoadState: document.getElementById('btn-load-state'),
+          btnClearStorage: document.getElementById('btn-clear-storage'),
+          consoleOutput: document.getElementById('console-output'),
+          storageOutput: document.getElementById('storage-output'),
+          storageDataDisplay: document.getElementById('storage-data-display'),
+          fieldValuesGrid: document.getElementById('field-values-grid'),
+          listenerStatus: document.getElementById('listener-status'),
+          fieldCount: document.getElementById('field-count'),
+          eventCount: document.getElementById('event-count'),
+          callbackCount: document.getElementById('callback-count'),
+        };
+      }
+
+      setupEventHandlers() {
+        this.elements.btnAttach.addEventListener('click', () => this.attachListener());
+        this.elements.btnDetach.addEventListener('click', () => this.detachListener());
+        this.elements.btnReset.addEventListener('click', () => this.resetForm());
+        this.elements.btnClearLog.addEventListener('click', () => this.clearLog());
+        this.elements.btnSaveState.addEventListener('click', () => this.saveState());
+        this.elements.btnLoadState.addEventListener('click', () => this.loadState());
+        this.elements.btnClearStorage.addEventListener('click', () => this.clearStorage());
+      }
+
+      initializeStateManager() {
+        this.stateManager = new FormStateManager('test-form', 8, true);
+        
+        // Register callbacks
+        this.stateManager.onStateChange((field, value, allState) => {
+          // Sync with listener values
+          this.fieldValues = allState;
+        });
+
+        this.stateManager.onSave((success, message) => {
+          if (success) {
+            this.storageLog('SUCCESS', `State saved to localStorage (key: ${message})`);
+            this.updateStorageDataDisplay();
+          } else {
+            this.storageLog('ERROR', `Failed to save: ${message}`);
+          }
+        });
+
+        // Try to load existing state
+        const loaded = this.stateManager.loadState();
+        if (loaded) {
+          this.log('SUCCESS', 'Loaded previous state from localStorage');
+          this.storageLog('SUCCESS', 'Previous state loaded from localStorage');
+        }
+      }
+
+      log(level, message) {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        this.logs.push({ time, level, message });
+
+        // Add to console output
+        const line = document.createElement('div');
+        line.className = 'console-line';
+        line.innerHTML = `
+          <span class="console-time">${time}</span>
+          <span class="console-level level-${level.toLowerCase()}">[${level}]</span>
+          <span class="console-msg">${this.escapeHtml(message)}</span>
+        `;
+        this.elements.consoleOutput.appendChild(line);
+
+        // Auto-scroll to bottom
+        this.elements.consoleOutput.scrollTop = this.elements.consoleOutput.scrollHeight;
+
+        // Keep only last 100 lines
+        const lines = this.elements.consoleOutput.querySelectorAll('.console-line');
+        if (lines.length > 100) {
+          lines[0].remove();
+        }
+      }
+
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      attachListener() {
+        try {
+          this.listener = new FormInputListener('#test-form', 8);
+
+          // Register callback
+          this.listener.onFieldChange((fieldName, value, allFields, event) => {
+            this.callbackCount++;
+            this.elements.callbackCount.textContent = this.callbackCount;
+            this.fieldValues = allFields;
+
+            // Update state manager (Module 2)
+            this.stateManager.updateState(fieldName, value);
+
+            // Log the event
+            const preview = value.length > 30 ? value.substring(0, 30) + '...' : value;
+            this.log('SUCCESS', `${fieldName} = "${preview}"`);
+
+            // Update field values display
+            this.updateFieldValuesDisplay();
+          });
+
+          // Attach to form
+          const success = this.listener.attach();
+
+          if (success) {
+            this.elements.listenerStatus.textContent = 'Listening';
+            this.elements.fieldCount.textContent = this.listener.getFieldCount();
+            this.log('SUCCESS', `Listener attached. Monitoring ${this.listener.getFieldCount()} fields.`);
+
+            // Log field metadata
+            const metadata = this.listener.getFieldMetadata();
+            metadata.forEach(field => {
+              this.log('INFO', `Field ${field.index}: ${field.name} (${field.type})`);
+            });
+
+            // Disable attach button
+            this.elements.btnAttach.disabled = true;
+            this.elements.btnDetach.disabled = false;
+
+            // Initialize field values display
+            this.updateFieldValuesDisplay();
+          } else {
+            this.log('ERROR', 'Failed to attach listener');
+          }
+        } catch (error) {
+          this.log('ERROR', `Exception: ${error.message}`);
+        }
+      }
+
+      detachListener() {
+        if (this.listener) {
+          this.listener.detach();
+          this.elements.listenerStatus.textContent = 'Detached';
+          this.log('INFO', 'Listener detached. Form monitoring stopped.');
+
+          this.elements.btnAttach.disabled = false;
+          this.elements.btnDetach.disabled = true;
+        }
+      }
+
+      resetForm() {
+        if (this.listener) {
+          this.listener.resetFields();
+          this.fieldValues = {};
+          this.updateFieldValuesDisplay();
+          this.log('INFO', 'Form reset. All fields cleared.');
+        } else {
+          document.getElementById('test-form').reset();
+          this.log('INFO', 'Form reset (listeners not active).');
+        }
+      }
+
+      clearLog() {
+        this.elements.consoleOutput.innerHTML = '';
+        this.logs = [];
+        this.log('INFO', 'Console cleared.');
+      }
+
+      storageLog(level, message) {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        this.storageLogs.push({ time, level, message });
+
+        const line = document.createElement('div');
+        line.className = 'console-line';
+        line.innerHTML = `
+          <span class="console-time">${time}</span>
+          <span class="console-level level-${level.toLowerCase()}">[${level}]</span>
+          <span class="console-msg">${this.escapeHtml(message)}</span>
+        `;
+        this.elements.storageOutput.appendChild(line);
+        this.elements.storageOutput.scrollTop = this.elements.storageOutput.scrollHeight;
+
+        const lines = this.elements.storageOutput.querySelectorAll('.console-line');
+        if (lines.length > 50) {
+          lines[0].remove();
+        }
+      }
+
+      saveState() {
+        if (!this.stateManager) {
+          this.storageLog('ERROR', 'State manager not initialized');
+          return;
+        }
+
+        const success = this.stateManager.saveState();
+        if (success) {
+          this.storageLog('SUCCESS', 'State saved to localStorage');
+        } else {
+          this.storageLog('ERROR', 'Failed to save state');
+        }
+      }
+
+      loadState() {
+        if (!this.stateManager) {
+          this.storageLog('ERROR', 'State manager not initialized');
+          return;
+        }
+
+        const loaded = this.stateManager.loadState();
+        if (loaded) {
+          this.fieldValues = loaded;
+          this.updateFieldValuesDisplay();
+          this.storageLog('SUCCESS', 'State loaded from localStorage');
+        } else {
+          this.storageLog('INFO', 'No saved state found in localStorage');
+        }
+      }
+
+      clearStorage() {
+        if (!this.stateManager) {
+          this.storageLog('ERROR', 'State manager not initialized');
+          return;
+        }
+
+        this.stateManager.clearState();
+        this.fieldValues = {};
+        this.updateFieldValuesDisplay();
+        this.storageLog('SUCCESS', 'Storage cleared');
+      }
+
+      updateStorageDataDisplay() {
+        const storageData = this.stateManager.getStorageData();
+        
+        const display = this.elements.storageDataDisplay;
+        display.innerHTML = '';
+
+        if (!storageData) {
+          display.innerHTML = `
+            <div class="console-line">
+              <span class="console-level level-info">[INFO]</span>
+              <span class="console-msg">No data in storage yet</span>
+            </div>
+          `;
+          return;
+        }
+
+        const formattedData = JSON.stringify(storageData, null, 2);
+        const lines = formattedData.split('\n');
+
+        lines.forEach(line => {
+          const div = document.createElement('div');
+          div.className = 'console-line';
+          div.style.fontSize = '11px';
+          div.innerHTML = `<span class="console-msg">${this.escapeHtml(line)}</span>`;
+          display.appendChild(div);
+        });
+      }
+
+      updateFieldValuesDisplay() {
+        const grid = this.elements.fieldValuesGrid;
+        grid.innerHTML = '';
+
+        const fields = this.listener?.getFieldMetadata() || [];
+        fields.forEach(field => {
+          const value = this.fieldValues[field.name] || '';
+          const div = document.createElement('div');
+          div.className = 'field-item';
+          div.innerHTML = `
+            <div class="field-name">${field.name} (#${field.index})</div>
+            <div class="field-value ${!value ? 'empty' : ''}">${value || '(empty)'}</div>
+          `;
+          grid.appendChild(div);
+        });
+      }
+    }
+
+    // Initialize test page when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      window.testPage = new TestPage();
+      window.testPage.log('INFO', 'Test page ready. Click "Attach Listeners" to begin.');
+    });
+  </script>
+</body>
+</html>

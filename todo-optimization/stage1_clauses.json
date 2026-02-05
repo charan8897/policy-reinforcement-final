@@ -1,0 +1,92 @@
+{
+  "metadata": {
+    "generated": "2026-02-03T13:59:15.683485",
+    "source": "/tmp/policy_doc_062a864cf99c.txt",
+    "format": "Clause \u2192 Text Mapping (Stage 1B \u2192 Stage 2 Intent Classification)",
+    "total_clauses": 20,
+    "stage": "1B",
+    "next_stage": "2 - Intent Classification"
+  },
+  "clauses": [
+    {
+      "clauseId": "C1",
+      "text": "This policy covers expenses and entitlements of employees who travel on company\u2019s business, or deputed to attend seminars / conferences / workshops /training programs. It highlights entitlements during travel including Accommodation, Food, and Local conveyance."
+    },
+    {
+      "clauseId": "C2",
+      "text": "This policy shall be applicable to all employees of NAGA LIMITED."
+    },
+    {
+      "clauseId": "C3",
+      "text": "Employees are allowed to stay in their relative/ friends home/ room, in the touring destination. IF staying with relatives/friends, they can claim 25% of their eligible amount and are NOT required to produce bills."
+    },
+    {
+      "clauseId": "C4",
+      "text": "For Twin sharing, the claim can be made to the maximum of 125% of the eligible amount of the Senior level employee."
+    },
+    {
+      "clauseId": "C5",
+      "text": "All tours MUST be made in accordance with the tour programme duly sanctioned by the Reporting Manager."
+    },
+    {
+      "clauseId": "C6",
+      "text": "Travel on Company account will be on the most economical basis, consistent with the Company\u2019s interest, dignity and work requirement."
+    },
+    {
+      "clauseId": "C7",
+      "text": "Employees SHALL claim the Travel entitlements as per the eligibilities fixed based on their job levels i.e. Job band and grade as per the Company Policy."
+    },
+    {
+      "clauseId": "C8",
+      "text": "All travels SHALL be supported by original bills."
+    },
+    {
+      "clauseId": "C9",
+      "text": "Travelling advance MUST be settled within 2 days after the tour programme."
+    },
+    {
+      "clauseId": "C10",
+      "text": "Travelling advance CANNOT be entertained IF there is any balance in the employee's account."
+    },
+    {
+      "clauseId": "C11",
+      "text": "Incase of not getting bills in remote areas, the employee can claim the eligible amount by self attestation."
+    },
+    {
+      "clauseId": "C12",
+      "text": "The claims approved by reporting manager SHALL be validated by HR & Accounts."
+    },
+    {
+      "clauseId": "C13",
+      "text": "Boarding & Lodging CANNOT be claimed as a combined limit."
+    },
+    {
+      "clauseId": "C14",
+      "text": "For Boarding/Lodging, the eligible amount or bill amount, whichever is less, will apply."
+    },
+    {
+      "clauseId": "C15",
+      "text": "Employees other than sales personnel shall be eligible for Food Reimbursement during out of office work (at business associates etc.) if spending more than 6 hours."
+    },
+    {
+      "clauseId": "C16",
+      "text": "No official Travel by Personal Car MUST exceed 200 kms on any day by Self Drive for Safety Reasons."
+    },
+    {
+      "clauseId": "C17",
+      "text": "Beyond 200 Kms of personal car travel MAY be encouraged only for Group Travel \u2013 3 or more people."
+    },
+    {
+      "clauseId": "C18",
+      "text": "No Driver Charges SHALL be paid for personal car travel."
+    },
+    {
+      "clauseId": "C19",
+      "text": "No official Travel by Personal Bike MUST exceed 50 kms on any day."
+    },
+    {
+      "clauseId": "C20",
+      "text": "This policy came into effect from 01st April 2014."
+    }
+  ]
+}

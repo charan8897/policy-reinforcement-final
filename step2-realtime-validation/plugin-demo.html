@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugin Demo - Auto-Initialization</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    main {
+      padding: 40px;
+    }
+
+    .notice {
+      background: #f0f7ff;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin-bottom: 30px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .notice strong {
+      color: #667eea;
+    }
+
+    form {
+      margin-bottom: 30px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group textarea {
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      grid-column: 1 / -1;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .info-box {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 15px;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .status-active {
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .storage-data {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      max-height: 300px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    footer {
+      background: #f5f5f5;
+      padding: 20px 40px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      background: #fffacd;
+      padding: 2px 4px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Plugin Demo - Automatic Mode</h1>
+      <p>Plugin auto-initializes without any user action</p>
+    </header>
+
+    <main>
+      <div class="notice">
+        <strong>✓ Plugin Initialized Automatically</strong><br>
+        The plugin has already started listening to this form and will automatically save your data to localStorage every 1 second as you type. No "Attach" or "Save" buttons needed.
+      </div>
+
+      <div class="section">
+        <h2>Test Form (8 Fields)</h2>
+        <form id="test-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Field 1: Name</label>
+              <input type="text" name="field1" placeholder="Enter name">
+            </div>
+
+            <div class="form-group">
+              <label>Field 2: Email</label>
+              <input type="email" name="field2" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+              <label>Field 3: Age</label>
+              <input type="number" name="field3" placeholder="Enter age">
+            </div>
+
+            <div class="form-group">
+              <label>Field 4: Phone</label>
+              <input type="tel" name="field4" placeholder="Enter phone">
+            </div>
+
+            <div class="form-group">
+              <label>Field 5: Date</label>
+              <input type="date" name="field5">
+            </div>
+
+            <div class="form-group">
+              <label>Field 6: Department</label>
+              <input type="text" name="field6" placeholder="Enter department">
+            </div>
+
+            <div class="form-group">
+              <label>Field 7: Comments</label>
+              <textarea name="field7" placeholder="Enter comments"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Field 8: Reference</label>
+              <input type="text" name="field8" placeholder="Enter reference">
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn-secondary" onclick="refreshStorageData()">Refresh Storage</button>
+            <button type="button" class="btn-secondary" onclick="clearPluginStorage()">Clear Storage</button>
+            <button type="button" class="btn-primary" onclick="reloadPage()">Reload Page</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2>Plugin Status</h2>
+        <div class="info-box">
+          <span class="status-indicator status-active"></span>
+          <strong>Status:</strong> <span id="plugin-status">Initializing...</span><br>
+          <strong>Fields Detected:</strong> <span id="fields-count">0</span><br>
+          <strong>Last Auto-Save:</strong> <span id="last-save">Never</span><br>
+          <strong>Storage Size:</strong> <span id="storage-size">0 bytes</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Data Stored in localStorage</h2>
+        <button class="btn-secondary" onclick="refreshStorageData()" style="margin-bottom: 15px;">Refresh</button>
+        <div class="storage-data" id="storage-display">
+          Loading storage data...
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>How It Works</h2>
+        <div class="info-box" style="background: white; border: 1px solid #e0e0e0;">
+          <strong>Automatic Flow:</strong><br>
+          1. Plugin loads and attaches listeners to all 8 fields (silently)<br>
+          2. As you type, listeners detect changes<br>
+          3. State manager updates in memory<br>
+          4. After 1 second of no typing, state auto-saves to localStorage<br>
+          5. Data persists - refresh the page and it loads automatically<br>
+          <br>
+          <strong>No user interaction required!</strong> This is how it will work as a browser extension on 3rd-party sites.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Testing Instructions</h2>
+        <div class="info-box" style="background: white; border: 1px solid #e0e0e0;">
+          1. Start typing in any field<br>
+          2. Wait 1 second - it auto-saves to localStorage<br>
+          3. Check the "Data Stored in localStorage" section above<br>
+          4. Click "Reload Page" - your data comes back automatically<br>
+          5. Check browser DevTools Console for any logs (if debug mode enabled)<br>
+          6. Try the "Refresh Storage" button to see live updates
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <strong>Plugin Auto-Initialization Demo</strong><br>
+      This demonstrates how the plugin works as a 3rd-party extension without requiring any UI buttons or user actions.
+    </footer>
+  </div>
+
+  <!-- Include modules in order -->
+  <script src="modules/form-listener.js"></script>
+  <script src="modules/form-state-manager.js"></script>
+  <script src="modules/plugin-init.js"></script>
+
+  <script>
+    // Update UI with plugin status
+    function updatePluginStatus() {
+      if (window.policyPlugin && window.policyPlugin.isInitialized) {
+        document.getElementById('plugin-status').textContent = 'Active (listening)';
+        document.getElementById('fields-count').textContent = window.policyPlugin.listener?.getFieldCount() || 0;
+        
+        const storageData = window.policyPlugin.getStorageData();
+        if (storageData) {
+          const size = JSON.stringify(storageData).length;
+          document.getElementById('storage-size').textContent = size + ' bytes';
+          
+          const timestamp = new Date(storageData.timestamp);
+          document.getElementById('last-save').textContent = timestamp.toLocaleTimeString();
+        }
+      } else {
+        document.getElementById('plugin-status').textContent = 'Waiting...';
+      }
+    }
+
+    function refreshStorageData() {
+      const storageData = window.policyPlugin?.getStorageData();
+      const display = document.getElementById('storage-display');
+
+      if (!storageData) {
+        display.textContent = '// No data in storage yet\n// Fill the form and wait 1 second for auto-save';
+        return;
+      }
+
+      const formatted = JSON.stringify(storageData, null, 2);
+      display.textContent = formatted;
+      updatePluginStatus();
+    }
+
+    function clearPluginStorage() {
+      if (confirm('Clear all stored data?')) {
+        window.policyPlugin?.clearStorage();
+        document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        refreshStorageData();
+        updatePluginStatus();
+      }
+    }
+
+    function reloadPage() {
+      location.reload();
+    }
+
+    // Initial status update
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        updatePluginStatus();
+        refreshStorageData();
+        
+        // Update every 2 seconds
+        setInterval(() => {
+          refreshStorageData();
+          updatePluginStatus();
+        }, 2000);
+      }, 500);
+    });
+  </script>
+</body>
+</html>
