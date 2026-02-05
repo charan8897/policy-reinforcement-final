@@ -7845,10 +7845,14 @@ class OPABundleStorageManager:
     
     def load_version_registry(self):
         """
-        Load versions.json registry with all deployed versions
+        Load versions.json registry with all deployed versions and active pointers
         
         Registry Format:
         {
+            "active": "v1.0.10",        # Currently active version
+            "previous": "v1.0.9",       # Previous active (for rollback)
+            "all_versions": ["v1.0.9", "v1.0.10"],
+            "created": "ISO timestamp",
             "latest": "1.0.10",
             "versions": [
                 {
@@ -7872,14 +7876,35 @@ class OPABundleStorageManager:
             if os.path.exists(versions_file):
                 with open(versions_file, 'r') as f:
                     return json.load(f)
-            return {"latest": None, "versions": []}
+            # Initialize empty registry with pointers
+            return {
+                "active": None,
+                "previous": None,
+                "all_versions": [],
+                "created": None,
+                "latest": None,
+                "versions": []
+            }
         except Exception as e:
             self.log_entry("WARNING", f"Failed to load version registry: {e}")
-            return {"latest": None, "versions": []}
+            return {
+                "active": None,
+                "previous": None,
+                "all_versions": [],
+                "created": None,
+                "latest": None,
+                "versions": []
+            }
     
     def update_version_registry(self, manifest, version_dir, status="active"):
         """
-        Update versions.json with new version metadata
+        Update versions.json with new version metadata and active pointers
+        
+        Updates:
+        - Adds new version entry
+        - Manages active/previous pointers
+        - Updates all_versions list
+        - Sets created timestamp
         
         Args:
             manifest (dict): Manifest object
@@ -7890,7 +7915,7 @@ class OPABundleStorageManager:
             bool: True if successful, False otherwise
         """
         try:
-            self.log_entry("STEP", "Updating version registry")
+            self.log_entry("STEP", "Updating version registry with active pointers")
             
             # Load current registry
             registry = self.load_version_registry()
@@ -7912,17 +7937,84 @@ class OPABundleStorageManager:
             registry["versions"].append(version_entry)
             registry["latest"] = manifest.get("version")
             
+            # Update active pointers
+            if status == "active":
+                # If this version is active, move current active to previous
+                if registry.get("active"):
+                    registry["previous"] = registry["active"]
+                registry["active"] = f"v{manifest.get('version')}"
+            
+            # Update all_versions list with unique versions
+            version_str = f"v{manifest.get('version')}"
+            if version_str not in registry.get("all_versions", []):
+                registry.setdefault("all_versions", []).append(version_str)
+            
+            # Set registry creation time (first creation only)
+            if not registry.get("created"):
+                registry["created"] = datetime.now().isoformat() + "Z"
+            
             # Save registry
             versions_file = f"{self.storage_dir}/versions.json"
             with open(versions_file, 'w') as f:
                 json.dump(registry, f, indent=2)
             
-            self.log_entry("SUCCESS", f"Version registry updated: {manifest.get('version')}")
+            self.log_entry("SUCCESS", f"Version registry updated: active={registry.get('active')}, previous={registry.get('previous')}")
             return True
             
         except Exception as e:
             self.log_entry("ERROR", f"Failed to update version registry: {e}")
             return False
+    
+    def rollback_to_previous_version(self):
+        """
+        Rollback to previous active version
+        
+        Updates registry:
+        - active → previous
+        - previous → None (unless more history needed)
+        - Marks old active as inactive
+        
+        Returns:
+            dict: {'success': bool, 'previous_version': str, 'error': str}
+        """
+        try:
+            self.log_entry("STEP", "Rolling back to previous version")
+            
+            registry = self.load_version_registry()
+            
+            if not registry.get("previous"):
+                return {'success': False, 'previous_version': None, 'error': 'No previous version available'}
+            
+            previous_version = registry["previous"]
+            current_version = registry["active"]
+            
+            # Update version statuses
+            for version_entry in registry.get("versions", []):
+                if version_entry.get("version") == current_version.replace("v", ""):
+                    version_entry["status"] = "inactive"
+                elif version_entry.get("version") == previous_version.replace("v", ""):
+                    version_entry["status"] = "active"
+            
+            # Update active pointers
+            registry["active"] = previous_version
+            registry["previous"] = current_version
+            
+            # Save updated registry
+            versions_file = f"{self.storage_dir}/versions.json"
+            with open(versions_file, 'w') as f:
+                json.dump(registry, f, indent=2)
+            
+            self.log_entry("SUCCESS", f"Rolled back: {current_version} → {previous_version}")
+            return {
+                'success': True,
+                'previous_version': previous_version,
+                'current_version': current_version,
+                'error': None
+            }
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Rollback failed: {e}")
+            return {'success': False, 'previous_version': None, 'error': str(e)}
     
     def generate_semantic_version(self, increment_type="patch"):
         """
