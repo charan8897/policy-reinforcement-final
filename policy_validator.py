@@ -7742,17 +7742,21 @@ class OPABundleStorageManager:
     
     def create_manifest(self, bundle_structure):
         """
-        Create manifest.json following OPA standard
+        Create manifest.json following OPA standard + custom metadata
         
-        OPA Manifest Format:
+        Manifest Format:
         {
-            "revision": "semantic version",
-            "roots": ["data/policies"],
+            "version": "semantic version",
+            "rules_count": N,
+            "created": "ISO timestamp",
+            "hash": "sha256:...",
+            "policy_type": "policy_name",
             "metadata": {
                 "bundle_name": "...",
-                "generated_at": "ISO timestamp",
-                "rego_version": "...",
-                "rule_count": N
+                "rego_version": "v1",
+                "source_stage": 9,
+                "destination_stage": 10,
+                "document_id": "..."
             }
         }
         
@@ -7760,21 +7764,31 @@ class OPABundleStorageManager:
             bundle_structure (dict): Generated bundle structure
             
         Returns:
-            dict: OPA-compliant manifest or None if failed
+            dict: Manifest with OPA standard + custom fields or None if failed
         """
         try:
-            self.log_entry("STEP", "Creating OPA manifest")
+            self.log_entry("STEP", "Creating manifest.json")
             
-            rule_count = sum(len(rules) for rules in bundle_structure.get("policies", {}).values())
+            # Count rules - get from first policy or 0
+            policies = bundle_structure.get("policies", {})
+            rule_count = 0
+            policy_type = "travel_policy"
+            
+            for policy_name, policy_data in policies.items():
+                if isinstance(policy_data, dict):
+                    rules = policy_data.get("rules", [])
+                    rule_count += len(rules)
+                    policy_type = policy_name
             
             manifest = {
-                "revision": self.bundle_version or self.generate_semantic_version(),
-                "roots": ["data/policies", "data/rules"],
+                "version": self.bundle_version or self.generate_semantic_version(),
+                "rules_count": rule_count,
+                "created": datetime.now().isoformat() + "Z",
+                "hash": "",  # Will be filled with SHA256 after calculation
+                "policy_type": policy_type,
                 "metadata": {
                     "bundle_name": f"policy_{self.document_id}",
-                    "generated_at": datetime.now().isoformat(),
                     "rego_version": "v1",
-                    "rule_count": rule_count,
                     "source_stage": 9,
                     "destination_stage": 10,
                     "document_id": self.document_id
@@ -7926,16 +7940,16 @@ class OPABundleStorageManager:
         try:
             self.log_entry("STEP", "Persisting bundle to filesystem")
             
-            version = manifest.get("revision", "1.0.0")
-            version_dir = f"{self.storage_dir}/{version}"
-            policies_dir = f"{version_dir}/policies"
+            version = manifest.get("version", "1.0.0")
+            version_dir = f"{self.storage_dir}/v{version}"
+            policies_dir = f"{version_dir}/.policy"
             
             # Create version directory
             Path(version_dir).mkdir(parents=True, exist_ok=True)
             Path(policies_dir).mkdir(parents=True, exist_ok=True)
             
-            # Write manifest
-            manifest_file = f"{version_dir}/.manifest"
+            # Write manifest.json
+            manifest_file = f"{version_dir}/manifest.json"
             with open(manifest_file, 'w') as f:
                 json.dump(manifest, f, indent=2)
             self.log_entry("SUCCESS", f"Wrote manifest: {manifest_file}")
@@ -7946,8 +7960,9 @@ class OPABundleStorageManager:
                 json.dump(bundle_structure, f, indent=2)
             self.log_entry("SUCCESS", f"Wrote bundle metadata: {bundle_meta_file}")
             
-            # Write Rego policies
-            rego_file = f"{policies_dir}/main.rego"
+            # Write Rego policies with policy name
+            policy_type = manifest.get("policy_type", "main")
+            rego_file = f"{policies_dir}/{policy_type}.rego"
             rego_content = self.serialize_rego_code(bundle_structure)
             with open(rego_file, 'w') as f:
                 f.write(rego_content)
@@ -8155,6 +8170,9 @@ class OPABundleStorageManager:
             bundle_hash = self.calculate_bundle_hash(bundle_structure)
             if not bundle_hash:
                 return {'success': False, 'error': 'Failed to calculate bundle hash'}
+            
+            # Add hash to manifest
+            manifest["hash"] = f"sha256:{bundle_hash}"
             
             # Step 6: Persist to filesystem
             version_dir = self.persist_bundle_to_filesystem(bundle_structure, manifest)
