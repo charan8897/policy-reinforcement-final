@@ -7840,8 +7840,89 @@ class OPABundleStorageManager:
             return None
     
     # ========================================================================
-    # STEP 4: Version Controller - Semantic Versioning
+    # STEP 4: Version Controller - Semantic Versioning & Registry
     # ========================================================================
+    
+    def load_version_registry(self):
+        """
+        Load versions.json registry with all deployed versions
+        
+        Registry Format:
+        {
+            "latest": "1.0.10",
+            "versions": [
+                {
+                    "version": "1.0.10",
+                    "created": "ISO timestamp",
+                    "status": "active",
+                    "policy_type": "travel_policy",
+                    "rules_count": 56,
+                    "hash": "sha256:...",
+                    "document_id": "...",
+                    "filesystem_path": "v1.0.10"
+                }
+            ]
+        }
+        
+        Returns:
+            dict: Version registry or empty structure if not exists
+        """
+        try:
+            versions_file = f"{self.storage_dir}/versions.json"
+            if os.path.exists(versions_file):
+                with open(versions_file, 'r') as f:
+                    return json.load(f)
+            return {"latest": None, "versions": []}
+        except Exception as e:
+            self.log_entry("WARNING", f"Failed to load version registry: {e}")
+            return {"latest": None, "versions": []}
+    
+    def update_version_registry(self, manifest, version_dir, status="active"):
+        """
+        Update versions.json with new version metadata
+        
+        Args:
+            manifest (dict): Manifest object
+            version_dir (str): Filesystem path to bundle
+            status (str): Version status (active/inactive/archived)
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            self.log_entry("STEP", "Updating version registry")
+            
+            # Load current registry
+            registry = self.load_version_registry()
+            
+            # Create version entry
+            version_entry = {
+                "version": manifest.get("version"),
+                "created": manifest.get("created"),
+                "status": status,
+                "policy_type": manifest.get("policy_type"),
+                "rules_count": manifest.get("rules_count"),
+                "hash": manifest.get("hash", "").replace("sha256:", ""),
+                "document_id": manifest.get("metadata", {}).get("document_id"),
+                "filesystem_path": version_dir.split("/")[-1],
+                "bundle_name": manifest.get("metadata", {}).get("bundle_name")
+            }
+            
+            # Add to versions list
+            registry["versions"].append(version_entry)
+            registry["latest"] = manifest.get("version")
+            
+            # Save registry
+            versions_file = f"{self.storage_dir}/versions.json"
+            with open(versions_file, 'w') as f:
+                json.dump(registry, f, indent=2)
+            
+            self.log_entry("SUCCESS", f"Version registry updated: {manifest.get('version')}")
+            return True
+            
+        except Exception as e:
+            self.log_entry("ERROR", f"Failed to update version registry: {e}")
+            return False
     
     def generate_semantic_version(self, increment_type="patch"):
         """
@@ -8087,56 +8168,84 @@ class OPABundleStorageManager:
         return "\n".join(lines)
     
     def persist_bundle_to_mongodb(self, bundle_structure, manifest, version_dir):
-        """
-        Store bundle metadata and version info to MongoDB
-        
-        Args:
-            bundle_structure (dict): Generated bundle
-            manifest (dict): OPA manifest
-            version_dir (str): Filesystem path to version directory
-            
-        Returns:
-            dict: {'success': bool, 'bundle_id': str, 'error': str}
-        """
-        try:
-            if not self.enable_mongodb:
-                self.log_entry("DEBUG", "MongoDB storage disabled")
-                return {'success': False, 'bundle_id': None, 'error': 'MongoDB disabled'}
-            
-            self.log_entry("STEP", "Persisting bundle metadata to MongoDB")
-            
-            bundle_record = {
-                "document_id": self.document_id,
-                "stage": 10,
-                "stage_name": "opa_bundle_storage",
-                "bundle_version": manifest.get("revision"),
-                "bundle_id": bundle_structure.get("bundle_id"),
-                "created_at": bundle_structure.get("created_at"),
-                "manifest": manifest,
-                "rule_count": manifest.get("metadata", {}).get("rule_count", 0),
-                "filesystem_path": version_dir,
-                "bundle_hash": self.bundle_hash,
-                "status": "active"
-            }
-            
-            # Use pipeline stage storage for MongoDB persistence
-            result = self.storage.store_stage(
-                stage_number=10,
-                stage_name="opa_bundle_storage",
-                stage_output=bundle_record,
-                filename=self.rego_bundles_file.split('/')[-1]
-            )
-            
-            if result['success']:
-                self.log_entry("SUCCESS", f"Bundle stored to MongoDB with ID: {result['stage_id']}")
-            else:
-                self.log_entry("WARNING", f"MongoDB storage failed: {result['error']}")
-            
-            return result
-            
-        except Exception as e:
-            self.log_entry("ERROR", f"Failed to persist bundle to MongoDB: {e}")
-            return {'success': False, 'bundle_id': None, 'error': str(e)}
+         """
+         Store bundle metadata to MongoDB with dual persistence backup
+         
+         Collections structure:
+         - opa_bundles (main collection):
+             ├── bundle_version (semantic version)
+             ├── rego_code (complete Rego rules)
+             ├── manifest (OPA manifest)
+             ├── created_at (timestamp)
+             ├── status (active/inactive/archived)
+             ├── document_id (traceability)
+             ├── policy_type (bundle classification)
+             └── hash (SHA256 integrity)
+         
+         Args:
+             bundle_structure (dict): Generated bundle
+             manifest (dict): OPA manifest
+             version_dir (str): Filesystem path to version directory
+             
+         Returns:
+             dict: {'success': bool, 'stage_id': str, 'error': str}
+         """
+         try:
+             if not self.enable_mongodb:
+                 self.log_entry("DEBUG", "MongoDB storage disabled")
+                 return {'success': False, 'stage_id': None, 'error': 'MongoDB disabled'}
+             
+             self.log_entry("STEP", "Persisting bundle to MongoDB (dual persistence)")
+             
+             # Read rego code for storage
+             policy_dir = f"{version_dir}/.policy"
+             rego_code_content = ""
+             if os.path.exists(policy_dir):
+                 rego_files = [f for f in os.listdir(policy_dir) if f.endswith(".rego")]
+                 for rego_file in sorted(rego_files):
+                     with open(f"{policy_dir}/{rego_file}", 'r') as f:
+                         rego_code_content += f.read()
+             
+             bundle_record = {
+                 "document_id": self.document_id,
+                 "stage": 10,
+                 "stage_name": "opa_bundle_storage",
+                 "bundle_version": manifest.get("version"),
+                 "bundle_id": bundle_structure.get("bundle_id"),
+                 "created_at": bundle_structure.get("created_at"),
+                 "policy_type": manifest.get("policy_type"),
+                 "rule_count": manifest.get("rules_count", 0),
+                 "manifest": manifest,
+                 "rego_code": rego_code_content,
+                 "filesystem_path": version_dir,
+                 "bundle_hash": self.bundle_hash,
+                 "status": "active",  # active/inactive/archived
+                 "metadata": {
+                     "bundle_name": manifest.get("metadata", {}).get("bundle_name"),
+                     "rego_version": manifest.get("metadata", {}).get("rego_version"),
+                     "source_stage": manifest.get("metadata", {}).get("source_stage"),
+                     "destination_stage": manifest.get("metadata", {}).get("destination_stage")
+                 }
+             }
+             
+             # Use pipeline stage storage for MongoDB persistence
+             result = self.storage.store_stage(
+                 stage_number=10,
+                 stage_name="opa_bundle_storage",
+                 stage_output=bundle_record,
+                 filename=self.rego_bundles_file.split('/')[-1]
+             )
+             
+             if result['success']:
+                 self.log_entry("SUCCESS", f"Bundle stored to MongoDB: {result['stage_id']} (status: active)")
+             else:
+                 self.log_entry("WARNING", f"MongoDB storage failed: {result['error']}")
+             
+             return result
+             
+         except Exception as e:
+             self.log_entry("ERROR", f"Failed to persist bundle to MongoDB: {e}")
+             return {'success': False, 'stage_id': None, 'error': str(e)}
     
     # ========================================================================
     # STEP 7: Cleanup Manager - Retention Policy
@@ -8251,13 +8360,16 @@ class OPABundleStorageManager:
             if not version_dir:
                 return {'success': False, 'error': 'Failed to persist bundle to filesystem'}
             
-            # Step 8: Persist to MongoDB
+            # Step 8: Update version registry (versions.json)
+            registry_updated = self.update_version_registry(manifest, version_dir, status="active")
+            
+            # Step 9: Persist to MongoDB (dual persistence backup)
             mongodb_result = self.persist_bundle_to_mongodb(bundle_structure, manifest, version_dir)
             
-            # Step 9: Cleanup old versions
+            # Step 10: Cleanup old versions
             cleanup_result = self.cleanup_old_versions(keep_count=5)
             
-            # Step 10: Verify bundle fingerprint (integrity check)
+            # Step 11: Verify bundle fingerprint (integrity check)
             fingerprint_verified = self.verify_bundle_fingerprint(version_dir)
             
             self.log_entry("SUCCESS", "Stage 10 processing complete")
