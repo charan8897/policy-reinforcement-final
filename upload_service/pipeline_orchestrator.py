@@ -21,7 +21,7 @@ class PipelineOrchestrator:
         self.db_manager = db_manager
         self.status = 'initializing'
         self.current_stage = 0
-        self.total_stages = 8
+        self.total_stages = 10
         self.stages_results = []
         self.error = None
         self.progress = 0
@@ -40,7 +40,9 @@ class PipelineOrchestrator:
                 AmbiguityClarifier,
                 DSLGenerator,
                 ConfidenceAndRationaleGenerator,
-                NormalizedPolicyGenerator
+                NormalizedPolicyGenerator,
+                RegoGenerator,
+                OPABundleStorageManager
             )
             self.ClauseExtractor = ClauseExtractor
             self.IntentClassifier = IntentClassifier
@@ -50,6 +52,8 @@ class PipelineOrchestrator:
             self.DSLGenerator = DSLGenerator
             self.ConfidenceAndRationaleGenerator = ConfidenceAndRationaleGenerator
             self.NormalizedPolicyGenerator = NormalizedPolicyGenerator
+            self.RegoGenerator = RegoGenerator
+            self.OPABundleStorageManager = OPABundleStorageManager
         except Exception as e:
             self.error = f"Failed to import validators: {str(e)}"
             logger.error(self.error)
@@ -62,7 +66,7 @@ class PipelineOrchestrator:
         logger.info(log_msg)
     
     async def run(self):
-        """Run the complete 7-stage pipeline asynchronously"""
+        """Run the complete 10-stage pipeline asynchronously"""
         
         self.start_time = time.time()
         self.log_progress("Pipeline starting...")
@@ -115,6 +119,14 @@ class PipelineOrchestrator:
             
             # Stage 8: Normalized Policies
             if not await self._run_stage_8():
+                return False
+            
+            # Stage 9: DSL to Rego Conversion
+            if not await self._run_stage_9():
+                return False
+            
+            # Stage 10: OPA Bundle Storage
+            if not await self._run_stage_10():
                 return False
             
             # Cleanup
@@ -458,7 +470,7 @@ class PipelineOrchestrator:
     async def _run_stage_8(self):
         """Run Stage 8: Generate Normalized Policies"""
         self.current_stage = 8
-        self.progress = 99
+        self.progress = 80
         
         try:
             self.log_progress("Stage 8: Generating normalized policies...")
@@ -501,15 +513,106 @@ class PipelineOrchestrator:
             self.log_progress(f"ERROR: {self.error}")
             return False
     
-    def _extract_stage_id(self, log_lines):
-        """Extract stage_id from log"""
-        import re
-        for log_line in reversed(log_lines):
-            if "stage_" in log_line:
-                match = re.search(r'stage_\d+_[a-f0-9]+', log_line)
-                if match:
-                    return match.group(0)
-        return None
+    async def _run_stage_9(self):
+        """Run Stage 9: DSL to Rego Conversion"""
+        self.current_stage = 9
+        self.progress = 90
+        
+        try:
+            self.log_progress("Stage 9: Converting DSL to Rego format...")
+            
+            stage9 = self.RegoGenerator(
+                dsl_file=f"{self.OUTPUT_DIR}/stage6_dsl_rules.yaml",
+                normalized_file=f"{self.OUTPUT_DIR}/stage8_normalized_policies.json",
+                document_id=self.document_id,
+                enable_mongodb=True
+            )
+            
+            success = stage9.generate()
+            
+            if success:
+                with open(f"{self.OUTPUT_DIR}/stage9_rego_bundles.json", 'r') as f:
+                    stage9_output = json.load(f)
+                
+                stage9_id = self._extract_stage_id(stage9.log)
+                total_rules = stage9_output.get('metadata', {}).get('total_rules', 0)
+                
+                self.stages_results.append({
+                    'stage_number': 9,
+                    'stage_name': 'dsl-to-rego',
+                    'stage_id': stage9_id or 'unknown',
+                    'status': 'pending_approval',
+                    'created_at': datetime.utcnow().isoformat(),
+                    'output_summary': {'total_rules': total_rules}
+                })
+                
+                self.log_progress(f"✓ Stage 9 completed: {stage9_id} ({total_rules} rules generated)")
+                return True
+            else:
+                self.error = "Stage 9 (DSL to Rego) failed"
+                self.log_progress(f"ERROR: {self.error}")
+                return False
+                
+        except Exception as e:
+            self.error = f"Stage 9 exception: {str(e)}"
+            self.log_progress(f"ERROR: {self.error}")
+            return False
+    
+    async def _run_stage_10(self):
+        """Run Stage 10: OPA Bundle Storage & Management"""
+        self.current_stage = 10
+        self.progress = 99
+        
+        try:
+            self.log_progress("Stage 10: Storing OPA bundle...")
+            
+            stage10 = self.OPABundleStorageManager(
+                rego_bundles_file=f"{self.OUTPUT_DIR}/stage9_rego_bundles.json",
+                document_id=self.document_id,
+                enable_mongodb=True,
+                enable_cleanup=False
+            )
+            
+            result = stage10.process()
+            
+            if result['success']:
+                stage10.save_log()
+                
+                self.stages_results.append({
+                    'stage_number': 10,
+                    'stage_name': 'opa-bundle-storage',
+                    'stage_id': result.get('bundle_version', 'unknown'),
+                    'status': 'pending_approval',
+                    'created_at': datetime.utcnow().isoformat(),
+                    'output_summary': {
+                        'bundle_version': result.get('bundle_version'),
+                        'bundle_hash': result.get('bundle_hash', ''),
+                        'filesystem_path': result.get('filesystem_path')
+                    }
+                })
+                
+                self.log_progress(f"✓ Stage 10 completed: {result.get('bundle_version')}")
+                return True
+            else:
+                self.error = f"Stage 10 (OPA Bundle Storage) failed: {result.get('error', 'Unknown error')}"
+                self.log_progress(f"ERROR: {self.error}")
+                return False
+                
+        except Exception as e:
+            self.error = f"Stage 10 exception: {str(e)}"
+            self.log_progress(f"ERROR: {self.error}")
+            return False
+            
+            def _extract_stage_id(self, log_lines):
+                """Extract stage_id from log"""
+                import re
+                for log_line in reversed(log_lines):
+                    if "stage_" in log_line:
+                        match = re.search(r'stage_\d+_[a-f0-9]+', log_line)
+                        if match:
+                            return match.group(0)
+                return None
+            
     
     def get_status(self):
         """Get current pipeline status"""

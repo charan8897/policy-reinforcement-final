@@ -9,6 +9,8 @@ Step 3: Extract entities & thresholds with Gemini → stage3_entities.json
 Step 4: Detect ambiguities in clauses → stage4_ambiguity_flags.json
 Step 5: Clarify ambiguous clauses with Gemini → stage5_clarified_clauses.json
 Step 6: Generate DSL rules from clarified clauses → stage6_dsl_rules.yaml
+Step 9: DSL to Rego conversion for OPA → stage9_rego_bundles.json
+Step 10: OPA Bundle Storage & Management → opa_bundles/v{version}/
 
 Stage 0 is CRITICAL - it extracts Annexures which contain actual policy rules
 (city classification, rates, thresholds) that were previously missing.
@@ -22,6 +24,7 @@ Usage:
   python policy_validator.py detect-ambiguities <stage3_entities.json>
   python policy_validator.py clarify-ambiguities <stage3_entities.json>
   python policy_validator.py generate-dsl <stage5_clarified_clauses.json>
+  python policy_validator.py opa-bundle-storage <stage9_rego_bundles.json>
 """
 
 import os
@@ -3952,10 +3955,11 @@ def interactive_menu():
     print(" 10) evaluate           - Evaluate employee payload against rules")
     print(" 11) extract-topics     - Select topic → Generate rules for topic")
     print(" 12) normalize-policies - Generate normalized policy JSON → stage8_normalized_policies.json")
-    print(" 13) run-full-pipeline  - Run complete pipeline (1B→2→3→4→5→6→8) at once")
-    print(" 14) exit               - Exit")
+    print(" 13) opa-bundle-storage - Stage 10: Store Rego rules in OPA-compatible bundle format")
+    print(" 14) run-full-pipeline  - Run complete pipeline (1B→2→3→4→5→6→8→9→10) at once")
+    print(" 15) exit               - Exit")
     
-    choice = input("\nEnter choice (0-14 or A): ").strip()
+    choice = input("\nEnter choice (0-15 or A): ").strip()
     
     if choice == "0":
         text_file = input("Enter raw policy text file path (default: filename.txt): ").strip()
@@ -4090,13 +4094,19 @@ def interactive_menu():
         return ("normalize-policies", dsl_file, confidence_file, "--no-llm")
     
     elif choice == "13":
+        rego_bundles_file = input("Enter stage9_rego_bundles.json file path (default: stage9_rego_bundles.json): ").strip()
+        if not rego_bundles_file:
+            rego_bundles_file = f"{OUTPUT_DIR}/stage9_rego_bundles.json"
+        return ("opa-bundle-storage", rego_bundles_file)
+    
+    elif choice == "14":
         pdf_file = input("Enter PDF file path: ").strip()
         if not pdf_file:
             print("ERROR: PDF file path required")
             return None
         return ("run-full-pipeline", pdf_file)
     
-    elif choice == "14":
+    elif choice == "15":
         print("Goodbye!")
         sys.exit(0)
     
@@ -4288,20 +4298,12 @@ class RegoGenerator:
         clause_data = merged_data
         dsl_rule = clause_data.get('dsl_rule', {})
         normalized = clause_data.get('normalized_policy', {})
-        
-        # Extract intent from Stage 8 core_attributes (correct source)
-        intent = normalized.get('core_attributes', {}).get('intent', 'INFORMATIONAL')
-        
-        # Extract is_ambiguous from Stage 8 ambiguity_analysis (correct source)
-        is_ambiguous = normalized.get('ambiguity_analysis', {}).get('is_ambiguous', False)
-        
-        # Extract confidence from Stage 8 core_attributes.confidence_score (correct source)
-        confidence = normalized.get('core_attributes', {}).get('confidence_score', 
-                                   clause_data.get('confidence', 0.5))
+        is_ambiguous = clause_data.get('is_ambiguous', False)
         
         # Extract components
         when_all = dsl_rule.get('when', {}).get('all', [])
         then_clause = dsl_rule.get('then', {})
+        intent = normalized.get('intent', 'INFORMATIONAL')
         
         # Generate Rego function name
         rule_name = f"allow_{clause_id.lower().replace('_', '')}_{intent.lower()[:10]}"
@@ -4328,7 +4330,7 @@ class RegoGenerator:
             'intent': intent,
             'is_ambiguous': is_ambiguous,
             'action': action,
-            'confidence': confidence
+            'confidence': clause_data.get('confidence', 0.5)
         }
     
     def generate_rego_bundles(self, merged_data):
@@ -4937,12 +4939,42 @@ def main():
             print("\n✗ Normalized policy generation failed. Check logs.")
             sys.exit(1)
     
+    elif command == "opa-bundle-storage":
+        rego_bundles_file = arg
+        
+        print(f"\n{'='*80}")
+        print("STAGE 10: OPA BUNDLE STORAGE & MANAGEMENT")
+        print(f"{'='*80}\n")
+        
+        manager = OPABundleStorageManager(rego_bundles_file, enable_mongodb=False, enable_cleanup=False)
+        result = manager.process()
+        manager.save_log()
+        
+        if result['success']:
+            print(f"\n{'='*80}")
+            print("✓ OPA BUNDLE STORAGE SUCCESSFUL")
+            print(f"{'='*80}")
+            print(f"✓ Bundle Version: {result['bundle_version']}")
+            print(f"✓ Bundle Hash: {result['bundle_hash'][:32]}...")
+            print(f"✓ Filesystem Path: {result['filesystem_path']}")
+            if result['mongodb_result'].get('success'):
+                print(f"✓ MongoDB ID: {result['mongodb_result'].get('stage_id')}")
+            print(f"✓ Cleanup Result: {result['cleanup_result']}")
+            print(f"✓ Mechanism log: {LOG_FILE}")
+        else:
+            print(f"\n{'='*80}")
+            print(f"✗ OPA BUNDLE STORAGE FAILED")
+            print(f"{'='*80}")
+            print(f"Error: {result.get('error', 'Unknown error')}")
+            print(f"Check logs for details: {LOG_FILE}")
+            sys.exit(1)
+    
     elif command == "run-full-pipeline":
         pdf_file = arg
         
         print(f"\n{'='*80}")
         print("FULL PIPELINE ORCHESTRATION")
-        print("Running: Stage 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 (skipping Stage 7)")
+        print("Running: Stage 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9 → 10")
         print(f"{'='*80}\n")
         
         orchestrator = PipelineOrchestrator(pdf_file, enable_mongodb=False)
@@ -6653,11 +6685,12 @@ Return ONLY the JSON object, no markdown formatting."""
 
 class PipelineOrchestrator:
     """
-    Orchestrate full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8
+    Orchestrate full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9 → 10
     (Skips Stage 7: Confidence-Rationale for speed)
     
     Single entry point for complete policy processing
     Starts from PDF extraction and handles all sequential dependencies automatically
+    Includes OPA Bundle Storage (Stage 10) for policy rule management
     """
     
     def __init__(self, pdf_file, enable_mongodb=True):
@@ -6888,15 +6921,43 @@ class PipelineOrchestrator:
             self.log_entry("ERROR", f"Stage 9 exception: {e}")
             return False
     
+    def run_stage_10(self):
+        """Stage 10: OPA Bundle Storage & Management"""
+        self.log_entry("STAGE", "Running Stage 10: OPA Bundle Storage")
+        
+        try:
+            rego_bundles_file = self.stage_results.get('stage9_file', f"{OUTPUT_DIR}/stage9_rego_bundles.json")
+            
+            manager = OPABundleStorageManager(
+                rego_bundles_file,
+                enable_mongodb=self.enable_mongodb,
+                enable_cleanup=False
+            )
+            result = manager.process()
+            manager.save_log()
+            
+            if result['success']:
+                self.stage_results['stage10_file'] = result['filesystem_path']
+                self.stage_results['stage10_version'] = result['bundle_version']
+                self.stage_results['stage10_hash'] = result['bundle_hash']
+                self.log_entry("SUCCESS", "Stage 10 complete")
+                return True
+            else:
+                self.log_entry("ERROR", f"Stage 10 failed: {result.get('error', 'Unknown error')}")
+                return False
+        except Exception as e:
+            self.log_entry("ERROR", f"Stage 10 exception: {e}")
+            return False
+    
     def run_full_pipeline(self):
         """
-        Execute full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9
+        Execute full pipeline: 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9 → 10
         
         Returns:
             dict: Results with success status and stage file paths
         """
         self.log_entry("START", "="*80)
-        self.log_entry("START", "FULL PIPELINE ORCHESTRATION: Stages 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9")
+        self.log_entry("START", "FULL PIPELINE ORCHESTRATION: Stages 1 → 1B → 2 → 3 → 4 → 5 → 6 → 8 → 9 → 10")
         self.log_entry("START", "="*80)
         
         stages = [
@@ -6908,7 +6969,8 @@ class PipelineOrchestrator:
             ('5', self.run_stage_5),
             ('6', self.run_stage_6),
             ('8', self.run_stage_8),
-            ('9', self.run_stage_9)
+            ('9', self.run_stage_9),
+            ('10', self.run_stage_10)
         ]
         
         for stage_name, stage_func in stages:
@@ -7615,7 +7677,7 @@ class OPABundleStorageManager:
         OPA Bundle Structure:
         bundle/
         ├── .manifest                    (OPA standard manifest)
-        ├── data.json                    (Data bundles)
+        ├── data.json                    (Data bundles - policy constants, thresholds)
         ├── policies/
         │   ├── main.rego               (Main policy package)
         │   └── helpers.rego            (Helper functions)
@@ -7634,28 +7696,33 @@ class OPABundleStorageManager:
                 "bundle_id": self.generate_bundle_id(),
                 "created_at": datetime.now().isoformat(),
                 "policies": {},
-                "rego_code": rego_data.get("rego_code", ""),
-                "data": {},
-                "metadata": rego_data.get("metadata", {}),
-                "statistics": rego_data.get("statistics", {})
+                "rego_code": {},
+                "data": {
+                    "metadata": rego_data.get("metadata", {}),
+                    "statistics": rego_data.get("statistics", {})
+                },
+                "metadata": rego_data.get("metadata", {})
             }
             
-            # Extract rules from policies array
+            # Extract policies and rules from stage9 structure
             policies = rego_data.get("policies", [])
             total_rules = 0
             
+            # Organize rules by policy
             for policy in policies:
-                rules = policy.get("rules", [])
-                total_rules += len(rules)
-                
-                # Organize rules by intent type
-                for rule in rules:
-                    intent = rule.get("intent", "general")
-                    if intent not in bundle_structure["policies"]:
-                        bundle_structure["policies"][intent] = []
-                    bundle_structure["policies"][intent].append(rule)
+                if isinstance(policy, dict):
+                    policy_name = policy.get("policy_name", "default")
+                    rules = policy.get("rules", [])
+                    
+                    bundle_structure["policies"][policy_name] = {
+                        "package": policy.get("package", f"data.{policy_name}"),
+                        "description": policy.get("description", ""),
+                        "rule_count": len(rules),
+                        "rules": rules
+                    }
+                    total_rules += len(rules)
             
-            self.log_entry("SUCCESS", f"Generated bundle structure with {total_rules} rules organized by {len(bundle_structure['policies'])} intent categories")
+            self.log_entry("SUCCESS", f"Generated bundle structure with {total_rules} rules from {len(policies)} policies")
             return bundle_structure
             
         except Exception as e:
@@ -7835,18 +7902,17 @@ class OPABundleStorageManager:
     
     def persist_bundle_to_filesystem(self, bundle_structure, manifest):
         """
-        Store bundle to filesystem with OPA-standard directory structure
+        Store bundle to filesystem with version directory structure
         
-        OPA Bundle Directory Layout (Standard):
+        Directory Layout:
         opa_bundles/
         ├── v1.0.0/
-        │   ├── .manifest                    (OPA standard manifest)
-        │   ├── data/                        (OPA data directory)
-        │   │   └── policies.json
-        │   ├── policies/                    (OPA policies directory)
+        │   ├── .manifest
+        │   ├── policies/
         │   │   ├── main.rego
         │   │   └── helpers.rego
-        │   └── bundle_metadata.json         (Extended metadata)
+        │   ├── data.json
+        │   └── bundle_metadata.json
         ├── v1.0.1/
         ...
         
@@ -7858,47 +7924,40 @@ class OPABundleStorageManager:
             str: Path to stored bundle directory or None if failed
         """
         try:
-            self.log_entry("STEP", "Persisting bundle to filesystem (OPA standard format)")
+            self.log_entry("STEP", "Persisting bundle to filesystem")
             
             version = manifest.get("revision", "1.0.0")
             version_dir = f"{self.storage_dir}/{version}"
             policies_dir = f"{version_dir}/policies"
-            data_dir = f"{version_dir}/data"
             
-            # Create version directory and subdirectories
+            # Create version directory
             Path(version_dir).mkdir(parents=True, exist_ok=True)
             Path(policies_dir).mkdir(parents=True, exist_ok=True)
-            Path(data_dir).mkdir(parents=True, exist_ok=True)
             
-            # Write manifest (OPA standard)
+            # Write manifest
             manifest_file = f"{version_dir}/.manifest"
             with open(manifest_file, 'w') as f:
                 json.dump(manifest, f, indent=2)
-            self.log_entry("SUCCESS", f"Wrote OPA manifest: {manifest_file}")
+            self.log_entry("SUCCESS", f"Wrote manifest: {manifest_file}")
             
-            # Write Rego policies (OPA standard)
-            rego_code = bundle_structure.get("rego_code", {})
+            # Write bundle metadata
+            bundle_meta_file = f"{version_dir}/bundle_metadata.json"
+            with open(bundle_meta_file, 'w') as f:
+                json.dump(bundle_structure, f, indent=2)
+            self.log_entry("SUCCESS", f"Wrote bundle metadata: {bundle_meta_file}")
+            
+            # Write Rego policies
             rego_file = f"{policies_dir}/main.rego"
-            rego_content = self.serialize_rego_code(rego_code)
+            rego_content = self.serialize_rego_code(bundle_structure)
             with open(rego_file, 'w') as f:
                 f.write(rego_content)
             self.log_entry("SUCCESS", f"Wrote Rego policies: {rego_file}")
             
-            # Write data bundle (OPA standard - data/ directory)
-            data_file = f"{data_dir}/policies.json"
-            data_content = {
-                "policies": bundle_structure.get("policies", {}),
-                "metadata": bundle_structure.get("metadata", {})
-            }
+            # Write data bundle
+            data_file = f"{version_dir}/data.json"
             with open(data_file, 'w') as f:
-                json.dump(data_content, f, indent=2)
+                json.dump(bundle_structure.get("data", {}), f, indent=2)
             self.log_entry("SUCCESS", f"Wrote data bundle: {data_file}")
-            
-            # Write extended bundle metadata (custom, in root)
-            bundle_meta_file = f"{version_dir}/bundle_metadata.json"
-            with open(bundle_meta_file, 'w') as f:
-                json.dump(bundle_structure, f, indent=2)
-            self.log_entry("SUCCESS", f"Wrote extended metadata: {bundle_meta_file}")
             
             # Write hash for integrity
             hash_file = f"{version_dir}/.bundle_hash"
@@ -7912,47 +7971,45 @@ class OPABundleStorageManager:
             self.log_entry("ERROR", f"Failed to persist bundle to filesystem: {e}")
             return None
     
-    def serialize_rego_code(self, rego_code):
+    def serialize_rego_code(self, bundle_structure):
         """
-        Serialize Rego code to text format
+        Serialize Rego code from bundle structure to text format
         
         Args:
-            rego_code (str or dict): Rego code (string from stage9 or dict structure)
+            bundle_structure (dict): Bundle structure with policies and rules
             
         Returns:
             str: Formatted Rego code
         """
-        # If rego_code is already a string, return it directly
-        if isinstance(rego_code, str):
-            return rego_code
-        
-        # If rego_code is a dict, serialize it
         lines = []
         
-        # Add package declaration
-        package = rego_code.get("package", "policies.main")
-        lines.append(f"package {package}")
-        lines.append("")
+        policies = bundle_structure.get("policies", {})
         
-        # Add imports
-        imports = rego_code.get("imports", [])
-        for import_stmt in imports:
-            lines.append(f"import {import_stmt}")
-        if imports:
-            lines.append("")
-        
-        # Add rules
-        rules = rego_code.get("rules", [])
-        for rule in rules:
-            if isinstance(rule, dict):
-                rule_name = rule.get("name", "unnamed_rule")
-                rule_body = rule.get("body", rule)
-                lines.append(f"# Rule: {rule_name}")
-                lines.append(str(rule_body))
+        # Iterate through each policy and its rules
+        for policy_name, policy_data in policies.items():
+            if isinstance(policy_data, dict):
+                # Add package declaration
+                package = policy_data.get("package", f"data.{policy_name}")
+                lines.append(f"package {package}")
                 lines.append("")
-            else:
-                lines.append(str(rule))
-                lines.append("")
+                
+                # Add description as comment
+                description = policy_data.get("description", "")
+                if description:
+                    lines.append(f"# {description}")
+                    lines.append("")
+                
+                # Add rules
+                rules = policy_data.get("rules", [])
+                for rule in rules:
+                    if isinstance(rule, dict):
+                        rule_name = rule.get("rego_rule_name", "unnamed_rule")
+                        rego_code = rule.get("rego_code", "")
+                        lines.append(f"\n{rego_code}")
+                    else:
+                        lines.append(str(rule))
+                
+                lines.append("\n" + "="*80)
         
         return "\n".join(lines)
     
