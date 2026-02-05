@@ -4097,7 +4097,11 @@ def interactive_menu():
         rego_bundles_file = input("Enter stage9_rego_bundles.json file path (default: stage9_rego_bundles.json): ").strip()
         if not rego_bundles_file:
             rego_bundles_file = f"{OUTPUT_DIR}/stage9_rego_bundles.json"
-        return ("opa-bundle-storage", rego_bundles_file)
+        document_id = input("Enter document ID (optional, default: auto-generated): ").strip()
+        if not document_id:
+            # Auto-generate from filename or use timestamp
+            document_id = None
+        return ("opa-bundle-storage", rego_bundles_file, document_id)
     
     elif choice == "14":
         pdf_file = input("Enter PDF file path: ").strip()
@@ -4507,15 +4511,23 @@ def main():
             main()  # Retry
             return
         
-        # Handle confidence-rationale which returns 3 values, or normalize-policies which may return 4
+        # Handle different tuple sizes from interactive menu
         if len(result) == 4:
             command, arg1, arg2, flag = result
             # For normalize-policies with --no-llm flag
             sys.argv = [sys.argv[0], command, arg1, arg2, flag]
         elif len(result) == 3:
             command, arg1, arg2 = result
-            # For confidence-rationale, set up sys.argv properly
-            sys.argv = [sys.argv[0], command, arg1, arg2]
+            # Handle 3-tuple cases (confidence-rationale, opa-bundle-storage)
+            if command == "opa-bundle-storage":
+                # opa-bundle-storage: arg1=file, arg2=document_id (optional)
+                if arg2:
+                    sys.argv = [sys.argv[0], command, arg1, arg2]
+                else:
+                    sys.argv = [sys.argv[0], command, arg1]
+            else:
+                # confidence-rationale: arg1 and arg2 are required
+                sys.argv = [sys.argv[0], command, arg1, arg2]
         else:
             command, arg = result
             sys.argv = [sys.argv[0], command, arg]
@@ -4940,13 +4952,23 @@ def main():
             sys.exit(1)
     
     elif command == "opa-bundle-storage":
-        rego_bundles_file = arg
+        # Extract arguments
+        if len(sys.argv) < 3:
+            print("ERROR: opa-bundle-storage requires stage9_rego_bundles.json file path")
+            sys.exit(1)
+        
+        rego_bundles_file = sys.argv[2]
+        
+        # Check if document_id was provided
+        document_id = None
+        if len(sys.argv) > 3:
+            document_id = sys.argv[3] if sys.argv[3] != "None" else None
         
         print(f"\n{'='*80}")
         print("STAGE 10: OPA BUNDLE STORAGE & MANAGEMENT")
         print(f"{'='*80}\n")
         
-        manager = OPABundleStorageManager(rego_bundles_file, enable_mongodb=False, enable_cleanup=False)
+        manager = OPABundleStorageManager(rego_bundles_file, document_id=document_id, enable_mongodb=False, enable_cleanup=False)
         result = manager.process()
         manager.save_log()
         
@@ -7570,13 +7592,28 @@ class OPABundleStorageManager:
             rego_bundles_file (str): Path to stage9_rego_bundles.json
             storage_dir (str): Directory for bundle storage (default: OUTPUT_DIR/opa_bundles)
             document_id (str): Reference to document in raw_documents collection
+                              If None, auto-generates from policy_type + timestamp
             enable_mongodb (bool): Store metadata and versions to MongoDB
             enable_cleanup (bool): Enable automatic cleanup of old versions
             retention_days (int): Days to retain old versions before cleanup
         """
         self.rego_bundles_file = rego_bundles_file
         self.storage_dir = storage_dir or f"{OUTPUT_DIR}/opa_bundles"
-        self.document_id = document_id or "unknown"
+        
+        # Auto-generate document_id if not provided
+        if document_id:
+            self.document_id = document_id
+        else:
+            # Extract policy type from stage9 for ID generation
+            try:
+                with open(rego_bundles_file, 'r') as f:
+                    stage9_data = json.load(f)
+                policy_type = stage9_data.get('policies', [{}])[0].get('policy_name', 'policy')
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                self.document_id = f"{policy_type}_{timestamp}"
+            except:
+                self.document_id = f"doc_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
         self.enable_mongodb = enable_mongodb and MONGODB_AVAILABLE
         self.enable_cleanup = enable_cleanup
         self.retention_days = retention_days
