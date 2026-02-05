@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: policy-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: policy_db
+    healthcheck:
+      test: echo 'db.adminCommand("ping")' | mongosh localhost/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - policy-network
+
+  upload-service:
+    build: .
+    container_name: policy-upload-service
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development
+      FLASK_DEBUG: "1"
+      MONGODB_URI: mongodb://mongodb:27017/policy_db
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 5000
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - policy-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  policy-network:
+    driver: bridge
