@@ -33,6 +33,7 @@ services:
     volumes:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
+      - /home/hutech/Documents/docupolicy:/home/hutech/Documents/docupolicy
     depends_on:
       mongodb:
         condition: service_healthy
