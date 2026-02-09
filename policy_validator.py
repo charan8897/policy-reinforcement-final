@@ -5375,8 +5375,28 @@ Output JSON:
                 ambiguity_score -= 5
                 reasons.append(f"Some entities extracted: {entity_count} entity")
         
-        # RULE 7 (NEW): Context-Aware Resolution - Check if vague terms are defined upstream
-        if clause_id in cross_refs:
+        # RULE 7 (NEW): Check for undefined key terms/categories
+        # Terms that must be explicitly defined or should raise ambiguity flags
+        undefined_key_terms = {
+            'residential training': 'UNDEFINED_REFERENCES',
+            'business visit': 'UNDEFINED_REFERENCES',
+            'official contingencies': 'UNDEFINED_REFERENCES',
+            'official guest entertainment': 'UNDEFINED_REFERENCES'
+        }
+        
+        found_undefined = []
+        for term, ambig_type in undefined_key_terms.items():
+            if term in clause_text.lower() and not entities:
+                # Only flag if no entities were extracted to define this term
+                found_undefined.append(term)
+                ambiguity_score += 25
+        
+        if found_undefined:
+            reasons.append(f"Found undefined key term(s): {', '.join(found_undefined)}")
+        
+        # RULE 8 (PREVIOUS 7): Context-Aware Resolution - Check if vague terms are defined upstream
+        # BUT: Don't apply resolution if undefined key terms were already detected
+        if clause_id in cross_refs and not found_undefined:
             ref_info = cross_refs[clause_id]
             preamble_text = ref_info.get('preamble_text', '').lower()
             
@@ -5404,6 +5424,17 @@ Output JSON:
         # Clamp score 0-100
         ambiguity_score = max(0, min(100, ambiguity_score))
         
+        # Determine ambiguity types based on detected issues
+        ambiguity_types = []
+        if 'undefined key term' in ' '.join(reasons).lower():
+            ambiguity_types.append('UNDEFINED_REFERENCES')
+        if any('vague' in r.lower() for r in reasons):
+            ambiguity_types.append('SUBJECTIVE_LANGUAGE')
+        if any('etc.' in r.lower() or 'open-ended' in r.lower() for r in reasons):
+            ambiguity_types.append('SUBJECTIVE_LANGUAGE')
+        if any('numeric' in r.lower() and 'without' in r.lower() for r in reasons):
+            ambiguity_types.append('VAGUE_METRICS')
+        
         # Decision threshold: > 40 = ambiguous
         is_ambiguous = ambiguity_score > 40
         
@@ -5418,7 +5449,8 @@ Output JSON:
             'is_ambiguous': is_ambiguous,
             'reason': ' | '.join(reasons) if reasons else 'No ambiguities detected',
             'score': ambiguity_score,
-            'confidence': confidence
+            'confidence': confidence,
+            'ambiguity_types': ambiguity_types
         }
     
     def detect_ambiguities_with_langchain(self, clause_id, clause_text, entities):
@@ -5535,7 +5567,7 @@ OUTPUT ONLY valid JSON matching the schema."""
                 "clauseId": clause_id,
                 "ambiguous": rule_result['is_ambiguous'],
                 "reason": f"[RULE-BASED] {rule_result['reason']} (score: {rule_result['score']}/100)",
-                "ambiguity_types": [],
+                "ambiguity_types": rule_result.get('ambiguity_types', []),
                 "detection_method": "rule-based",
                 "confidence": rule_result['confidence']
             }
@@ -5974,14 +6006,19 @@ TASK:
 
 OUTPUT ONLY JSON:
 {{
-    "text_clarified": "Updated clause with inserted definitions (or original if no context found)",
+    "text_clarified": "Updated clause with inserted definitions, OR annotated with [DEFINITION NEEDED: ...] if no context found",
     "confidence": 0.0-1.0,
     "is_real_ambiguity": true/false,
     "real_ambiguity_reason": "Only if is_real_ambiguity=true: what definition is missing?",
     "context_used": "{search_method}",
     "changes_made": ["change1", "change2"],
     "source": "extracted from policy"
-}}"""
+}}
+
+IMPORTANT: If a definition is needed but not found:
+- Add annotation [DEFINITION NEEDED: <term>] to the clarified text
+- Set is_real_ambiguity = true
+- List the missing definition in real_ambiguity_reason"""
         
         try:
             response = self.model.generate_content(prompt)
