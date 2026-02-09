@@ -66,6 +66,7 @@ class OPARuntimeClient:
         # Dynamic policy loading (after logger is set up)
         self.policies: List[Dict[str, Any]] = []
         self.policy_rules: Dict[str, Dict[str, Any]] = {}
+        self.field_mapping: Dict[str, str] = {}  # Maps API field names to DSL field names
         self._load_policies_from_bundle()
     
     def _get_active_bundle_version(self) -> str:
@@ -140,6 +141,16 @@ class OPARuntimeClient:
                 
                 self.logger.info(f"Loaded {len(policies_loaded)} policies from stage9_rego_bundles.json")
                 
+                # Load field mapping from bundle
+                field_mapping = bundle_data.get('field_mapping', {})
+                if field_mapping:
+                    self.field_mapping = field_mapping
+                    self.logger.info(f"Loaded {len(field_mapping)} field mappings from bundle")
+                else:
+                    # Use default field mapping for travel policy
+                    self.field_mapping = self.get_default_field_mapping()
+                    self.logger.info("Using default field mapping for travel policy")
+                
             except Exception as e:
                 self.logger.warning(f"Could not load from stage9_rego_bundles.json: {e}")
         
@@ -181,6 +192,49 @@ class OPARuntimeClient:
             self.policies = policies_loaded
         
         self.logger.info(f"Total enforce policies: {len(self.policies)}")
+    
+    @staticmethod
+    def get_default_field_mapping():
+        """
+        Default field mapping for travel policy.
+        Maps user-friendly API field paths to DSL field names expected by Rego rules.
+        
+        Maps both flat field names and nested paths.
+        """
+        return {
+            # Nested path mappings (flattened paths -> DSL field names)
+            'employee_designation': 'directortype',
+            'employee_grade': 'eligibleemployeegrades',
+            'employee_type': 'eligibleemployees',
+            'employee_employee_id': 'employee_id',
+            'travel_tour_duration_days': 'maximumallowanceduration',
+            'travel_travel_mode': 'travel_mode',
+            'travel_destination': 'destination',
+            'allowance_daily_allowance_requested': 'dailyallowance',
+            'allowance_daily_allowance': 'dailyallowance',
+            'allowance_maximum_allowed_days': 'maximumallowanceduration',
+            'allowance_total_allowance_requested': 'total_allowance',
+            # Flat field mappings
+            'designation': 'directortype',
+            'grade': 'eligibleemployeegrades',
+            'employee_type': 'eligibleemployees',
+            'tour_duration_days': 'maximumallowanceduration',
+            'daily_allowance_requested': 'dailyallowance',
+            'daily_allowance': 'dailyallowance',
+            'maximum_allowed_days': 'maximumallowanceduration',
+            # Direct DSL field names (identity mapping)
+            'directortype': 'directortype',
+            'eligibleemployeegrades': 'eligibleemployeegrades',
+            'eligibleemployees': 'eligibleemployees',
+            'dailyallowance': 'dailyallowance',
+            'maximumallowanceduration': 'maximumallowanceduration',
+            'mdceotravelmode': 'mdceotravelmode',
+            'directortravelmode': 'directortravelmode',
+            'e8toe10travelmode': 'e8toe10travelmode',
+            'e7andbelowtravelmode': 'e7andbelowtravelmode',
+            'visafeereimbursement': 'visafeereimbursement',
+            'insurancecoverage': 'insurancecoverage',
+        }
     
     def get_policies_for_enforcement(self, policy_type: Optional[str] = None) -> List[Dict[str, Any]]:
         """
@@ -288,22 +342,43 @@ class OPARuntimeClient:
                 "timestamp": datetime.now().isoformat()
             }
     
+    # Field mapping: Dynamically extracted from bundle policies
+    FIELD_MAPPING = {}
+    
     @staticmethod
     def flatten_input(input_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Flatten nested input data for OPA policy evaluation.
+        Flatten nested input data and map to DSL field names.
+        
+        Maps user-friendly API field names to the field names expected by Rego policies.
+        Uses the field_mapping to translate field names.
         
         Input: {"employee": {"designation": "Director", "grade": "E9"}}
-        Output: {"designation": "Director", "grade": "E9"}
+        Output: {"directortype": "Director", "eligibleemployeegrades": "E9"}
         """
         flattened = {}
-        for key, value in input_data.items():
-            if isinstance(value, dict):
-                flattened.update(OPARuntimeClient.flatten_input(value))
-            elif isinstance(value, list):
-                flattened[key] = value
-            else:
-                flattened[key] = value
+        
+        def _flatten_and_map(data, prefix=''):
+            for key, value in data.items():
+                if isinstance(value, dict):
+                    _flatten_and_map(value, prefix + key + '_')
+                elif isinstance(value, list):
+                    # Handle list values - preserve as-is
+                    flattened[key] = value
+                else:
+                    # Map field name using field_mapping
+                    mapped_key = key
+                    
+                    # Try to find mapping for this field
+                    # Check direct mapping first
+                    if key in OPARuntimeClient.get_default_field_mapping():
+                        mapping = OPARuntimeClient.get_default_field_mapping()[key]
+                        if mapping:
+                            mapped_key = mapping
+                    
+                    flattened[mapped_key] = value
+        
+        _flatten_and_map(input_data)
         return flattened
     
     def _generate_violation_reason(self, policy_path: str, policy_result: Dict[str, Any], input_data: Dict[str, Any]) -> str:
@@ -409,7 +484,8 @@ class OPARuntimeClient:
                 rule_info = self.policy_rules.get(policy_path, {})
                 has_rule = bool(rule_info)
                 
-                if not policy_result.get('allow', True) or not has_rule:
+                if not policy_result.get('allow', False) or not has_rule:
+                    # Rule conditions not met OR rule not found → DENIED
                     denied += 1
                     # Generate detailed violation reason
                     reason = self._generate_violation_reason(policy_path, policy_result, input_data)

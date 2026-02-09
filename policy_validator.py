@@ -4470,6 +4470,9 @@ class RegoGenerator:
             
             self.log_entry("POLICY", f"Generated {len(rules)} Rego rules for policy: {policy_name}")
         
+        # Extract field mapping from DSL conditions
+        field_mapping = self.extract_field_mapping(merged_data)
+        
         # Add allow_all default rule
         all_rego_code.append("""
 # Default: Allow if no violations
@@ -4491,6 +4494,7 @@ allow_default {
             },
             'policies': policies,
             'rego_code': '\n'.join(all_rego_code),
+            'field_mapping': field_mapping,
             'statistics': {
                 'total_clauses': len(merged_data),
                 'total_rules': total_rules,
@@ -4501,6 +4505,29 @@ allow_default {
         }
         
         return bundles
+    
+    def extract_field_mapping(self, merged_data):
+        """
+        Extract field mapping from DSL conditions.
+        Maps DSL facts to standardized field names.
+        
+        Returns a dictionary of field mappings for the bundle.
+        """
+        field_mapping = {}
+        
+        for clause_id, clause_data in merged_data.items():
+            dsl_rule = clause_data.get('dsl_rule', {})
+            when_all = dsl_rule.get('when', {}).get('all', [])
+            
+            for condition in when_all:
+                fact = condition.get('fact')
+                if fact:
+                    # Map DSL fact to standardized field name
+                    # For now, use the fact name directly
+                    # In the future, this could use NLP to map to semantic names
+                    field_mapping[fact] = fact
+        
+        return field_mapping
     
     def _group_by_policy_domain(self, merged_data):
         """Group clauses by policy domain"""
