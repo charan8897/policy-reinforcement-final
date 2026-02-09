@@ -4321,8 +4321,11 @@ class RegoGenerator:
     def generate_rego_then_constraints(self, then_constraints, intent, is_ambiguous):
         """Convert DSL THEN constraints to Rego output
         
-        Properly maps DSL actions (warn/enforce) to Rego actions,
-        respecting the DSL specification over ambiguity flag.
+        Generates proper OPA/Rego syntax for rule bodies.
+        Uses conditional object syntax: rule[result] { conditions... result := {...} }
+        
+        This ensures proper Rego semantics where the rule succeeds/fails
+        based on conditions, and returns structured data.
         """
         # Determine action: prefer what's in DSL, fallback to is_ambiguous flag
         all_actions = [k for k in then_constraints.keys() if k in ['enforce', 'warn']]
@@ -4345,6 +4348,7 @@ class RegoGenerator:
         constraint_name = constraint.get('constraint', 'policy_check')
         constraint_value = constraint.get('value', 'APPROVED')
         
+        # Generate Rego code with proper syntax (conditional object)
         rego_code = f"""
     result := {{
         "allow": true,
@@ -4356,7 +4360,13 @@ class RegoGenerator:
         return rego_code, action
     
     def generate_rego_rule(self, clause_id, merged_data):
-        """Generate complete Rego rule for a single clause"""
+        """Generate complete Rego rule for a single clause
+        
+        Uses OPA/Rego v1 compatible syntax:
+        - Simple boolean rules (no complex object returns)
+        - Rules evaluate to true/false based on conditions
+        - Metadata returned separately in bundle_metadata.json
+        """
         clause_data = merged_data
         dsl_rule = clause_data.get('dsl_rule', {})
         normalized = clause_data.get('normalized_policy', {})
@@ -4368,23 +4378,26 @@ class RegoGenerator:
         # Use intent from merged data (sourced from Stage 5 clarified clauses)
         intent = clause_data.get('intent', normalized.get('intent', 'INFORMATIONAL'))
         
-        # Generate Rego function name
-        rule_name = f"allow_{clause_id.lower().replace('_', '')}_{intent.lower()[:10]}"
+        # Generate Rego rule names
+        short_name = f"{clause_id.lower()}_{intent.lower()[:4]}"
+        rule_name = f"policy_{short_name}"
         
         # Generate conditions
         when_conditions = self.generate_rego_when_conditions(when_all)
         
-        # Generate constraints
+        # Generate constraints (metadata only, for bundle_metadata.json)
         constraint_code, action = self.generate_rego_then_constraints(then_clause, intent, is_ambiguous)
         
-        # Build complete Rego rule with proper Rego v1 syntax
+        # Build simple boolean rule - just conditions, no object return
+        # This is compatible with OPA v1 and avoids partial set syntax
         rego_code = f"""
-        # Rule: {clause_id}
-        # Intent: {intent}
-        # Ambiguous: {is_ambiguous}
-        {rule_name} if {{
-        {when_conditions}{constraint_code}
-        }}"""
+    # Rule: {clause_id}
+    # Intent: {intent}
+    # Action: {action}
+    # Ambiguous: {is_ambiguous}
+    {rule_name} if {{
+    {when_conditions}
+    }}"""
         
         return {
             'clause_id': clause_id,
@@ -8569,7 +8582,7 @@ class OPABundleStorageManager:
             bundle_structure (dict): Bundle structure with policies and rules
             
         Returns:
-            str: Formatted Rego code (valid Rego syntax)
+            str: Formatted Rego code
         """
         lines = []
         
@@ -8599,7 +8612,6 @@ class OPABundleStorageManager:
                     else:
                         lines.append(str(rule))
         
-        # Return without separator to ensure valid Rego syntax
         return "\n".join(lines)
     
     def persist_bundle_to_mongodb(self, bundle_structure, manifest, version_dir):
