@@ -602,17 +602,16 @@ class PipelineOrchestrator:
             self.error = f"Stage 10 exception: {str(e)}"
             self.log_progress(f"ERROR: {self.error}")
             return False
-            
-            def _extract_stage_id(self, log_lines):
-                """Extract stage_id from log"""
-                import re
-                for log_line in reversed(log_lines):
-                    if "stage_" in log_line:
-                        match = re.search(r'stage_\d+_[a-f0-9]+', log_line)
-                        if match:
-                            return match.group(0)
-                return None
-            
+    
+    def _extract_stage_id(self, log_lines):
+        """Extract stage_id from log"""
+        import re
+        for log_line in reversed(log_lines):
+            if "stage_" in log_line:
+                match = re.search(r'stage_\d+_[a-f0-9]+', log_line)
+                if match:
+                    return match.group(0)
+        return None
     
     def get_status(self):
         """Get current pipeline status"""

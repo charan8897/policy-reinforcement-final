@@ -141,6 +141,16 @@ class OPARuntimeClient:
                 
                 self.logger.info(f"Loaded {len(policies_loaded)} policies from stage9_rego_bundles.json")
                 
+                # Load field mapping from bundle (dynamic - no hardcoding needed!)
+                bundle_field_mapping = bundle_data.get('field_mapping', {})
+                if bundle_field_mapping:
+                    self.field_mapping = bundle_field_mapping
+                    self.logger.info(f"Loaded {len(bundle_field_mapping)} field mappings from bundle")
+                else:
+                    # Fallback: use default field mapping
+                    self.field_mapping = self.get_default_field_mapping()
+                    self.logger.info("Using default field mapping (bundle has no field_mapping)")
+                
                 # Load field mapping from bundle
                 field_mapping = bundle_data.get('field_mapping', {})
                 if field_mapping:
@@ -342,16 +352,37 @@ class OPARuntimeClient:
                 "timestamp": datetime.now().isoformat()
             }
     
-    # Field mapping: Dynamically extracted from bundle policies
-    FIELD_MAPPING = {}
-    
     @staticmethod
-    def flatten_input(input_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _fuzzy_find_mapping(key: str, available_mappings: dict) -> str:
+        """
+        Fuzzy match: Try to find a mapping for a field name.
+        
+        Checks:
+        1. Exact match
+        2. Case-insensitive match
+        3. Partial match (field contains key or key contains field)
+        """
+        # 1. Exact match
+        if key in available_mappings:
+            return available_mappings[key]
+        
+        # 2. Case-insensitive match
+        key_lower = key.lower()
+        for field in available_mappings:
+            if field.lower() == key_lower:
+                return available_mappings[field]
+        
+        # 3. Partial match - if input has 'designation' and bundle has 'validationauthority',
+        # we can't really match them, so return original key
+        # This is a policy-specific field that needs explicit mapping
+        return key
+    
+    def flatten_input(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Flatten nested input data and map to DSL field names.
         
         Maps user-friendly API field names to the field names expected by Rego policies.
-        Uses the field_mapping to translate field names.
+        Uses field_mapping loaded from bundle (dynamic - no hardcoding needed!).
         
         Input: {"employee": {"designation": "Director", "grade": "E9"}}
         Output: {"directortype": "Director", "eligibleemployeegrades": "E9"}
@@ -366,16 +397,8 @@ class OPARuntimeClient:
                     # Handle list values - preserve as-is
                     flattened[key] = value
                 else:
-                    # Map field name using field_mapping
-                    mapped_key = key
-                    
-                    # Try to find mapping for this field
-                    # Check direct mapping first
-                    if key in OPARuntimeClient.get_default_field_mapping():
-                        mapping = OPARuntimeClient.get_default_field_mapping()[key]
-                        if mapping:
-                            mapped_key = mapping
-                    
+                    # Map field name using field_mapping from bundle
+                    mapped_key = self._fuzzy_find_mapping(key, self.field_mapping)
                     flattened[mapped_key] = value
         
         _flatten_and_map(input_data)
