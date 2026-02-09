@@ -4377,14 +4377,14 @@ class RegoGenerator:
         # Generate constraints
         constraint_code, action = self.generate_rego_then_constraints(then_clause, intent, is_ambiguous)
         
-        # Build complete Rego rule
+        # Build complete Rego rule with proper Rego v1 syntax
         rego_code = f"""
-# Rule: {clause_id}
-# Intent: {intent}
-# Ambiguous: {is_ambiguous}
-{rule_name} {{
-    {when_conditions}{constraint_code}
-}}"""
+        # Rule: {clause_id}
+        # Intent: {intent}
+        # Ambiguous: {is_ambiguous}
+        {rule_name} if {{
+        {when_conditions}{constraint_code}
+        }}"""
         
         return {
             'clause_id': clause_id,
@@ -8569,7 +8569,7 @@ class OPABundleStorageManager:
             bundle_structure (dict): Bundle structure with policies and rules
             
         Returns:
-            str: Formatted Rego code
+            str: Formatted Rego code (valid Rego syntax)
         """
         lines = []
         
@@ -8598,9 +8598,8 @@ class OPABundleStorageManager:
                         lines.append(f"\n{rego_code}")
                     else:
                         lines.append(str(rule))
-                
-                lines.append("\n" + "="*80)
         
+        # Return without separator to ensure valid Rego syntax
         return "\n".join(lines)
     
     def persist_bundle_to_mongodb(self, bundle_structure, manifest, version_dir):
