@@ -4363,9 +4363,9 @@ class RegoGenerator:
         """Generate complete Rego rule for a single clause
         
         Uses OPA/Rego v1 compatible syntax:
-        - Simple boolean rules (no complex object returns)
-        - Rules evaluate to true/false based on conditions
-        - Metadata returned separately in bundle_metadata.json
+        - Rules return { allow: bool, reason: "..." } format
+        - Proper evaluation based on conditions
+        - Metadata included in rule output
         """
         clause_data = merged_data
         dsl_rule = clause_data.get('dsl_rule', {})
@@ -4380,23 +4380,42 @@ class RegoGenerator:
         
         # Generate Rego rule names
         short_name = f"{clause_id.lower()}_{intent.lower()[:4]}"
-        rule_name = f"policy_{short_name}"
+        rule_name = f"allow_{short_name}"
         
         # Generate conditions
         when_conditions = self.generate_rego_when_conditions(when_all)
         
-        # Generate constraints (metadata only, for bundle_metadata.json)
+        # Generate constraint info
         constraint_code, action = self.generate_rego_then_constraints(then_clause, intent, is_ambiguous)
         
-        # Build simple boolean rule - just conditions, no object return
-        # This is compatible with OPA v1 and avoids partial set syntax
+        # Extract allow/reason from constraint_code
+        allow_value = "false"  # Default deny
+        reason_text = f"Clause {clause_id}: {intent.replace('_', ' ').title()}"
+        
+        # Parse allow value from constraint_code
+        if '"allow": true' in constraint_code:
+            allow_value = "true"
+        elif '"allow": false' in constraint_code:
+            allow_value = "false"
+        
+        # Parse reason from constraint_code
+        if '"status":' in constraint_code:
+            import re
+            status_match = re.search(r'"status":\s*"([^"]+)"', constraint_code)
+            if status_match:
+                status = status_match.group(1)
+                reason_text = f"Clause {clause_id}: {intent.replace('_', ' ').title()} - {status}"
+        
+        # Build Rego rule with proper object output syntax
+        # OPA v1 requires 'if' keyword before rule body
+        # Syntax: rule := object { ... } if { conditions }
         rego_code = f"""
     # Rule: {clause_id}
     # Intent: {intent}
     # Action: {action}
     # Ambiguous: {is_ambiguous}
-    {rule_name} if {{
-    {when_conditions}
+    {rule_name} := {{"allow": {allow_value}, "reason": "{reason_text}"}} if {{
+        {when_conditions}
     }}"""
         
         return {
@@ -4406,7 +4425,9 @@ class RegoGenerator:
             'intent': intent,
             'is_ambiguous': is_ambiguous,
             'action': action,
-            'confidence': clause_data.get('confidence', 0.5)
+            'confidence': clause_data.get('confidence', 0.5),
+            'allow': allow_value == 'true',
+            'reason': reason_text
         }
     
     def generate_rego_bundles(self, merged_data):
