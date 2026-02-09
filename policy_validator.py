@@ -6867,13 +6867,16 @@ Return ONLY the JSON object, no markdown formatting."""
             intent = clause.get('intent', 'INFORMATIONAL')
             entities = clause.get('entities', {})
             
-            # Check if ambiguities were FIXED in stage5
+            # Check if there are UNRESOLVED (real) ambiguities
+            is_real_ambiguity = clause.get('is_real_ambiguity', False)
+            
+            # Also check if ambiguities were FIXED in stage5
             ambiguity_types = clause.get('ambiguity_types', [])
             ambiguities_fixed = clause.get('ambiguities_fixed', [])
             
-            # If all ambiguities are fixed, use enforce; otherwise warn
+            # If real ambiguities exist OR not all ambiguities are fixed, use warn; otherwise enforce
             all_fixed = set(ambiguity_types).issubset(set(ambiguities_fixed)) if ambiguity_types else True
-            is_ambiguous = not all_fixed
+            is_ambiguous = is_real_ambiguity or not all_fixed
             
             self.log_entry("PROCESSING", f"{clause_id}: Generating DSL ({intent}) - ambiguities_fixed: {len(ambiguities_fixed)}/{len(ambiguity_types)}")
             
