@@ -4138,9 +4138,10 @@ class RegoGenerator:
     - Generates complete Rego package
     """
     
-    def __init__(self, dsl_file, normalized_file, document_id=None, enable_mongodb=True):
+    def __init__(self, dsl_file, normalized_file, clarified_file=None, document_id=None, enable_mongodb=True):
         self.dsl_file = dsl_file
         self.normalized_file = normalized_file
+        self.clarified_file = clarified_file or f"{OUTPUT_DIR}/stage5_clarified_clauses.json"
         self.rego_bundles_file = f"{OUTPUT_DIR}/stage9_rego_bundles.json"
         self.document_id = document_id
         self.log = []
@@ -4194,13 +4195,39 @@ class RegoGenerator:
             self.log_entry("ERROR", f"Failed to read normalized policies: {e}")
             return None
     
-    def merge_dsl_and_normalized(self, dsl_data, normalized_data):
-        """Merge DSL rules and normalized policies by clause_id"""
+    def read_clarified_clauses(self):
+        """Read stage5_clarified_clauses.json to extract intent information"""
+        try:
+            with open(self.clarified_file, 'r') as f:
+                data = json.load(f)
+            
+            clarified = data.get('clarified_clauses', [])
+            self.log_entry("SUCCESS", f"Read {len(clarified)} clarified clauses from {self.clarified_file}")
+            return data
+        
+        except FileNotFoundError:
+            self.log_entry("WARNING", f"Clarified file not found: {self.clarified_file} - will use default intent")
+            return None
+        except Exception as e:
+            self.log_entry("WARNING", f"Failed to read clarified clauses: {e} - will use default intent")
+            return None
+    
+    def merge_dsl_and_normalized(self, dsl_data, normalized_data, clarified_data=None):
+        """Merge DSL rules, normalized policies, and clarified clauses by clause_id"""
         merged = {}
         
         # Extract DSL rules
         dsl_rules = {rule['rule_id']: rule for rule in dsl_data.get('rules', [])}
         self.log_entry("MERGE", f"Extracted {len(dsl_rules)} DSL rules")
+        
+        # Extract clarified clauses for intent information
+        clarified_clauses = {}
+        if clarified_data:
+            for clause in clarified_data.get('clarified_clauses', []):
+                clause_id = clause.get('clauseId')
+                if clause_id:
+                    clarified_clauses[clause_id] = clause
+            self.log_entry("MERGE", f"Extracted {len(clarified_clauses)} clarified clauses with intent info")
         
         # Extract normalized policies and correlate with DSL rules
         for policy in normalized_data.get('policies', []):
@@ -4211,15 +4238,23 @@ class RegoGenerator:
                 clause_id = policy.get('core_attributes', {}).get('clauseId')
             
             if clause_id and clause_id in dsl_rules:
+                # Get intent from clarified clauses (Stage 5), fallback to normalized or default
+                intent = 'INFORMATIONAL'  # default
+                if clause_id in clarified_clauses:
+                    intent = clarified_clauses[clause_id].get('intent', 'INFORMATIONAL')
+                elif policy.get('intent'):
+                    intent = policy.get('intent')
+                
                 merged[clause_id] = {
                     'clause_id': clause_id,
                     'dsl_rule': dsl_rules[clause_id],
                     'normalized_policy': policy,
+                    'intent': intent,  # NEW: Add intent from Stage 5
                     'confidence': policy.get('confidence_score', policy.get('rationale_metadata', {}).get('confidence', 0.5)),
                     'is_ambiguous': policy.get('is_ambiguous', policy.get('core_attributes', {}).get('is_real_ambiguity', False))
                 }
         
-        self.log_entry("MERGE", f"Merged into {len(merged)} clause records")
+        self.log_entry("MERGE", f"Merged into {len(merged)} clause records with intent information")
         return merged
     
     def convert_operator_to_rego(self, operator):
@@ -4307,7 +4342,8 @@ class RegoGenerator:
         # Extract components
         when_all = dsl_rule.get('when', {}).get('all', [])
         then_clause = dsl_rule.get('then', {})
-        intent = normalized.get('intent', 'INFORMATIONAL')
+        # Use intent from merged data (sourced from Stage 5 clarified clauses)
+        intent = clause_data.get('intent', normalized.get('intent', 'INFORMATIONAL'))
         
         # Generate Rego function name
         rule_name = f"allow_{clause_id.lower().replace('_', '')}_{intent.lower()[:10]}"
@@ -4464,9 +4500,12 @@ allow_default {
         if not normalized_data:
             return False
         
-        # Step 2: Merge DSL and normalized data
-        self.log_entry("STEP", "Merging DSL rules with normalized policies")
-        merged_data = self.merge_dsl_and_normalized(dsl_data, normalized_data)
+        self.log_entry("STEP", "Reading clarified clauses for intent information")
+        clarified_data = self.read_clarified_clauses()
+        
+        # Step 2: Merge DSL and normalized data with clarified clauses
+        self.log_entry("STEP", "Merging DSL rules with normalized policies and clarified clauses")
+        merged_data = self.merge_dsl_and_normalized(dsl_data, normalized_data, clarified_data)
         
         if not merged_data:
             self.log_entry("ERROR", "Merge resulted in empty data")
