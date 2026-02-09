@@ -4271,8 +4271,19 @@ class RegoGenerator:
         }
         return operator_map.get(operator, '==')
     
+    def extract_numeric_value(self, value_str):
+        """Extract numeric value from strings like '45 days', '$500', etc."""
+        if not isinstance(value_str, str):
+            return value_str
+        
+        # Try to extract numeric part
+        numbers = re.findall(r'-?\d+\.?\d*', value_str)
+        if numbers:
+            return numbers[0]
+        return value_str
+    
     def generate_rego_when_conditions(self, when_conditions):
-        """Convert DSL WHEN conditions to Rego syntax"""
+        """Convert DSL WHEN conditions to Rego syntax with proper type handling"""
         conditions = []
         
         for condition in when_conditions:
@@ -4283,16 +4294,23 @@ class RegoGenerator:
             # Convert operator
             rego_operator = self.convert_operator_to_rego(operator)
             
-            # Format value
-            if isinstance(value, list):
-                formatted_value = json.dumps(value)
-            elif isinstance(value, str):
-                if re.match(r'^-?\d+\.?\d*$', value):
-                    formatted_value = value
-                else:
-                    formatted_value = f'"{value}"'
+            # Extract numeric values for comparison operators
+            if operator in ['LESS_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL']:
+                # For numeric comparisons, extract numeric part
+                numeric_value = self.extract_numeric_value(value)
+                formatted_value = numeric_value
             else:
-                formatted_value = json.dumps(value)
+                # For equality/string operations, keep original value
+                if isinstance(value, list):
+                    formatted_value = json.dumps(value)
+                elif isinstance(value, str):
+                    # Check if it's already a pure number
+                    if re.match(r'^-?\d+\.?\d*$', value):
+                        formatted_value = value
+                    else:
+                        formatted_value = f'"{value}"'
+                else:
+                    formatted_value = json.dumps(value)
             
             # Build condition
             condition_str = f"input.{fact} {rego_operator} {formatted_value}"
@@ -4301,17 +4319,22 @@ class RegoGenerator:
         return "\n    ".join(conditions) if conditions else "true"
     
     def generate_rego_then_constraints(self, then_constraints, intent, is_ambiguous):
-        """Convert DSL THEN constraints to Rego output"""
-        action = 'warn' if is_ambiguous else 'enforce'
+        """Convert DSL THEN constraints to Rego output
         
-        constraints = then_constraints.get(action, [])
+        Properly maps DSL actions (warn/enforce) to Rego actions,
+        respecting the DSL specification over ambiguity flag.
+        """
+        # Determine action: prefer what's in DSL, fallback to is_ambiguous flag
+        all_actions = [k for k in then_constraints.keys() if k in ['enforce', 'warn']]
         
-        if not constraints:
-            all_actions = [k for k in then_constraints.keys() if k in ['enforce', 'warn']]
-            if all_actions:
-                constraints = then_constraints.get(all_actions[0], [])
-            else:
-                constraints = []
+        if all_actions:
+            # Use the action from DSL (prefer enforce, then warn)
+            action = 'enforce' if 'enforce' in all_actions else 'warn'
+            constraints = then_constraints.get(action, [])
+        else:
+            # Fallback: use ambiguity flag if no explicit action in DSL
+            action = 'warn' if is_ambiguous else 'enforce'
+            constraints = []
         
         # Extract constraint info
         if isinstance(constraints, list) and constraints:
