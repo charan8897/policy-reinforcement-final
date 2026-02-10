@@ -1,14 +1,7 @@
 """
 OPA Runtime Client - FastAPI Integration for OPA Policy Enforcement
 Communicates with OPA running in Docker container on localhost:8181
-
-Features:
-- Async REST API calls to OPA server (localhost:8181)
-- Dynamic policy loading from bundle JSON (stage9_rego_bundles.json)
-- Policy-agnostic enforcement with detailed violation reasons
-- Bundle version management
-- Error handling and logging
-- Compliance checking and rule violation reporting
+Enhanced with detailed violation reporting
 """
 
 import aiohttp
@@ -20,19 +13,19 @@ from datetime import datetime
 import os
 from pathlib import Path
 
-
 class OPARuntimeClient:
     """
     OPA Runtime Client for policy enforcement against OPA server running in Docker.
     
     Features:
-    - Dynamic policy loading from stage9_rego_bundles.json
-    - Policy-agnostic enforcement (works with any policy bundle)
-    - Detailed violation reasons based on bundle metadata
     - Async REST API calls to OPA server (localhost:8181)
+    - Policy evaluation with DETAILED violation reasons
+    - Bundle version management
+    - Comprehensive error handling and logging
+    - Compliance checking with granular detail
     """
     
-    def __init__(self, opa_host: str = "localhost", opa_port: int = 8181, 
+    def __init__(self, opa_host: str = "0.0.0.0", opa_port: int = 8181, 
                  bundles_dir: str = "./opa_bundles", timeout: int = 30):
         """
         Initialize OPA Runtime Client
@@ -50,7 +43,7 @@ class OPARuntimeClient:
         self.timeout = timeout
         self.active_version = self._get_active_bundle_version()
         
-        # Setup logging FIRST (before loading policies)
+        # Setup logging
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         if not self.logger.handlers:
@@ -62,12 +55,6 @@ class OPARuntimeClient:
         self.logger.info(f"OPA Runtime Client initialized")
         self.logger.info(f"  OPA URL: {self.opa_url}")
         self.logger.info(f"  Active Bundle: {self.active_version}")
-        
-        # Dynamic policy loading (after logger is set up)
-        self.policies: List[Dict[str, Any]] = []
-        self.policy_rules: Dict[str, Dict[str, Any]] = {}
-        self.field_mapping: Dict[str, str] = {}  # Maps API field names to DSL field names
-        self._load_policies_from_bundle()
     
     def _get_active_bundle_version(self) -> str:
         """Get active bundle version from version registry"""
@@ -76,197 +63,70 @@ class OPARuntimeClient:
             if registry_file.exists():
                 with open(registry_file) as f:
                     registry = json.load(f)
-                    active = registry.get('active_version', 'v1.0.0')
-                    self.logger.info(f"Active bundle version: {active}")
+                    active = registry.get('active_version', 'v1.0.4')
                     return active
         except Exception as e:
             self.logger.warning(f"Could not read version registry: {e}")
         
-        return "v1.0.4"  # Default fallback
+        return "v1.0.4"
     
-    def _load_policies_from_bundle(self):
+    def _extract_violation_reason(self, clause_id: str, policy_result: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Dynamically load policies from stage9_rego_bundles.json
-        
-        Reads the bundle JSON and extracts all policy rules with their metadata
-        for dynamic policy enforcement.
-        """
-        bundle_path = self.bundles_dir / self.active_version / "bundle_metadata.json"
-        stage9_path = Path("/home/hutech/Documents/docupolicy/stage9_rego_bundles.json")
-        
-        policies_loaded = []
-        
-        # Try to load from stage9_rego_bundles.json (primary source)
-        if stage9_path.exists():
-            try:
-                with open(stage9_path, 'r') as f:
-                    bundle_data = json.load(f)
-                
-                policies = bundle_data.get('policies', [])
-                for policy in policies:
-                    policy_name = policy.get('policy_name', 'unknown')
-                    package = policy.get('package', 'data.travel_policy')
-                    rules = policy.get('rules', [])
-                    
-                    for rule in rules:
-                        rule_name = rule.get('rego_rule_name', '')
-                        clause_id = rule.get('clause_id', '')
-                        intent = rule.get('intent', 'UNKNOWN')
-                        action = rule.get('action', 'enforce')
-                        is_ambiguous = rule.get('is_ambiguous', False)
-                        confidence = rule.get('confidence', 0.5)
-                        
-                        # Create policy path for OPA query (use / instead of . after package)
-                        policy_path = f"{package.replace('data.', 'data/')}/{rule_name}"
-                        
-                        policy_info = {
-                            "path": policy_path,
-                            "name": f"{clause_id}: {intent}",
-                            "clause_id": clause_id,
-                            "intent": intent,
-                            "action": action,
-                            "is_ambiguous": is_ambiguous,
-                            "confidence": confidence,
-                            "description": rule.get('description', '')
-                        }
-                        policies_loaded.append(policy_info)
-                        
-                        # Store detailed rule info for violation reasons
-                        self.policy_rules[policy_path] = {
-                            "clause_id": clause_id,
-                            "intent": intent,
-                            "action": action,
-                            "confidence": confidence
-                        }
-                
-                self.logger.info(f"Loaded {len(policies_loaded)} policies from stage9_rego_bundles.json")
-                
-                # Load field mapping from bundle (dynamic - no hardcoding needed!)
-                bundle_field_mapping = bundle_data.get('field_mapping', {})
-                if bundle_field_mapping:
-                    self.field_mapping = bundle_field_mapping
-                    self.logger.info(f"Loaded {len(bundle_field_mapping)} field mappings from bundle")
-                else:
-                    # Fallback: use default field mapping
-                    self.field_mapping = self.get_default_field_mapping()
-                    self.logger.info("Using default field mapping (bundle has no field_mapping)")
-                
-                # Load field mapping from bundle
-                field_mapping = bundle_data.get('field_mapping', {})
-                if field_mapping:
-                    self.field_mapping = field_mapping
-                    self.logger.info(f"Loaded {len(field_mapping)} field mappings from bundle")
-                else:
-                    # Use default field mapping for travel policy
-                    self.field_mapping = self.get_default_field_mapping()
-                    self.logger.info("Using default field mapping for travel policy")
-                
-            except Exception as e:
-                self.logger.warning(f"Could not load from stage9_rego_bundles.json: {e}")
-        
-        # Fallback: Try to load from bundle_metadata.json
-        if not policies_loaded and bundle_path.exists():
-            try:
-                with open(bundle_path, 'r') as f:
-                    bundle_data = json.load(f)
-                
-                # Extract rules from metadata
-                rules = bundle_data.get('rules', [])
-                for rule in rules:
-                    clause_id = rule.get('clause_id', '')
-                    intent = rule.get('intent', 'UNKNOWN')
-                    policy_path = f"data.travel_policy.policy_{clause_id.lower()}"
-                    
-                    policy_info = {
-                        "path": policy_path,
-                        "name": f"{clause_id}: {intent}",
-                        "clause_id": clause_id,
-                        "intent": intent,
-                        "action": rule.get('action', 'enforce'),
-                        "is_ambiguous": rule.get('is_ambiguous', False),
-                        "confidence": rule.get('confidence', 0.5),
-                        "description": rule.get('description', '')
-                    }
-                    policies_loaded.append(policy_info)
-                
-                self.logger.info(f"Loaded {len(policies_loaded)} policies from bundle_metadata.json")
-                
-            except Exception as e:
-                self.logger.warning(f"Could not load from bundle_metadata.json: {e}")
-        
-        # Filter to only enforce-type policies for enforcement checks
-        self.policies = [p for p in policies_loaded if p.get('action') == 'enforce']
-        
-        # If no enforce policies found, use all policies
-        if not self.policies:
-            self.policies = policies_loaded
-        
-        self.logger.info(f"Total enforce policies: {len(self.policies)}")
-    
-    @staticmethod
-    def get_default_field_mapping():
-        """
-        Default field mapping for travel policy.
-        Maps user-friendly API field paths to DSL field names expected by Rego rules.
-        
-        Maps both flat field names and nested paths.
-        """
-        return {
-            # Nested path mappings (flattened paths -> DSL field names)
-            'employee_designation': 'directortype',
-            'employee_grade': 'eligibleemployeegrades',
-            'employee_type': 'eligibleemployees',
-            'employee_employee_id': 'employee_id',
-            'travel_tour_duration_days': 'maximumallowanceduration',
-            'travel_travel_mode': 'travel_mode',
-            'travel_destination': 'destination',
-            'allowance_daily_allowance_requested': 'dailyallowance',
-            'allowance_daily_allowance': 'dailyallowance',
-            'allowance_maximum_allowed_days': 'maximumallowanceduration',
-            'allowance_total_allowance_requested': 'total_allowance',
-            # Flat field mappings
-            'designation': 'directortype',
-            'grade': 'eligibleemployeegrades',
-            'employee_type': 'eligibleemployees',
-            'tour_duration_days': 'maximumallowanceduration',
-            'daily_allowance_requested': 'dailyallowance',
-            'daily_allowance': 'dailyallowance',
-            'maximum_allowed_days': 'maximumallowanceduration',
-            # Direct DSL field names (identity mapping)
-            'directortype': 'directortype',
-            'eligibleemployeegrades': 'eligibleemployeegrades',
-            'eligibleemployees': 'eligibleemployees',
-            'dailyallowance': 'dailyallowance',
-            'maximumallowanceduration': 'maximumallowanceduration',
-            'mdceotravelmode': 'mdceotravelmode',
-            'directortravelmode': 'directortravelmode',
-            'e8toe10travelmode': 'e8toe10travelmode',
-            'e7andbelowtravelmode': 'e7andbelowtravelmode',
-            'visafeereimbursement': 'visafeereimbursement',
-            'insurancecoverage': 'insurancecoverage',
-        }
-    
-    def get_policies_for_enforcement(self, policy_type: Optional[str] = None) -> List[Dict[str, Any]]:
-        """
-        Get policies for enforcement
+        Extract detailed violation reason from policy evaluation
         
         Args:
-            policy_type: Optional filter by intent type (e.g., "LIMIT", "RESTRICTION")
+            clause_id: Clause ID being evaluated
+            policy_result: Raw OPA result
         
         Returns:
-            List of policy dictionaries with path and name
+            dict: Detailed violation information
         """
-        if policy_type:
-            return [p for p in self.policies if p.get('intent') == policy_type]
-        return self.policies
+        reason_data = {
+            "clause_id": clause_id,
+            "denied": True,
+            "reason": "Policy denied",
+            "details": []
+        }
+        
+        # Parse OPA response for constraint violations
+        if isinstance(policy_result, dict):
+            # Check result structure
+            if 'result' in policy_result:
+                inner_result = policy_result['result']
+                
+                # Check for allow field
+                if 'allow' in inner_result:
+                    reason_data["allow"] = inner_result['allow']
+                    if not inner_result['allow']:
+                        reason_data["details"].append("Evaluation returned: allow=false")
+                
+                # Check for constraint field
+                if 'constraint' in inner_result:
+                    constraint = inner_result['constraint']
+                    reason_data["constraint"] = constraint
+                    reason_data["details"].append(f"Constraint: {constraint}")
+                
+                # Check for action field
+                if 'action' in inner_result:
+                    action = inner_result['action']
+                    reason_data["action"] = action
+                    reason_data["details"].append(f"Action: {action}")
+                
+                # Check for status field
+                if 'status' in inner_result:
+                    status = inner_result['status']
+                    reason_data["status"] = status
+                    reason_data["details"].append(f"Status: {status}")
+        
+        # If still no details, it's an empty response
+        if not reason_data["details"]:
+            reason_data["details"].append("OPA returned empty result - no matching conditions")
+            reason_data["reason"] = "No matching conditions in policy"
+        
+        return reason_data
     
     async def health_check(self) -> Dict[str, Any]:
-        """
-        Check OPA server health
-        
-        Returns:
-            dict: Health status
-        """
+        """Check OPA server health"""
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -288,45 +148,47 @@ class OPARuntimeClient:
                             input_data: Dict[str, Any],
                             bundle_version: Optional[str] = None) -> Dict[str, Any]:
         """
-        Evaluate policy against input data
+        Evaluate policy against input data with detailed result
         
         Args:
-            policy_path: OPA policy path (e.g., "data.travel_policy.policy_c13_limi")
+            policy_path: OPA policy path (e.g., "data.travel_policy.allow_c13_limit")
             input_data: Input payload for policy evaluation
             bundle_version: Specific bundle version (uses active if None)
         
         Returns:
-            dict: Policy evaluation result with allow/deny and violations
+            dict: Detailed policy evaluation result
         """
         if bundle_version is None:
             bundle_version = self.active_version
         
         try:
-            # Flatten input data for OPA (policies expect flat structure)
-            flattened_input = self.flatten_input(input_data)
-            
-            # Prepare OPA query
-            query_data = {
-                "input": flattened_input,
-                "bundle_version": bundle_version
-            }
-            
             self.logger.info(f"Evaluating policy: {policy_path}")
+            
+            # Convert policy path to OPA URL format
+            # data.travel_policy → data/travel_policy
+            url_path = policy_path.replace('.', '/')
+            opa_url = f"{self.opa_url}/v1/data/{url_path}"
+            
+            self.logger.debug(f"OPA URL: {opa_url}")
+            self.logger.debug(f"Input keys: {list(input_data.keys())}")
             
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{self.opa_url}/v1/data/{policy_path}",
-                    json=query_data,
+                    opa_url,
+                    json={"input": input_data},
                     timeout=aiohttp.ClientTimeout(total=self.timeout)
                 ) as response:
                     result = await response.json()
                     
                     if response.status == 200:
                         self.logger.info(f"Policy evaluation succeeded for {policy_path}")
+                        # Extract the actual result - OPA returns { "result": {...} }
+                        policy_results = result.get("result", {})
+                        self.logger.debug(f"Policy results: {list(policy_results.keys())}")
                         return {
                             "status": "success",
                             "policy": policy_path,
-                            "result": result,
+                            "result": policy_results,  # The actual rules and their results
                             "timestamp": datetime.now().isoformat()
                         }
                     else:
@@ -341,137 +203,101 @@ class OPARuntimeClient:
             self.logger.error(f"Policy evaluation timeout for {policy_path}")
             return {
                 "status": "error",
-                "error": f"Timeout evaluating {policy_path}",
+                "error": "Request timeout",
                 "timestamp": datetime.now().isoformat()
             }
         except Exception as e:
-            self.logger.error(f"Policy evaluation error for {policy_path}: {e}")
+            self.logger.error(f"Policy evaluation exception: {e}")
             return {
                 "status": "error",
                 "error": str(e),
                 "timestamp": datetime.now().isoformat()
             }
     
-    @staticmethod
-    def _fuzzy_find_mapping(key: str, available_mappings: dict) -> str:
+    def _process_package_results(self, policies: List[Dict[str, Any]], package_result: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Fuzzy match: Try to find a mapping for a field name.
-        
-        Checks:
-        1. Exact match
-        2. Case-insensitive match
-        3. Partial match (field contains key or key contains field)
-        """
-        # 1. Exact match
-        if key in available_mappings:
-            return available_mappings[key]
-        
-        # 2. Case-insensitive match
-        key_lower = key.lower()
-        for field in available_mappings:
-            if field.lower() == key_lower:
-                return available_mappings[field]
-        
-        # 3. Partial match - if input has 'designation' and bundle has 'validationauthority',
-        # we can't really match them, so return original key
-        # This is a policy-specific field that needs explicit mapping
-        return key
-    
-    def flatten_input(self, input_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Flatten nested input data and map to DSL field names.
-        
-        Maps user-friendly API field names to the field names expected by Rego policies.
-        Uses field_mapping loaded from bundle (dynamic - no hardcoding needed!).
-        
-        Input: {"employee": {"designation": "Director", "grade": "E9"}}
-        Output: {"directortype": "Director", "eligibleemployeegrades": "E9"}
-        """
-        flattened = {}
-        
-        def _flatten_and_map(data, prefix=''):
-            for key, value in data.items():
-                if isinstance(value, dict):
-                    _flatten_and_map(value, prefix + key + '_')
-                elif isinstance(value, list):
-                    # Handle list values - preserve as-is
-                    flattened[key] = value
-                else:
-                    # Map field name using field_mapping from bundle
-                    mapped_key = self._fuzzy_find_mapping(key, self.field_mapping)
-                    flattened[mapped_key] = value
-        
-        _flatten_and_map(input_data)
-        return flattened
-    
-    def _generate_violation_reason(self, policy_path: str, policy_result: Dict[str, Any], input_data: Dict[str, Any]) -> str:
-        """
-        Generate detailed violation reason based on bundle metadata and input
+        Process OPA package result to extract individual rule evaluations
         
         Args:
-            policy_path: OPA policy path
-            policy_result: Policy evaluation result
-            input_data: Original input data
+            policies: List of policy metadata
+            package_result: Result from evaluating the entire package
         
         Returns:
-            Detailed violation reason string
+            dict: Formatted batch result with compliance info
         """
-        # Get rule metadata from bundle
-        rule_info = self.policy_rules.get(policy_path, {})
-        clause_id = rule_info.get('clause_id', '')
-        intent = rule_info.get('intent', '')
-        action = rule_info.get('action', '')
+        violations = []
+        compliance_summary = []
+        allowed = 0
+        denied = 0
         
-        # Build detailed reason
-        reasons = []
+        policy_results = package_result.get('result', {})
         
-        if clause_id:
-            reasons.append(f"Clause {clause_id}")
-        
-        if intent:
-            reasons.append(f"Intent: {intent.replace('_', ' ').title()}")
-        
-        # Add specific details based on input data
-        if input_data:
-            employee = input_data.get('employee', {})
-            travel = input_data.get('travel', {})
-            allowance = input_data.get('allowance', {})
+        for policy_info in policies:
+            clause_id = policy_info.get('clause_id')
+            policy_name = policy_info.get('name')
             
-            if employee.get('designation'):
-                reasons.append(f"Designation: {employee.get('designation')}")
-            if employee.get('grade'):
-                reasons.append(f"Grade: {employee.get('grade')}")
-            if travel.get('travel_mode'):
-                reasons.append(f"Travel Mode: {travel.get('travel_mode')}")
-            if travel.get('destination'):
-                reasons.append(f"Destination: {travel.get('destination')}")
-            if allowance.get('daily_allowance_requested'):
-                reasons.append(f"Requested Allowance: ${allowance.get('daily_allowance_requested')}")
+            # Find the rule result for this clause
+            rule_name = f"allow_{clause_id.lower()}_*"
+            matching_rules = {k: v for k, v in policy_results.items() if k.startswith(f"allow_{clause_id.lower()}_")}
+            
+            is_allowed = False
+            rule_reason = "No matching conditions in policy"
+            
+            if matching_rules:
+                first_rule = list(matching_rules.values())[0]
+                is_allowed = first_rule.get('allow', False) if isinstance(first_rule, dict) else False
+                rule_reason = first_rule.get('reason', 'No message') if isinstance(first_rule, dict) else 'Invalid result'
+            
+            # Only count as PASS if rules matched AND allow is true
+            # If no matching rules, it should be marked as FAIL
+            if matching_rules and is_allowed:
+                allowed += 1
+                compliance_summary.append({
+                    "clause_id": clause_id,
+                    "status": "PASS",
+                    "message": rule_reason
+                })
+            else:
+                denied += 1
+                violations.append({
+                    "clause_id": clause_id,
+                    "denied": True,
+                    "reason": rule_reason,
+                    "details": [],
+                    "policy": policy_name
+                })
+                compliance_summary.append({
+                    "clause_id": clause_id,
+                    "status": "FAIL",
+                    "reason": rule_reason,
+                    "details": []
+                })
         
-        # If policy has a reason field, use it
-        if policy_result.get('reason'):
-            return f"{policy_result.get('reason')} (Clause {clause_id})"
-        
-        # Build comprehensive reason
-        if reasons:
-            return "; ".join(reasons)
-        
-        return f"Policy violation detected for {policy_path}"
+        return {
+            "violations": violations,
+            "compliance_summary": compliance_summary,
+            "summary": {
+                "passed": allowed,
+                "failed": denied,
+                "total": allowed + denied,
+                "pass_rate": f"{(allowed / (allowed + denied) * 100):.1f}%" if (allowed + denied) > 0 else "0%"
+            }
+        }
     
-    async def batch_evaluate(self,
-                            policies: List[Dict[str, Any]],
-                            input_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def batch_evaluate_with_details(self,
+                                         policies: List[Dict[str, Any]],
+                                         input_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Evaluate multiple policies in parallel
+        Evaluate multiple policies with DETAILED violation information
         
         Args:
-            policies: List of policy objects with 'path' and 'name' keys
+            policies: List of policy dicts with 'path', 'name', 'clause_id' keys
             input_data: Common input data for all policies
         
         Returns:
-            dict: Results for all policies with violations summary
+            dict: Results with detailed violations
         """
-        self.logger.info(f"Starting batch evaluation of {len(policies)} policies")
+        self.logger.info(f"Starting batch evaluation of {len(policies)} policies with detail extraction")
         
         tasks = [
             self.evaluate_policy(policy['path'], input_data)
@@ -480,115 +306,191 @@ class OPARuntimeClient:
         
         results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        # Process results
+        # Process results with DETAILED violation information
         violations = []
+        compliance_summary = []
         allowed = 0
         denied = 0
         
         for i, result in enumerate(results):
             policy_info = policies[i]
-            policy_path = policy_info.get('path', f'policy_{i}')
+            policy_name = policy_info.get('name', f'policy_{i}')
+            clause_id = policy_info.get('clause_id', f'C{i}')
             
             if isinstance(result, Exception):
-                self.logger.error(f"Batch evaluation error for policy {i}: {result}")
-                violations.append({
-                    "policy": policy_info.get('name', f'policy_{i}'),
-                    "clause_id": policy_info.get('clause_id', ''),
-                    "reason": f"Evaluation error: {str(result)}",
-                    "severity": "error"
-                })
                 denied += 1
+                violations.append({
+                    "policy": policy_name,
+                    "clause_id": clause_id,
+                    "denied": True,
+                    "reason": "Evaluation error",
+                    "error": str(result),
+                    "error_type": type(result).__name__
+                })
+                compliance_summary.append({
+                    "clause_id": clause_id,
+                    "status": "ERROR",
+                    "message": str(result)
+                })
+            
             elif result.get('status') == 'success':
-                # OPA returns {"result": {"allow": true, ...}}} - extract inner result
-                inner_result = result.get('result', {})
-                policy_result = inner_result.get('result', {}) if isinstance(inner_result, dict) else {}
+                policy_results = result.get('result', {})
                 
-                # Check if rule exists in bundle
-                rule_info = self.policy_rules.get(policy_path, {})
-                has_rule = bool(rule_info)
+                # The result is now all rules from the package, find our specific rule
+                rule_name = f"allow_{clause_id.lower()}_*"  # Pattern like allow_c2_*
+                matching_rules = {k: v for k, v in policy_results.items() if k.startswith(f"allow_{clause_id.lower()}_")}
                 
-                if not policy_result.get('allow', False) or not has_rule:
-                    # Rule conditions not met OR rule not found → DENIED
-                    denied += 1
-                    # Generate detailed violation reason
-                    reason = self._generate_violation_reason(policy_path, policy_result, input_data)
-                    
-                    violations.append({
-                        "policy": policy_info.get('name', policy_path),
-                        "clause_id": policy_info.get('clause_id', ''),
-                        "intent": policy_info.get('intent', ''),
-                        "reason": reason,
-                        "severity": policy_info.get('action', 'enforce'),
-                        "confidence": policy_info.get('confidence', 0.5)
+                # Get the first matching rule result
+                is_allowed = False
+                if matching_rules:
+                    first_rule = list(matching_rules.values())[0]
+                    is_allowed = first_rule.get('allow', False) if isinstance(first_rule, dict) else False
+                    self.logger.debug(f"Clause {clause_id}: Found rules {list(matching_rules.keys())}, result={is_allowed}")
+                else:
+                    self.logger.debug(f"Clause {clause_id}: No matching rules in result. Available: {list(policy_results.keys())}")
+                
+                # Extract violation details
+                violation_info = self._extract_violation_reason(clause_id, result)
+                
+                # Only count as PASS if rules matched AND allow is true
+                if matching_rules and is_allowed:
+                    allowed += 1
+                    compliance_summary.append({
+                        "clause_id": clause_id,
+                        "status": "PASS",
+                        "message": f"{policy_name} passed"
                     })
                 else:
-                    allowed += 1
+                    denied += 1
+                    violations.append(violation_info)
+                    compliance_summary.append({
+                        "clause_id": clause_id,
+                        "status": "FAIL",
+                        "reason": violation_info.get("reason"),
+                        "details": violation_info.get("details", [])
+                    })
+            else:
+                denied += 1
+                violations.append({
+                    "policy": policy_name,
+                    "clause_id": clause_id,
+                    "denied": True,
+                    "reason": f"Unexpected status: {result.get('status')}",
+                    "details": [str(result)]
+                })
+                compliance_summary.append({
+                    "clause_id": clause_id,
+                    "status": "UNKNOWN",
+                    "message": f"Unexpected status: {result.get('status')}"
+                })
         
         return {
             "status": "complete",
-            "total_policies": len(policies),
-            "allowed": allowed,
-            "denied": denied,
+            "summary": {
+                "total_policies": len(policies),
+                "passed": allowed,
+                "failed": denied,
+                "pass_rate": f"{(allowed/len(policies)*100):.1f}%" if policies else "N/A"
+            },
+            "compliance_summary": compliance_summary,
             "violations": violations,
             "timestamp": datetime.now().isoformat()
         }
     
-    async def enforce_policies(self, 
-                              input_data: Dict[str, Any],
-                              policy_filter: Optional[str] = None) -> Dict[str, Any]:
+    async def enforce_travel_policy(self, employee_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Enforce all policies from the loaded bundle
+        Enforce travel policy with DETAILED violation reporting
+        Dynamically loads all rules from bundle metadata (not hardcoded)
         
         Args:
-            input_data: Input data for policy evaluation
-            policy_filter: Optional filter by intent type (e.g., "LIMIT", "RESTRICTION")
+            employee_data: Employee travel request data
         
         Returns:
-            dict: Enforcement result with compliance status and violations
+            dict: Detailed enforcement result
         """
-        employee_id = input_data.get('employee', {}).get('employee_id', 'unknown')
-        self.logger.info(f"Enforcing policies for: {employee_id}")
+        employee_id = employee_data.get('employee', {}).get('employee_id', 'UNKNOWN')
+        self.logger.info(f"Enforcing travel policy for employee: {employee_id}")
         
         try:
-            # Get policies to check (dynamically loaded)
-            policies_to_check = self.get_policies_for_enforcement(policy_filter)
+            # Dynamically load all policy rules from bundle metadata
+            policies_to_check = []
             
-            if not policies_to_check:
-                self.logger.warning("No policies loaded for enforcement")
-                return {
-                    "status": "warning",
-                    "employee_id": employee_id,
-                    "compliant": True,
-                    "message": "No enforce-type policies found in bundle",
-                    "evaluation_result": {
-                        "status": "complete",
-                        "total_policies": 0,
-                        "allowed": 0,
-                        "denied": 0,
-                        "violations": [],
-                        "timestamp": datetime.now().isoformat()
+            # Try to load from bundle metadata (if available)
+            bundle_metadata_path = "/home/hutech/Documents/docupolicy/opa_bundles/v1.0.0/bundle_metadata.json"
+            try:
+                import json as json_lib
+                with open(bundle_metadata_path, 'r') as f:
+                    metadata = json_lib.load(f)
+                    travel_policy = metadata.get('policies', {}).get('travel_policy', {})
+                    rules = travel_policy.get('rules', [])
+                    
+                    # Convert metadata rules to policy check format
+                    for rule in rules:
+                        policies_to_check.append({
+                            "path": f"data.travel_policy.{rule.get('rego_rule_name')}",
+                            "name": f"Clause {rule.get('clause_id')} - {rule.get('intent')}",
+                            "clause_id": rule.get('clause_id'),
+                            "description": rule.get('rego_code', '').split('\n')[2].strip() if rule.get('rego_code') else 'Policy rule'
+                        })
+                    
+                    self.logger.info(f"Dynamically loaded {len(policies_to_check)} policies from bundle metadata")
+                    
+            except Exception as e:
+                self.logger.warning(f"Failed to load bundle metadata: {e}. Using fallback rules.")
+                # Fallback to hardcoded rules if metadata unavailable
+                policies_to_check = [
+                    {
+                        "path": "data.travel_policy.allow_c2_info",
+                        "name": "Clause C2 - INFORMATIONAL",
+                        "clause_id": "C2",
+                        "description": "Validates policy applicability"
                     },
-                    "timestamp": datetime.now().isoformat()
-                }
+                    {
+                        "path": "data.travel_policy.allow_c13_rest",
+                        "name": "Clause C13 - RESTRICTION",
+                        "clause_id": "C13",
+                        "description": "Validates daily allowance restrictions"
+                    },
+                ]
             
-            self.logger.info(f"Evaluating {len(policies_to_check)} policies")
+            # Query the whole package once instead of individual rules
+            # This is more efficient and returns all rules with their results
+            package_result = await self.evaluate_policy("data.travel_policy", employee_data)
             
-            # Batch evaluate all policies
-            batch_result = await self.batch_evaluate(policies_to_check, input_data)
+            # Get the actual rule results from the package
+            policy_results = package_result.get('result', {})
+            
+            # If package result is empty, query individual rules
+            if not policy_results:
+                self.logger.info("Package result empty, querying individual rules")
+                policy_results = {}
+                for policy_info in policies_to_check:
+                    rule_path = policy_info['path']
+                    rule_result = await self.evaluate_policy(rule_path, employee_data)
+                    rule_data = rule_result.get('result', {})
+                    if rule_data:
+                        policy_results[rule_path.split('.')[-1]] = rule_data
+                    self.logger.debug(f"Rule {rule_path}: {rule_data}")
+            
+            # Create a fake package result for processing
+            package_result_for_processing = {"result": policy_results}
+            
+            # Process the package result to extract individual rule results
+            batch_result = self._process_package_results(policies_to_check, package_result_for_processing)
             
             # Determine overall compliance
-            is_compliant = batch_result['denied'] == 0
+            is_compliant = batch_result['summary']['failed'] == 0
             
             return {
                 "status": "success",
                 "employee_id": employee_id,
                 "compliant": is_compliant,
-                "evaluation_result": batch_result,
+                "compliance": batch_result,
                 "timestamp": datetime.now().isoformat()
             }
         
         except Exception as e:
-            self.logger.error(f"Policy enforcement failed: {e}")
+            self.logger.error(f"Travel policy enforcement failed: {e}")
             return {
                 "status": "error",
                 "employee_id": employee_id,
@@ -596,27 +498,8 @@ class OPARuntimeClient:
                 "timestamp": datetime.now().isoformat()
             }
     
-    async def enforce_travel_policy(self, employee_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Enforce travel policy for employee request (legacy wrapper)
-        
-        Uses dynamically loaded policies from bundle instead of hardcoded paths.
-        
-        Args:
-            employee_data: Employee travel request data
-        
-        Returns:
-            dict: Enforcement result with compliance status and violations
-        """
-        return await self.enforce_policies(employee_data)
-    
     async def get_bundle_info(self) -> Dict[str, Any]:
-        """
-        Get information about loaded bundles from OPA
-        
-        Returns:
-            dict: Bundle information
-        """
+        """Get information about loaded bundles from OPA"""
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -629,8 +512,7 @@ class OPARuntimeClient:
                         return {
                             "status": "success",
                             "bundle_info": data,
-                            "active_version": self.active_version,
-                            "local_policies_loaded": len(self.policies)
+                            "active_version": self.active_version
                         }
                     else:
                         return {"status": "error", "status_code": response.status}
@@ -638,108 +520,51 @@ class OPARuntimeClient:
             self.logger.error(f"Failed to get bundle info: {e}")
             return {"status": "error", "error": str(e)}
     
-    async def reload_bundle(self, version: str) -> Dict[str, Any]:
-        """
-        Trigger OPA to reload a specific bundle version
-        
-        Args:
-            version: Bundle version to reload (e.g., "v1.0.4")
-        
-        Returns:
-            dict: Reload status
-        """
-        self.logger.info(f"Requesting OPA to reload bundle version: {version}")
-        
-        try:
-            # OPA auto-loads bundles, but we can verify
-            bundle_path = self.bundles_dir / version / "bundle_metadata.json"
-            if bundle_path.exists():
-                self.active_version = version
-                # Reload policies from new bundle
-                self._load_policies_from_bundle()
-                self.logger.info(f"Bundle version switched to: {version}")
-                return {
-                    "status": "success",
-                    "active_version": version,
-                    "policies_loaded": len(self.policies),
-                    "message": "Bundle version activated"
-                }
-            else:
-                self.logger.error(f"Bundle version not found: {version}")
-                return {
-                    "status": "error",
-                    "error": f"Bundle version {version} not found"
-                }
-        except Exception as e:
-            self.logger.error(f"Bundle reload failed: {e}")
-            return {"status": "error", "error": str(e)}
-    
+    # Synchronous wrappers for compatibility
     def sync_health_check(self) -> Dict[str, Any]:
         """Synchronous wrapper for health check"""
         return asyncio.run(self.health_check())
-    
-    def sync_evaluate_policy(self, policy_path: str, input_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Synchronous wrapper for policy evaluation"""
-        return asyncio.run(self.evaluate_policy(policy_path, input_data))
-    
-    def sync_enforce_policies(self, input_data: Dict[str, Any], policy_filter: Optional[str] = None) -> Dict[str, Any]:
-        """Synchronous wrapper for policy enforcement"""
-        return asyncio.run(self.enforce_policies(input_data, policy_filter))
     
     def sync_enforce_travel_policy(self, employee_data: Dict[str, Any]) -> Dict[str, Any]:
         """Synchronous wrapper for travel policy enforcement"""
         return asyncio.run(self.enforce_travel_policy(employee_data))
 
 
-# FastAPI Integration Helper
-def create_oparuntime_client(opa_host: str = "localhost", opa_port: int = 8181) -> OPARuntimeClient:
-    """
-    Factory function to create OPA Runtime Client
-    
-    Useful for FastAPI dependency injection
-    """
+def create_opa_client(opa_host: str = "localhost", opa_port: int = 8181) -> OPARuntimeClient:
+    """Factory function for OPA Runtime Client (useful for FastAPI dependency injection)"""
     return OPARuntimeClient(opa_host=opa_host, opa_port=opa_port)
 
 
 if __name__ == "__main__":
     """Test the OPA Runtime Client"""
-    import sys
     
-    # Test data
     test_input = {
         "employee": {
-            "employee_id": "EMP001",
-            "designation": "Director",
-            "grade": "E9",
+            "employee_id": "EMP002",
+            "designation": "Senior Manager",
+            "grade": "E7",
             "employee_type": "on_regular_rolls"
         },
         "travel": {
-            "travel_mode": "Air (Business Class/Club Class)",
-            "tour_duration_days": 10,
-            "destination": "Singapore"
+            "travel_mode": "Air (Economy Class)",
+            "tour_duration_days": 15,
+            "destination": "USA"
         },
         "allowance": {
-            "daily_allowance_requested": 500.0,
-            "maximum_allowed_days": 45,
-            "total_allowance_requested": 5000.0
+            "daily_allowance_requested": 400.0,
+            "maximum_allowed_days": 45
         }
     }
     
     async def test():
         client = OPARuntimeClient()
         
-        # Show loaded policies
-        print(f"\nLoaded {len(client.policies)} policies for enforcement:")
-        for p in client.policies[:5]:
-            print(f"  - {p['name']}: {p['path']}")
-        
         # Health check
         health = await client.health_check()
-        print(f"\nHealth Check: {json.dumps(health, indent=2)}")
+        logging.info(f"Health Check: {health['status']}")
         
         # Travel policy enforcement
         enforce_result = await client.enforce_travel_policy(test_input)
-        print(f"\nTravel Policy Enforcement: {json.dumps(enforce_result, indent=2)}")
+        logging.info(f"Travel Policy Enforcement: {enforce_result['status']}, Compliant: {enforce_result.get('compliant', 'N/A')}")
     
-    # Run tests
     asyncio.run(test())
