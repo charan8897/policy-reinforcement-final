@@ -1179,7 +1179,9 @@ class ClauseExtractor:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
             self.text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=3000,
@@ -1599,7 +1601,9 @@ class IntentClassifier:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
         else:
             if not LANGCHAIN_AVAILABLE:
@@ -1959,7 +1963,9 @@ class EntityExtractor:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
         else:
             if not LANGCHAIN_AVAILABLE:
@@ -4409,6 +4415,8 @@ class RegoGenerator:
         # Build Rego rule with proper object output syntax
         # OPA v1 requires 'if' keyword before rule body
         # Syntax: rule := object { ... } if { conditions }
+        # NOTE: Only generate ONE rule definition per clause (allow=true)
+        # Do NOT generate a separate allow=false rule as it causes Rego conflicts
         rego_code = f"""
     # Rule: {clause_id}
     # Intent: {intent}
@@ -5235,7 +5243,9 @@ class AmbiguityDetector:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
         else:
             if not LANGCHAIN_AVAILABLE:
@@ -6535,7 +6545,9 @@ class DSLGenerator:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
         else:
             self.log_entry("INFO", "Using standard Gemini for DSL generation")
@@ -7477,7 +7489,9 @@ class NormalizedPolicyGenerator:
                 model="gemma-3-27b-it",
                 google_api_key=GEMINI_API_KEY,
                 temperature=0.1,
-                max_retries=3
+                max_retries=3,
+                request_timeout=120,
+                convert_system_message_to_unused=True
             )
         else:
             self.log_entry("INFO", "Using fast rule-based metadata extraction (LLM disabled)")
@@ -8590,10 +8604,14 @@ class OPABundleStorageManager:
                 json.dump(manifest, f, indent=2)
             self.log_entry("SUCCESS", f"Wrote manifest: {manifest_file}")
             
-            # Write bundle metadata
+            # Write bundle metadata (with deduplication)
             bundle_meta_file = f"{version_dir}/bundle_metadata.json"
+            
+            # Deduplicate rules in bundle_structure before saving
+            dedup_bundle = self._deduplicate_bundle_rules(bundle_structure)
+            
             with open(bundle_meta_file, 'w') as f:
-                json.dump(bundle_structure, f, indent=2)
+                json.dump(dedup_bundle, f, indent=2)
             self.log_entry("SUCCESS", f"Wrote bundle metadata: {bundle_meta_file}")
             
             # Write Rego policies with policy name
@@ -8622,17 +8640,62 @@ class OPABundleStorageManager:
             self.log_entry("ERROR", f"Failed to persist bundle to filesystem: {e}")
             return None
     
+    def _deduplicate_bundle_rules(self, bundle_structure):
+        """
+        Remove duplicate rules from bundle structure
+        Keeps only first occurrence of each rule by rego_rule_name
+        
+        Args:
+            bundle_structure (dict): Bundle with potentially duplicate rules
+            
+        Returns:
+            dict: Bundle structure with deduplicated rules
+        """
+        import copy
+        dedup_bundle = copy.deepcopy(bundle_structure)
+        
+        policies = dedup_bundle.get("policies", {})
+        total_removed = 0
+        
+        for policy_name, policy_data in policies.items():
+            if isinstance(policy_data, dict):
+                rules = policy_data.get("rules", [])
+                if rules:
+                    seen_rules = set()
+                    unique_rules = []
+                    
+                    for rule in rules:
+                        if isinstance(rule, dict):
+                            rule_name = rule.get("rego_rule_name", "")
+                            if rule_name and rule_name in seen_rules:
+                                total_removed += 1
+                                continue
+                            if rule_name:
+                                seen_rules.add(rule_name)
+                        
+                        unique_rules.append(rule)
+                    
+                    policy_data["rules"] = unique_rules
+                    policy_data["rule_count"] = len(unique_rules)
+        
+        if total_removed > 0:
+            self.log_entry("INFO", f"Deduplicated bundle: removed {total_removed} duplicate rules")
+        
+        return dedup_bundle
+    
     def serialize_rego_code(self, bundle_structure):
         """
         Serialize Rego code from bundle structure to text format
+        Deduplicates rules to avoid Rego conflicts
         
         Args:
             bundle_structure (dict): Bundle structure with policies and rules
             
         Returns:
-            str: Formatted Rego code
+            str: Formatted Rego code (deduplicated)
         """
         lines = []
+        seen_rules = set()  # Track rule names to avoid duplicates
         
         policies = bundle_structure.get("policies", {})
         
@@ -8650,16 +8713,24 @@ class OPABundleStorageManager:
                     lines.append(f"# {description}")
                     lines.append("")
                 
-                # Add rules
+                # Add rules with deduplication
                 rules = policy_data.get("rules", [])
                 for rule in rules:
                     if isinstance(rule, dict):
                         rule_name = rule.get("rego_rule_name", "unnamed_rule")
                         rego_code = rule.get("rego_code", "")
+                        
+                        # Skip if rule already seen
+                        if rule_name in seen_rules:
+                            self.log_entry("DEBUG", f"Skipping duplicate rule: {rule_name}")
+                            continue
+                        
+                        seen_rules.add(rule_name)
                         lines.append(f"\n{rego_code}")
                     else:
                         lines.append(str(rule))
         
+        self.log_entry("INFO", f"Serialized {len(seen_rules)} unique rules")
         return "\n".join(lines)
     
     def persist_bundle_to_mongodb(self, bundle_structure, manifest, version_dir):
