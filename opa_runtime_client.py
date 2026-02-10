@@ -8,6 +8,7 @@ import aiohttp
 import asyncio
 import json
 import logging
+import shutil
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 import os
@@ -41,9 +42,8 @@ class OPARuntimeClient:
         self.opa_url = f"http://{opa_host}:{opa_port}"
         self.bundles_dir = Path(bundles_dir)
         self.timeout = timeout
-        self.active_version = self._get_active_bundle_version()
         
-        # Setup logging
+        # Setup logging FIRST (needed for version detection)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         if not self.logger.handlers:
@@ -52,23 +52,122 @@ class OPARuntimeClient:
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
         
+        # Get active version AFTER logging is setup
+        self.active_version = self._get_active_bundle_version()
+        
         self.logger.info(f"OPA Runtime Client initialized")
         self.logger.info(f"  OPA URL: {self.opa_url}")
         self.logger.info(f"  Active Bundle: {self.active_version}")
+        
+        # Prepare bundle for OPA loading
+        self._prepare_bundle()
+    
+    def _prepare_bundle(self):
+        """
+        Prepare bundle structure for OPA bundle mode.
+        OPA expects bundle at bundles_dir root, not in version subdirectory.
+        """
+        bundle_root = self.bundles_dir
+        
+        # Check if bundle root has required files
+        has_manifest = (bundle_root / "manifest.json").exists()
+        has_data = (bundle_root / "data.json").exists()
+        has_policy = (bundle_root / ".policy").exists()
+        
+        if has_manifest and has_data and has_policy:
+            self.logger.info(f"Bundle already prepared at {bundle_root}")
+            return
+        
+        self.logger.info(f"Preparing bundle structure at {bundle_root}")
+        
+        # Get the active version directory
+        version_dir = bundle_root / self.active_version
+        
+        # If active version doesn't exist, find available version
+        if not version_dir.exists():
+            self.logger.warning(f"Active version {self.active_version} not found, looking for alternatives...")
+            # Find the first version directory that exists
+            for item in bundle_root.iterdir():
+                if item.is_dir() and item.name.startswith('v'):
+                    version_dir = item
+                    self.active_version = item.name
+                    self.logger.info(f"Using alternative version: {self.active_version}")
+                    break
+            else:
+                self.logger.error(f"No version directories found in {bundle_root}")
+                return
+        
+        # Copy manifest.json
+        src_manifest = version_dir / "manifest.json"
+        if src_manifest.exists():
+            import shutil
+            shutil.copy(src_manifest, bundle_root / "manifest.json")
+            self.logger.info(f"Copied manifest.json to bundle root")
+        
+        # Copy data.json
+        src_data = version_dir / "data.json"
+        if src_data.exists():
+            shutil.copy(src_data, bundle_root / "data.json")
+            self.logger.info(f"Copied data.json to bundle root")
+        
+        # Copy .policy directory
+        src_policy = version_dir / ".policy"
+        if src_policy.exists():
+            import shutil
+            if (bundle_root / ".policy").exists():
+                shutil.rmtree(bundle_root / ".policy")
+            shutil.copytree(src_policy, bundle_root / ".policy")
+            self.logger.info(f"Copied .policy directory to bundle root")
+        
+        self.logger.info(f"Bundle preparation complete for version {self.active_version}")
     
     def _get_active_bundle_version(self) -> str:
-        """Get active bundle version from version registry"""
+        """Get active bundle version from version registry or filesystem"""
+        # First try versions.json (new format)
+        versions_file = self.bundles_dir / "versions.json"
+        if versions_file.exists():
+            try:
+                with open(versions_file) as f:
+                    versions = json.load(f)
+                    active = versions.get('active', versions.get('latest', None))
+                    if active:
+                        # Normalize version format (e.g., "1.0.0" -> "v1.0.0")
+                        if not active.startswith('v'):
+                            active = f'v{active}'
+                        self.logger.info(f"Active version from versions.json: {active}")
+                        return active
+            except Exception as e:
+                self.logger.warning(f"Could not read versions.json: {e}")
+        
+        # Fallback to version_registry.json (old format)
         try:
             registry_file = self.bundles_dir / "version_registry.json"
             if registry_file.exists():
                 with open(registry_file) as f:
                     registry = json.load(f)
-                    active = registry.get('active_version', 'v1.0.4')
-                    return active
+                    active = registry.get('active_version', None)
+                    if active:
+                        self.logger.info(f"Active version from version_registry.json: {active}")
+                        return active
         except Exception as e:
             self.logger.warning(f"Could not read version registry: {e}")
         
-        return "v1.0.4"
+        # Final fallback: find the latest version directory from filesystem
+        self.logger.info("No active version found in registry, looking for available versions...")
+        versions = []
+        for item in self.bundles_dir.iterdir():
+            if item.is_dir() and item.name.startswith('v'):
+                versions.append(item.name)
+        
+        if versions:
+            # Sort versions and get the latest
+            versions.sort(key=lambda v: [int(x) for x in v[1:].split('.')])
+            latest_version = versions[-1]
+            self.logger.info(f"Found latest version from filesystem: {latest_version}")
+            return latest_version
+        
+        self.logger.warning("No version directories found, returning default")
+        return "v1.0.0"
     
     def _extract_violation_reason(self, clause_id: str, policy_result: Dict[str, Any]) -> Dict[str, Any]:
         """
