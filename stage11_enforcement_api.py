@@ -338,7 +338,45 @@ def _calculate_keyword_similarity(expected_keywords: set, payload_keywords: set)
     return combined_similarity
 
 
-def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
+def _infer_value_type(condition: str) -> str:
+    """
+    Infer expected value type from Rego condition
+    
+    Examples:
+        'input.field == "string"' -> 'string'
+        'input.field <= 50' -> 'number'
+        'input.field >= 6' -> 'number'
+    """
+    if " == " in condition:
+        parts = condition.split(" == ")
+        if len(parts) > 1:
+            value_part = parts[1].strip().strip('"\'')
+            try:
+                float(value_part)
+                return 'number'
+            except ValueError:
+                return 'string'
+    
+    # For comparison operators, expect number
+    if any(op in condition for op in ['<=', '>=', '<', '>']):
+        return 'number'
+    
+    return 'unknown'
+
+
+def _get_payload_value_type(value: Any) -> str:
+    """Get the type of a payload value"""
+    if isinstance(value, (int, float)):
+        return 'number'
+    elif isinstance(value, bool):
+        return 'boolean'
+    elif isinstance(value, str):
+        return 'string'
+    else:
+        return 'unknown'
+
+
+def _find_field_in_payload(field_name: str, payload: Dict[str, Any], condition: str = "") -> Any:
     """
     Find field value in payload with flexible matching
     
@@ -366,10 +404,10 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
             logger.debug(f"Field matched (normalized): '{field_name}' -> '{key}'")
             return value
     
-    # Try semantic/keyword-based match for synonymous fields
-    # This handles cases where backends use different names but similar semantics
-    # e.g., driverchargesapplicability vs operatorcosts (both about transportation costs)
+    # Try semantic/keyword-based match with TYPE CONSTRAINT
+    # Critical: Only match fields with compatible value types
     expected_keywords = _extract_keywords(field_name)
+    expected_type = _infer_value_type(condition) if condition else 'unknown'
     
     if expected_keywords:
         best_match = None
@@ -377,21 +415,30 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
         best_match_key = None
         
         for key, value in payload.items():
+            # TYPE FILTERING: Skip fields with incompatible types
+            payload_value_type = _get_payload_value_type(value)
+            
+            # Only enforce type constraint if both are known (avoid over-filtering)
+            if expected_type != 'unknown' and payload_value_type != 'unknown':
+                if expected_type != payload_value_type:
+                    logger.debug(
+                        f"Skipping '{key}': type mismatch "
+                        f"(expected {expected_type}, got {payload_value_type})"
+                    )
+                    continue
+            
             payload_keywords = _extract_keywords(key)
             similarity_score = _calculate_keyword_similarity(expected_keywords, payload_keywords)
             
-            # Lower threshold to catch semantic matches even with completely different names
-            # The 3-gram analysis catches character pattern similarity
             if similarity_score > best_score:
                 best_score = similarity_score
                 best_match = value
                 best_match_key = key
         
         # Only use semantic match if score is meaningful (>25% similarity)
-        # Higher threshold reduces false matches while still catching synonyms
         if best_match is not None and best_score > 0.25:
             logger.info(
-                f"Field semantic match (similarity: {best_score:.2f}): "
+                f"Field semantic match (type: {expected_type}, similarity: {best_score:.2f}): "
                 f"expected '{field_name}' -> found '{best_match_key}'"
             )
             return best_match
@@ -413,8 +460,8 @@ def _evaluate_condition(condition: str, payload: Dict[str, Any], field_name: str
     Returns:
         "passed" if condition is satisfied, "violated" if not
     """
-    # Use flexible field matching to find field in payload
-    field_value = _find_field_in_payload(field_name, payload)
+    # Use flexible field matching with type constraint from condition
+    field_value = _find_field_in_payload(field_name, payload, condition)
     
     try:
         # Extract operator and expected value from condition
@@ -503,8 +550,8 @@ def _build_simple_failure_report(
                 field_matches = re.findall(r'input\.(\w+)', condition)
                 
                 for field_name in set(field_matches):
-                    # Use flexible matching to find field
-                    payload_value = _find_field_in_payload(field_name, payload)
+                    # Use flexible matching with type constraint to find field
+                    payload_value = _find_field_in_payload(field_name, payload, condition)
                     if payload_value is not None:
                         status = _evaluate_condition(condition, payload, field_name)
                         
