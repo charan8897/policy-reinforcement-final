@@ -229,6 +229,55 @@ async def get_opa_client() -> OPARuntimeClient:
     return create_opa_client(opa_host="0.0.0.0", opa_port=8181)
 
 
+def _normalize_field_name(field_name: str) -> str:
+    """
+    Normalize field name to lowercase with no special chars
+    Converts: driverChargesApplicability -> driverchargesapplicability
+              driver_charges_applicability -> driverchargesapplicability
+              Driver Charges -> drivercharges
+    """
+    # Convert camelCase to lowercase
+    import re
+    name = re.sub(r'([a-z])([A-Z])', r'\1\2', field_name)
+    # Remove spaces, underscores, hyphens
+    name = re.sub(r'[\s_-]+', '', name)
+    # Convert to lowercase
+    return name.lower()
+
+
+def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
+    """
+    Find field value in payload with flexible matching
+    
+    Tries:
+    1. Exact match
+    2. Case-insensitive match
+    3. Normalized match (remove special chars, camelCase handling)
+    """
+    # Try exact match first
+    if field_name in payload:
+        return payload[field_name]
+    
+    # Try case-insensitive match
+    field_lower = field_name.lower()
+    for key, value in payload.items():
+        if key.lower() == field_lower:
+            logger.debug(f"Field matched (case-insensitive): '{field_name}' -> '{key}'")
+            return value
+    
+    # Try normalized match (camelCase, snake_case, spaces all treated same)
+    normalized_target = _normalize_field_name(field_name)
+    for key, value in payload.items():
+        normalized_key = _normalize_field_name(key)
+        if normalized_key == normalized_target:
+            logger.debug(f"Field matched (normalized): '{field_name}' (norm: {normalized_target}) -> '{key}' (norm: {normalized_key})")
+            return value
+    
+    # Not found
+    logger.debug(f"Field '{field_name}' not found in payload. Payload keys: {list(payload.keys())}")
+    return None
+
+
 def _evaluate_condition(condition: str, payload: Dict[str, Any], field_name: str) -> str:
     """
     Evaluate if a condition is satisfied for the given field value
@@ -241,7 +290,8 @@ def _evaluate_condition(condition: str, payload: Dict[str, Any], field_name: str
     Returns:
         "passed" if condition is satisfied, "violated" if not
     """
-    field_value = payload.get(field_name)
+    # Use flexible field matching to find field in payload
+    field_value = _find_field_in_payload(field_name, payload)
     
     try:
         # Extract operator and expected value from condition
@@ -330,8 +380,9 @@ def _build_simple_failure_report(
                 field_matches = re.findall(r'input\.(\w+)', condition)
                 
                 for field_name in set(field_matches):
-                    if field_name in payload:
-                        payload_value = payload.get(field_name)
+                    # Use flexible matching to find field
+                    payload_value = _find_field_in_payload(field_name, payload)
+                    if payload_value is not None:
                         status = _evaluate_condition(condition, payload, field_name)
                         
                         rule_violations.append({
