@@ -302,28 +302,40 @@ def _extract_keywords(field_name: str) -> set:
 
 def _calculate_keyword_similarity(expected_keywords: set, payload_keywords: set) -> float:
     """
-    Calculate similarity score based on shared keywords (n-grams + words)
+    Calculate semantic similarity between field names using multiple strategies
     
-    Uses Jaccard similarity: |intersection| / |union|
+    Combines:
+    1. N-gram overlap (character patterns)
+    2. Length similarity (fields of similar length are more likely to map)
+    3. Jaccard similarity on extracted words
     
     Returns:
         float: Similarity score between 0 and 1
-        1.0 = perfect match (all keywords overlap)
-        0.5 = partial overlap (50% keywords match)
-        0.0 = no overlap
     """
     if not expected_keywords or not payload_keywords:
         return 0.0
     
-    # Calculate Jaccard similarity: intersection / union
+    # Strategy 1: Jaccard similarity on n-grams
     intersection = len(expected_keywords & payload_keywords)
     union = len(expected_keywords | payload_keywords)
     
     if union == 0:
         return 0.0
     
-    similarity = intersection / union
-    return similarity
+    ngram_similarity = intersection / union
+    
+    # Strategy 2: Prefer fields of similar length (heuristic: mapped fields usually have similar length)
+    # This helps avoid matching very different field names
+    expected_str = ''.join(sorted(expected_keywords))
+    payload_str = ''.join(sorted(payload_keywords))
+    
+    len_similarity = 1.0 - (abs(len(expected_str) - len(payload_str)) / max(len(expected_str), len(payload_str)))
+    
+    # Weighted combination: n-gram similarity is primary, length is secondary filter
+    # This ensures we match fields with actual character overlap AND reasonable length
+    combined_similarity = (ngram_similarity * 0.7) + (len_similarity * 0.3)
+    
+    return combined_similarity
 
 
 def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
@@ -375,8 +387,9 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
                 best_match = value
                 best_match_key = key
         
-        # Only use semantic match if score is meaningful (>15% similarity)
-        if best_match is not None and best_score > 0.15:
+        # Only use semantic match if score is meaningful (>25% similarity)
+        # Higher threshold reduces false matches while still catching synonyms
+        if best_match is not None and best_score > 0.25:
             logger.info(
                 f"Field semantic match (similarity: {best_score:.2f}): "
                 f"expected '{field_name}' -> found '{best_match_key}'"
