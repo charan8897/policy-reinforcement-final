@@ -32,7 +32,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -46,7 +46,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -60,7 +60,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -74,7 +74,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -88,7 +88,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -102,7 +102,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
@@ -116,7 +116,7 @@ GEMINI_MODEL = None
 if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
         logger.info("Gemini API initialized")
     except Exception as e:
         logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
