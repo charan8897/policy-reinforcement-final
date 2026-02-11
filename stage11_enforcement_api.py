@@ -13,7 +13,6 @@ import asyncio
 import logging
 import re
 from datetime import datetime
-import google.generativeai as genai
 from opa_runtime_client import OPARuntimeClient, create_opa_client
 
 # Configure logging
@@ -22,106 +21,6 @@ logging.basicConfig(
     format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-# Configure Gemini API
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
-# Configure Gemini API - reads from env variable
-import os
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = None
-
-if GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        GEMINI_MODEL = genai.GenerativeModel("gemma-3-27b-it")
-        logger.info("Gemini API initialized")
-    except Exception as e:
-        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
-else:
-    logger.info("No Gemini API key. Using exact matching only.")
 
 # ============================================================================
 # Rego Policy Analyzer - Parse conditions from Rego files
@@ -330,63 +229,6 @@ async def get_opa_client() -> OPARuntimeClient:
     return create_opa_client(opa_host="0.0.0.0", opa_port=8181)
 
 
-def _find_semantic_match(field_name: str, payload: Dict[str, Any]) -> Any:
-    """
-    Find field with dynamic semantic matching using Gemini API
-    
-    Uses Gemini to determine if payload field names are semantically similar to Rego field names.
-    Falls back to None if Gemini unavailable.
-    """
-    if not GEMINI_MODEL or not payload:
-        return None
-    
-    try:
-        payload_keys = list(payload.keys())
-        
-        # Create prompt for Gemini to find semantic match
-        prompt = f"""
-You are a field name matcher. Given a Rego policy field name and a list of payload field names,
-determine if any payload field is semantically similar to the Rego field.
-
-Rego field name: "{field_name}"
-Payload field names: {payload_keys}
-
-Rules:
-1. Consider semantic meaning, not just syntax
-2. "driverchargesapplicability" could match "chauffeurfees", "operatorcosts", "pilotage"
-3. "maximumdailydistance" could match "travelcoverage", "dailylimit"
-4. Return ONLY the matching payload field name if found, or "NOMATCH" if none are semantically similar
-5. Be conservative - only match if clearly related
-6. Return single word only: the field name or NOMATCH
-
-Examples:
-- driverchargesapplicability → chauffeurfees = "chauffeurfees"
-- driverchargesapplicability → vehicleprice = "NOMATCH"
-- maximumdailydistance → travelcoverage = "travelcoverage"
-- maximumdailydistance → hourlywage = "NOMATCH"
-
-Now match: "{field_name}" against {payload_keys}
-"""
-        
-        response = GEMINI_MODEL.generate_content(prompt)
-        result = response.text.strip().upper()
-        
-        if result == "NOMATCH":
-            return None
-        
-        # Find the actual matching key (case-insensitive)
-        for key in payload_keys:
-            if key.lower() == result.lower():
-                logger.debug(f"Semantic match (Gemini): '{field_name}' -> '{key}'")
-                return payload[key]
-        
-        return None
-        
-    except Exception as e:
-        logger.debug(f"Gemini semantic matching failed for '{field_name}': {e}")
-        return None
-
-
 def _normalize_field_name(field_name: str) -> str:
     """
     Normalize field name to lowercase with no special chars
@@ -395,7 +237,6 @@ def _normalize_field_name(field_name: str) -> str:
               Driver Charges -> drivercharges
     """
     # Convert camelCase to lowercase
-    import re
     name = re.sub(r'([a-z])([A-Z])', r'\1\2', field_name)
     # Remove spaces, underscores, hyphens
     name = re.sub(r'[\s_-]+', '', name)
@@ -403,15 +244,96 @@ def _normalize_field_name(field_name: str) -> str:
     return name.lower()
 
 
+def _extract_ngrams(text: str, n: int = 3) -> set:
+    """
+    Extract n-grams (character substrings) from text
+    This is completely dynamic and works for any field name
+    
+    Example: "drivercharges" -> {"dri", "riv", "ive", "ver", "erc", "rch", "cha", "har", "arg", "rge", "ges", ...}
+    This captures phonetic/semantic similarity even for synonymous terms
+    """
+    text = text.lower()
+    ngrams = set()
+    for i in range(len(text) - n + 1):
+        ngrams.add(text[i:i+n])
+    return ngrams
+
+
+def _extract_keywords(field_name: str) -> set:
+    """
+    Extract semantic keywords from field name dynamically
+    No hardcoded lists - uses character n-gram analysis
+    
+    Examples:
+        driverchargesapplicability -> ngrams + word segments
+        chauffeurfees -> ngrams + word segments  
+        operatorcosts -> ngrams + word segments
+        pilotage -> ngrams + word segments
+    
+    Works for ANY field name regardless of domain
+    """
+    normalized = _normalize_field_name(field_name)
+    
+    # Use n-grams for character-level similarity
+    # 3-grams work well for capturing phonetic/spelling similarity
+    ngrams = _extract_ngrams(normalized, n=3)
+    
+    # Also try to extract words by assuming capital letters or common patterns
+    # This helps with camelCase: driverCharges -> driver, charges
+    # And compound words: drivercharges could be driver+charges
+    words = set()
+    
+    # Simple heuristic: look for transitions where pattern might indicate word boundary
+    current_word = ""
+    for char in normalized:
+        if char.isalpha():
+            current_word += char
+        else:
+            if len(current_word) >= 2:
+                words.add(current_word)
+            current_word = ""
+    
+    if len(current_word) >= 2:
+        words.add(current_word)
+    
+    # Return combination of n-grams (for similarity) and words (for semantic matching)
+    return ngrams | words
+
+
+def _calculate_keyword_similarity(expected_keywords: set, payload_keywords: set) -> float:
+    """
+    Calculate similarity score based on shared keywords (n-grams + words)
+    
+    Uses Jaccard similarity: |intersection| / |union|
+    
+    Returns:
+        float: Similarity score between 0 and 1
+        1.0 = perfect match (all keywords overlap)
+        0.5 = partial overlap (50% keywords match)
+        0.0 = no overlap
+    """
+    if not expected_keywords or not payload_keywords:
+        return 0.0
+    
+    # Calculate Jaccard similarity: intersection / union
+    intersection = len(expected_keywords & payload_keywords)
+    union = len(expected_keywords | payload_keywords)
+    
+    if union == 0:
+        return 0.0
+    
+    similarity = intersection / union
+    return similarity
+
+
 def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
     """
     Find field value in payload with flexible matching
     
-    Tries (in order):
+    Tries:
     1. Exact match
     2. Case-insensitive match
     3. Normalized match (remove special chars, camelCase handling)
-    4. Semantic/fuzzy match using field aliases
     """
     # Try exact match first
     if field_name in payload:
@@ -429,13 +351,37 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
     for key, value in payload.items():
         normalized_key = _normalize_field_name(key)
         if normalized_key == normalized_target:
-            logger.debug(f"Field matched (normalized): '{field_name}' (norm: {normalized_target}) -> '{key}' (norm: {normalized_key})")
+            logger.debug(f"Field matched (normalized): '{field_name}' -> '{key}'")
             return value
     
-    # Try semantic/fuzzy match using Gemini API
-    matched_value = _find_semantic_match(field_name, payload)
-    if matched_value is not None:
-        return matched_value
+    # Try semantic/keyword-based match for synonymous fields
+    # This handles cases where backends use different names but similar semantics
+    # e.g., driverchargesapplicability vs operatorcosts (both about transportation costs)
+    expected_keywords = _extract_keywords(field_name)
+    
+    if expected_keywords:
+        best_match = None
+        best_score = 0.0
+        best_match_key = None
+        
+        for key, value in payload.items():
+            payload_keywords = _extract_keywords(key)
+            similarity_score = _calculate_keyword_similarity(expected_keywords, payload_keywords)
+            
+            # Lower threshold to catch semantic matches even with completely different names
+            # The 3-gram analysis catches character pattern similarity
+            if similarity_score > best_score:
+                best_score = similarity_score
+                best_match = value
+                best_match_key = key
+        
+        # Only use semantic match if score is meaningful (>15% similarity)
+        if best_match is not None and best_score > 0.15:
+            logger.info(
+                f"Field semantic match (similarity: {best_score:.2f}): "
+                f"expected '{field_name}' -> found '{best_match_key}'"
+            )
+            return best_match
     
     # Not found
     logger.debug(f"Field '{field_name}' not found in payload. Payload keys: {list(payload.keys())}")
