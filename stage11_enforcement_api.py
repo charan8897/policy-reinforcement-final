@@ -13,6 +13,7 @@ import asyncio
 import logging
 import re
 from datetime import datetime
+import google.generativeai as genai
 from opa_runtime_client import OPARuntimeClient, create_opa_client
 
 # Configure logging
@@ -21,6 +22,106 @@ logging.basicConfig(
     format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Configure Gemini API
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
+# Configure Gemini API - reads from env variable
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = None
+
+if GEMINI_API_KEY:
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash")
+        logger.info("Gemini API initialized")
+    except Exception as e:
+        logger.warning(f"Gemini init failed: {e}. Fallback to exact matching.")
+else:
+    logger.info("No Gemini API key. Using exact matching only.")
 
 # ============================================================================
 # Rego Policy Analyzer - Parse conditions from Rego files
@@ -229,47 +330,61 @@ async def get_opa_client() -> OPARuntimeClient:
     return create_opa_client(opa_host="0.0.0.0", opa_port=8181)
 
 
-# Field alias mapping for semantic similarity
-# Maps Rego field names to possible backend field name variations
-FIELD_ALIASES = {
-    "driverchargesapplicability": [
-        "chauffeurfees", "operatorcosts", "hiringcharges", 
-        "pilotage", "servicefees", "transportationcosts",
-        "driver_charges", "driving_costs", "chauffeur_charges"
-    ],
-    "maximumdailydistance": [
-        "maxdailydistance", "max_daily_distance", "dailydistancelimit",
-        "travel_distance", "travelcoverage"
-    ],
-    "maximumclaimpercentage": [
-        "maxclaimpercentage", "max_claim_percentage", "claimlimit",
-        "claim_percentage"
-    ],
-    "minimumoutofficehours": [
-        "minhoursout", "minimumhours", "min_out_office_hours",
-        "fieldhoursmin", "onsite_hours_minimum"
-    ]
-}
-
-
-def _find_fuzzy_match(field_name: str, payload: Dict[str, Any]) -> tuple[str, Any]:
+def _find_semantic_match(field_name: str, payload: Dict[str, Any]) -> Any:
     """
-    Find field with fuzzy/semantic matching
+    Find field with dynamic semantic matching using Gemini API
     
-    Returns: (matched_key, value) or (None, None)
+    Uses Gemini to determine if payload field names are semantically similar to Rego field names.
+    Falls back to None if Gemini unavailable.
     """
-    normalized_field = _normalize_field_name(field_name)
+    if not GEMINI_MODEL or not payload:
+        return None
     
-    # Check if this field has known aliases
-    if normalized_field in FIELD_ALIASES:
-        aliases = FIELD_ALIASES[normalized_field]
-        for alias in aliases:
-            for key, value in payload.items():
-                if _normalize_field_name(key) == _normalize_field_name(alias):
-                    logger.debug(f"Fuzzy matched via alias: '{field_name}' -> '{key}' (via alias '{alias}')")
-                    return (key, value)
-    
-    return (None, None)
+    try:
+        payload_keys = list(payload.keys())
+        
+        # Create prompt for Gemini to find semantic match
+        prompt = f"""
+You are a field name matcher. Given a Rego policy field name and a list of payload field names,
+determine if any payload field is semantically similar to the Rego field.
+
+Rego field name: "{field_name}"
+Payload field names: {payload_keys}
+
+Rules:
+1. Consider semantic meaning, not just syntax
+2. "driverchargesapplicability" could match "chauffeurfees", "operatorcosts", "pilotage"
+3. "maximumdailydistance" could match "travelcoverage", "dailylimit"
+4. Return ONLY the matching payload field name if found, or "NOMATCH" if none are semantically similar
+5. Be conservative - only match if clearly related
+6. Return single word only: the field name or NOMATCH
+
+Examples:
+- driverchargesapplicability → chauffeurfees = "chauffeurfees"
+- driverchargesapplicability → vehicleprice = "NOMATCH"
+- maximumdailydistance → travelcoverage = "travelcoverage"
+- maximumdailydistance → hourlywage = "NOMATCH"
+
+Now match: "{field_name}" against {payload_keys}
+"""
+        
+        response = GEMINI_MODEL.generate_content(prompt)
+        result = response.text.strip().upper()
+        
+        if result == "NOMATCH":
+            return None
+        
+        # Find the actual matching key (case-insensitive)
+        for key in payload_keys:
+            if key.lower() == result.lower():
+                logger.debug(f"Semantic match (Gemini): '{field_name}' -> '{key}'")
+                return payload[key]
+        
+        return None
+        
+    except Exception as e:
+        logger.debug(f"Gemini semantic matching failed for '{field_name}': {e}")
+        return None
 
 
 def _normalize_field_name(field_name: str) -> str:
@@ -317,8 +432,8 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
             logger.debug(f"Field matched (normalized): '{field_name}' (norm: {normalized_target}) -> '{key}' (norm: {normalized_key})")
             return value
     
-    # Try semantic/fuzzy match using field aliases
-    matched_key, matched_value = _find_fuzzy_match(field_name, payload)
+    # Try semantic/fuzzy match using Gemini API
+    matched_value = _find_semantic_match(field_name, payload)
     if matched_value is not None:
         return matched_value
     
