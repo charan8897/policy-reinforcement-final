@@ -229,6 +229,49 @@ async def get_opa_client() -> OPARuntimeClient:
     return create_opa_client(opa_host="0.0.0.0", opa_port=8181)
 
 
+# Field alias mapping for semantic similarity
+# Maps Rego field names to possible backend field name variations
+FIELD_ALIASES = {
+    "driverchargesapplicability": [
+        "chauffeurfees", "operatorcosts", "hiringcharges", 
+        "pilotage", "servicefees", "transportationcosts",
+        "driver_charges", "driving_costs", "chauffeur_charges"
+    ],
+    "maximumdailydistance": [
+        "maxdailydistance", "max_daily_distance", "dailydistancelimit",
+        "travel_distance", "travelcoverage"
+    ],
+    "maximumclaimpercentage": [
+        "maxclaimpercentage", "max_claim_percentage", "claimlimit",
+        "claim_percentage"
+    ],
+    "minimumoutofficehours": [
+        "minhoursout", "minimumhours", "min_out_office_hours",
+        "fieldhoursmin", "onsite_hours_minimum"
+    ]
+}
+
+
+def _find_fuzzy_match(field_name: str, payload: Dict[str, Any]) -> tuple[str, Any]:
+    """
+    Find field with fuzzy/semantic matching
+    
+    Returns: (matched_key, value) or (None, None)
+    """
+    normalized_field = _normalize_field_name(field_name)
+    
+    # Check if this field has known aliases
+    if normalized_field in FIELD_ALIASES:
+        aliases = FIELD_ALIASES[normalized_field]
+        for alias in aliases:
+            for key, value in payload.items():
+                if _normalize_field_name(key) == _normalize_field_name(alias):
+                    logger.debug(f"Fuzzy matched via alias: '{field_name}' -> '{key}' (via alias '{alias}')")
+                    return (key, value)
+    
+    return (None, None)
+
+
 def _normalize_field_name(field_name: str) -> str:
     """
     Normalize field name to lowercase with no special chars
@@ -249,10 +292,11 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
     """
     Find field value in payload with flexible matching
     
-    Tries:
+    Tries (in order):
     1. Exact match
     2. Case-insensitive match
     3. Normalized match (remove special chars, camelCase handling)
+    4. Semantic/fuzzy match using field aliases
     """
     # Try exact match first
     if field_name in payload:
@@ -272,6 +316,11 @@ def _find_field_in_payload(field_name: str, payload: Dict[str, Any]) -> Any:
         if normalized_key == normalized_target:
             logger.debug(f"Field matched (normalized): '{field_name}' (norm: {normalized_target}) -> '{key}' (norm: {normalized_key})")
             return value
+    
+    # Try semantic/fuzzy match using field aliases
+    matched_key, matched_value = _find_fuzzy_match(field_name, payload)
+    if matched_value is not None:
+        return matched_value
     
     # Not found
     logger.debug(f"Field '{field_name}' not found in payload. Payload keys: {list(payload.keys())}")
