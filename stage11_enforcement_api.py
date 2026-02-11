@@ -5,11 +5,13 @@ Enhanced with DETAILED violation reporting
 """
 
 from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 import asyncio
 import logging
+import re
 from datetime import datetime
 from opa_runtime_client import OPARuntimeClient, create_opa_client
 
@@ -20,11 +22,152 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ============================================================================
+# Rego Policy Analyzer - Parse conditions from Rego files
+# ============================================================================
+
+def parse_rego_rules(rego_file_path: str) -> Dict[str, List[str]]:
+    """
+    Parse Rego file and extract all rules with their conditions
+    
+    Args:
+        rego_file_path: Path to .rego policy file
+        
+    Returns:
+        Dict mapping rule IDs (C1, C2, etc.) to their conditions
+    """
+    try:
+        with open(rego_file_path, 'r') as f:
+            content = f.read()
+        
+        rules = {}
+        
+        # Extract rule blocks with conditions
+        rule_blocks = re.findall(
+            r'# Rule: (C\d+).*?if \{(.*?)\}',
+            content,
+            re.DOTALL
+        )
+        
+        for rule_id, conditions_block in rule_blocks:
+            # Parse conditions
+            conditions = [
+                line.strip() 
+                for line in conditions_block.split('\n') 
+                if line.strip() and not line.strip().startswith('#')
+            ]
+            rules[rule_id] = conditions
+        
+        return rules
+    except Exception as e:
+        logger.error(f"Failed to parse Rego file: {e}")
+        return {}
+
+
+def analyze_rule_failures(
+    failed_rules: List[str],
+    payload: Dict[str, Any],
+    rego_rules: Dict[str, List[str]]
+) -> Dict[str, Dict[str, Any]]:
+    """
+    Analyze why each rule failed and provide detailed reasons
+    
+    Args:
+        failed_rules: List of rule IDs that failed (e.g., ['C2', 'C3', ...])
+        payload: The input payload that was tested
+        rego_rules: Dict of parsed Rego rules from rego file
+        
+    Returns:
+        Dict with detailed failure analysis for each rule
+    """
+    failure_analysis = {}
+    
+    for rule_id in failed_rules:
+        if rule_id not in rego_rules:
+            continue
+        
+        conditions = rego_rules[rule_id]
+        rule_failures = []
+        
+        for condition in conditions:
+            # Check if condition involves input fields
+            if "input." in condition:
+                # Extract field name from condition
+                field_matches = re.findall(r'input\.(\w+)', condition)
+                
+                for field_name in field_matches:
+                    if field_name not in payload:
+                        rule_failures.append({
+                            'type': 'missing_field',
+                            'field': field_name,
+                            'condition': condition
+                        })
+                    else:
+                        # Field exists but condition might not be satisfied
+                        rule_failures.append({
+                            'type': 'field_exists',
+                            'field': field_name,
+                            'value': payload[field_name],
+                            'condition': condition
+                        })
+            else:
+                # Condition doesn't reference input
+                rule_failures.append({
+                    'type': 'constant',
+                    'condition': condition
+                })
+        
+        failure_analysis[rule_id] = rule_failures
+    
+    return failure_analysis
+
+
+def format_detailed_failure_report(
+    failure_analysis: Dict[str, Dict[str, Any]]
+) -> str:
+    """
+    Format failure analysis into human-readable report
+    
+    Args:
+        failure_analysis: Dict from analyze_rule_failures()
+        
+    Returns:
+        Formatted string report
+    """
+    report_lines = []
+    
+    for rule_id in sorted(failure_analysis.keys()):
+        report_lines.append(f"{rule_id}:")
+        failures = failure_analysis[rule_id]
+        
+        for failure in failures:
+            if failure['type'] == 'missing_field':
+                report_lines.append(f"  ✗ Missing field: {failure['field']}")
+                report_lines.append(f"    Condition requires: {failure['condition']}")
+            
+            elif failure['type'] == 'field_exists':
+                report_lines.append(f"  ✓ Field exists: {failure['field']} = {failure['value']}")
+                report_lines.append(f"    But condition '{failure['condition']}' not satisfied")
+        
+        report_lines.append("")
+    
+    return "\n".join(report_lines)
+
+
 # Initialize FastAPI app
 app = FastAPI(
     title="Policy Enforcement API",
     description="Stage 11: Real-time policy enforcement via OPA with detailed violation reporting",
     version="1.0.0"
+)
+
+# Add CORS middleware for browser access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins for testing
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
 )
 
 # ============================================================================
@@ -86,6 +229,191 @@ async def get_opa_client() -> OPARuntimeClient:
     return create_opa_client(opa_host="0.0.0.0", opa_port=8181)
 
 
+def _evaluate_condition(condition: str, payload: Dict[str, Any], field_name: str) -> str:
+    """
+    Evaluate if a condition is satisfied for the given field value
+    
+    Args:
+        condition: Rego condition string (e.g., "input.maximumdailydistance <= 50")
+        payload: Request payload dict
+        field_name: Field name to check
+        
+    Returns:
+        "passed" if condition is satisfied, "violated" if not
+    """
+    field_value = payload.get(field_name)
+    
+    try:
+        # Extract operator and expected value from condition
+        # Examples: "input.field <= 50", "input.field == 'value'", "input.field >= 200"
+        
+        if " <= " in condition:
+            parts = condition.split(" <= ")
+            expected = parts[1].strip()
+            # Remove quotes if present
+            expected = expected.strip("'\"")
+            try:
+                expected_num = float(expected)
+                return "passed" if float(field_value) <= expected_num else "violated"
+            except:
+                return "violated"
+        
+        elif " >= " in condition:
+            parts = condition.split(" >= ")
+            expected = parts[1].strip()
+            expected = expected.strip("'\"")
+            try:
+                expected_num = float(expected)
+                return "passed" if float(field_value) >= expected_num else "violated"
+            except:
+                return "violated"
+        
+        elif " < " in condition:
+            parts = condition.split(" < ")
+            expected = parts[1].strip()
+            expected = expected.strip("'\"")
+            try:
+                expected_num = float(expected)
+                return "passed" if float(field_value) < expected_num else "violated"
+            except:
+                return "violated"
+        
+        elif " > " in condition:
+            parts = condition.split(" > ")
+            expected = parts[1].strip()
+            expected = expected.strip("'\"")
+            try:
+                expected_num = float(expected)
+                return "passed" if float(field_value) > expected_num else "violated"
+            except:
+                return "violated"
+        
+        elif " == " in condition:
+            parts = condition.split(" == ")
+            expected = parts[1].strip()
+            expected = expected.strip("'\"")
+            return "passed" if str(field_value) == expected else "violated"
+        
+        else:
+            return "violated"
+    
+    except Exception as e:
+        logger.debug(f"Error evaluating condition '{condition}': {e}")
+        return "violated"
+
+
+def _build_simple_failure_report(
+    failed_rules_list: List[str],
+    payload: Dict[str, Any],
+    rego_rules: Dict[str, List[str]]
+) -> Dict[str, Any]:
+    """
+    Build detailed failure report for failed rules
+    
+    Shows rules where fields exist in payload with condition status (passed/violated).
+    Omits rules with only missing fields since those don't need analysis.
+    
+    Returns structured dict with condition evaluation results.
+    """
+    violations = {}
+    
+    for rule_id in sorted(failed_rules_list):
+        if rule_id not in rego_rules:
+            continue
+        
+        conditions = rego_rules[rule_id]
+        rule_violations = []
+        
+        for condition in conditions:
+            if "input." in condition:
+                # Extract all field names from this condition
+                field_matches = re.findall(r'input\.(\w+)', condition)
+                
+                for field_name in set(field_matches):
+                    if field_name in payload:
+                        payload_value = payload.get(field_name)
+                        status = _evaluate_condition(condition, payload, field_name)
+                        
+                        rule_violations.append({
+                            "field": field_name,
+                            "value": payload_value,
+                            "condition": condition,
+                            "status": status
+                        })
+        
+        # Only add this rule if it has at least one field that exists
+        if rule_violations:
+            violations[rule_id] = rule_violations
+    
+    return violations
+
+
+def _build_failure_report(
+    compliance_summary_data: List[Dict[str, Any]],
+    payload: Dict[str, Any],
+    rego_rules: Dict[str, List[str]]
+) -> str:
+    """
+    Build detailed failure report from compliance summary
+    
+    Shows for each failed rule:
+    - Missing fields (✗)
+    - Fields that exist but don't satisfy conditions (✓ but...)
+    - The actual conditions from the Rego file
+    """
+    report_lines = []
+    
+    if not isinstance(compliance_summary_data, list):
+        logger.warning(f"compliance_summary_data is not a list: {type(compliance_summary_data)}")
+        return ""
+    
+    for item in compliance_summary_data:
+        if not isinstance(item, dict):
+            logger.warning(f"Item in compliance_summary_data is not a dict: {type(item)}")
+            continue
+        
+        if item.get('status') == 'FAIL':
+            clause_id = item.get('clause_id')
+            details = item.get('details', {})
+            
+            # details might be a list or dict depending on source
+            if isinstance(details, list):
+                logger.warning(f"details is a list for {clause_id}, converting...")
+                expected_fields = []
+                provided_fields = []
+            else:
+                expected_fields = details.get('expected_fields', []) if isinstance(details, dict) else []
+                provided_fields = details.get('provided_fields', []) if isinstance(details, dict) else []
+            
+            # Get conditions from parsed Rego rules
+            conditions = rego_rules.get(clause_id, [])
+            
+            report_lines.append(f"{clause_id}:")
+            
+            # Check each expected field
+            for field in expected_fields:
+                if field not in provided_fields:
+                    report_lines.append(f"  ✗ Missing field: {field}")
+                    # Find the condition that uses this field
+                    for condition in conditions:
+                        if f"input.{field}" in condition:
+                            report_lines.append(f"    Condition requires: {condition}")
+                            break
+                else:
+                    # Field exists but might not satisfy condition
+                    payload_value = payload.get(field, "N/A")
+                    report_lines.append(f"  ✓ Field exists: {field} = {payload_value}")
+                    # Find the condition that uses this field
+                    for condition in conditions:
+                        if f"input.{field}" in condition:
+                            report_lines.append(f"    But condition '{condition}' not satisfied")
+                            break
+            
+            report_lines.append("")
+    
+    return "\n".join(report_lines)
+
+
 # ============================================================================
 # Health & Status Endpoints
 # ============================================================================
@@ -127,7 +455,7 @@ async def get_bundle_info(opa_client: OPARuntimeClient = Depends(get_opa_client)
 # Policy Enforcement Endpoints
 # ============================================================================
 
-@app.post("/api/enforce", response_model=EnforcementResult)
+@app.post("/api/enforce")
 async def enforce_policy(
     request: PolicyRequest,
     opa_client: OPARuntimeClient = Depends(get_opa_client)
@@ -146,6 +474,7 @@ async def enforce_policy(
     - Which policies passed/failed
     - Exact conditions that weren't met
     - What was expected vs. what was provided
+    - DETAILED rule-by-rule failure analysis
     """
     try:
         request_id = request.request_id or f"REQ_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -170,36 +499,51 @@ async def enforce_policy(
         if result.get('status') == 'error':
             raise HTTPException(status_code=500, detail=result.get('error'))
         
-        # Extract detailed violations with reasons
+        # Extract OPA results
         compliance = result.get('compliance', {})
-        violations_data = compliance.get('violations', [])
-        compliance_summary_data = compliance.get('compliance_summary', [])
-        summary = compliance.get('summary', {})
+        violations_data = compliance.get('violations', []) if isinstance(compliance, dict) else []
+        compliance_summary_data = compliance.get('compliance_summary', []) if isinstance(compliance, dict) else []
+        summary = compliance.get('summary', {}) if isinstance(compliance, dict) else {}
+        opa_result = result.get('opa_result', {})
+        
+        # Extract passed and failed rules from compliance summary
+        passed_rules = [item['clause_id'] for item in compliance_summary_data if isinstance(item, dict) and item.get('status') == 'PASS']
+        failed_rules = [item['clause_id'] for item in compliance_summary_data if isinstance(item, dict) and item.get('status') == 'FAIL']
+        
+        # Parse Rego rules and analyze failures
+        try:
+            rego_file_path = '/home/hutech/Documents/docupolicy/opa_bundles/v1.0.0/.policy/travel_policy.rego'
+            rego_rules = parse_rego_rules(rego_file_path)
+            
+            # Build detailed failure report from passed/failed rules
+            detailed_failure_report = _build_simple_failure_report(failed_rules, request_data, rego_rules)
+        except Exception as e:
+            logger.error(f"Error in Rego analysis: {e}", exc_info=True)
+            detailed_failure_report = f"Error generating detailed report: {str(e)}"
         
         # Convert to Pydantic models
-        violations = [Violation(**v) for v in violations_data]
+        violations = []
+        try:
+            violations = [Violation(**v) for v in violations_data]
+        except:
+            pass
         
         compliance_summary = []
         for item in compliance_summary_data:
             try:
-                comp = ComplianceSummary(**item)
-                compliance_summary.append(comp)
+                if isinstance(item, dict):
+                    comp = ComplianceSummary(**item)
+                    compliance_summary.append(comp)
             except:
-                # Fallback if model doesn't match exactly
                 pass
         
-        return EnforcementResult(
-            request_id=request_id,
-            status=result.get('status'),
-            compliant=result.get('compliant', False),
-            total_policies_checked=summary.get('total', 0),
-            passed=summary.get('passed', 0),
-            failed=summary.get('failed', 0),
-            pass_rate=summary.get('pass_rate', '0%'),
-            violations=violations,
-            compliance_summary=compliance_summary,
-            timestamp=datetime.now().isoformat()
-        )
+        # Return response with detailed failure analysis
+        return {
+            "request_id": request_id,
+            "status": result.get('status'),
+            "detailed_failure_analysis": detailed_failure_report,
+            "timestamp": datetime.now().isoformat()
+        }
     
     except HTTPException:
         raise
