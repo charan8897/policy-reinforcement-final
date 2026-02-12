@@ -150,30 +150,65 @@ Return 3 patterns:"""
         f_lower = field_name.lower()
         p_lower = payload_field.lower()
         
-        # Exact substring match
+        # Exact substring match (highest priority)
         if p_lower in f_lower:
             score += 100
+            return score
         
         # Word component matches
         p_words = p_lower.split('_')
+        word_matches = 0
         for word in p_words:
             if word and word in f_lower:
-                score += 25
+                score += 30
+                word_matches += 1
+        
+        # If multiple words match, boost score
+        if word_matches >= 2:
+            score += 20
         
         # Semantic matching - authority/entity/manager family
         if any(w in p_lower for w in ['authority', 'entity', 'manager', 'approval', 'validator', 'designat']):
-            if any(w in f_lower for w in ['authority', 'approval', 'designat', 'grade', 'employee', 'manager']):
+            # Prefer fields specifically about authority/approval
+            if any(w in f_lower for w in ['authority', 'approval']):
+                score += 60
+            elif any(w in f_lower for w in ['designat', 'grade', 'employee', 'manager']):
                 score += 40
         
-        # Semantic matching - limit/ceiling/amount family
-        if any(w in p_lower for w in ['ceiling', 'limit', 'maximum', 'stipend', 'ratio', 'amount', 'reimburs']):
-            if any(w in f_lower for w in ['limit', 'maximum', 'allowance', 'percentage', 'rate', 'lodg', 'board', 'claim']):
+        # Semantic matching - reimbursement/ceiling/limit/percentage family
+        if any(w in p_lower for w in ['reimburs', 'ceiling']):
+            # Prioritize percentage and claim-based limits
+            if any(w in f_lower for w in ['percentage', 'claim']):
+                score += 60
+            elif any(w in f_lower for w in ['limit', 'maximum']):
+                score += 50
+            elif any(w in f_lower for w in ['allowance', 'rate']):
+                score += 40
+        
+        # Semantic matching - limit/maximum/cap family
+        elif any(w in p_lower for w in ['limit', 'maximum', 'cap', 'threshold']):
+            if any(w in f_lower for w in ['limit', 'maximum', 'threshold']):
+                score += 60
+            elif any(w in f_lower for w in ['allowance', 'percentage']):
+                score += 40
+            elif any(w in f_lower for w in ['rate']):
+                score += 30
+        
+        # Semantic matching - stipend/ratio/amount family
+        elif any(w in p_lower for w in ['stipend', 'ratio', 'amount']):
+            if any(w in f_lower for w in ['allowance', 'lodg', 'board']):
+                score += 50
+            elif any(w in f_lower for w in ['rate', 'percentage']):
                 score += 40
         
         # Semantic matching - distance/duration/travel family
-        if any(w in p_lower for w in ['distance', 'duration', 'travel', 'threshold']):
-            if any(w in f_lower for w in ['distance', 'duration', 'maximum', 'travel', 'day', 'threshold']):
+        elif any(w in p_lower for w in ['distance', 'duration', 'travel', 'threshold']):
+            if any(w in f_lower for w in ['distance', 'duration', 'threshold']):
+                score += 60
+            elif any(w in f_lower for w in ['maximum', 'travel']):
                 score += 40
+            elif any(w in f_lower for w in ['day', 'time']):
+                score += 30
         
         return score
     
