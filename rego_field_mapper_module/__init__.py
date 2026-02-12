@@ -6,7 +6,7 @@ Version: 1.0.0
 Part of: docupolicy - Policy Reinforcement System
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "docupolicy"
 __all__ = [
     'RegoFieldMatcher',
@@ -16,7 +16,13 @@ __all__ = [
     'get_best_match',
     'get_field_info',
     'print_mapping_report',
+    'map_json_payload',
+    'map_json_payload_to_opa_input',
+    'print_json_mapping_report',
+    'payload_to_opa_conditions',
     'PayloadRegoMapper',
+    'initialize_matcher',
+    'get_matcher',
 ]
 
 # Import main classes and functions
@@ -27,6 +33,10 @@ from .rego_field_mapper import (
     get_best_match,
     get_field_info,
     print_mapping_report,
+    map_json_payload,
+    map_json_payload_to_opa_input,
+    print_json_mapping_report,
+    payload_to_opa_conditions,
     PayloadRegoMapper,
     initialize_matcher,
     get_matcher,
