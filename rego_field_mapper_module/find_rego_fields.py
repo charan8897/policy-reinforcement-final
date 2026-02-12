@@ -136,6 +136,11 @@ Return 3 patterns:"""
             patterns.append("day|hour|time|period|range")
             patterns.append("min|max|exceed")
         
+        elif any(word in payload_lower for word in ['basis', 'disbursement', 'claim']):
+            patterns.append("basis|claim|eligibility")
+            patterns.append("dependency|source")
+            patterns.append("type|standard")
+        
         else:
             # Default: use keywords
             patterns.append(keywords)
@@ -209,6 +214,15 @@ Return 3 patterns:"""
                 score += 40
             elif any(w in f_lower for w in ['day', 'time']):
                 score += 30
+        
+        # Semantic matching - basis/disbursement/claim family
+        elif any(w in p_lower for w in ['basis', 'disbursement', 'claim']):
+            if any(w in f_lower for w in ['basis', 'claim']):
+                score += 60
+            elif any(w in f_lower for w in ['eligibility', 'dependency']):
+                score += 50
+            elif any(w in f_lower for w in ['source', 'type']):
+                score += 40
         
         return score
     
