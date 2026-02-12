@@ -100,6 +100,41 @@ def get_payload_field_mappings(payload: Dict[str, Any]) -> Dict[str, Any]:
         return {}
 
 
+def simplify_field_mappings(field_mappings: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Simplify field mappings for API response
+    
+    Removes verbose fields and keeps only:
+    - payload_value: Original value from request
+    - mapped_to: The OPA input field name
+    - confidence_score: Match score (0-100)
+    - context: Where this field is used in rego
+    
+    Args:
+        field_mappings: Raw field mappings from map_json_payload
+    
+    Returns:
+        Simplified mappings suitable for API response
+    """
+    simplified = {}
+    
+    for field_name, mapping in field_mappings.items():
+        if "best_match" not in mapping:
+            # Skip fields with no matches
+            continue
+        
+        best = mapping["best_match"]
+        
+        simplified[field_name] = {
+            "payload_value": mapping.get("payload_value"),
+            "mapped_to": best.get("rego_field"),
+            "confidence_score": best.get("score"),
+            "context": best.get("context", "")
+        }
+    
+    return simplified
+
+
 # ============================================================================
 # Rego Policy Analyzer - Parse conditions from Rego files
 # ============================================================================
@@ -859,8 +894,8 @@ async def enforce_policy(
             logger.info(f"Using original request fields (no mapping available)")
         
         # Enforce policy via OPA - returns detailed violations
-         # For now using travel_policy enforcement; make policy-agnostic in future
-         result = await opa_client.enforce_travel_policy(opa_request_data)
+        # For now using travel_policy enforcement; make policy-agnostic in future
+        result = await opa_client.enforce_travel_policy(opa_request_data)
         
         if result.get('status') == 'error':
             raise HTTPException(status_code=500, detail=result.get('error'))
@@ -903,7 +938,7 @@ async def enforce_policy(
             except:
                 pass
         
-        # Return response with detailed failure analysis and field mappings
+        # Return response with detailed failure analysis and simplified field mappings
         response = {
             "request_id": request_id,
             "status": result.get('status'),
@@ -911,9 +946,11 @@ async def enforce_policy(
             "timestamp": datetime.now().isoformat()
         }
         
-        # Add field mappings if available
+        # Add simplified field mappings if available
         if field_mappings:
-            response["payload_field_mappings"] = field_mappings
+            simplified_mappings = simplify_field_mappings(field_mappings)
+            if simplified_mappings:
+                response["payload_field_mappings"] = simplified_mappings
         
         return response
     
