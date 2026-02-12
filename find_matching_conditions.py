@@ -197,16 +197,46 @@ def find_matching_conditions(payload_field):
 def main():
     if len(sys.argv) < 2:
         print("Usage: python find_matching_conditions.py <payload_field>")
+        print("       python find_matching_conditions.py '{\"payload_field\": \"description\"}'")
         print()
         print("Examples:")
         print("  python find_matching_conditions.py qualification_standard")
-        print("  python find_matching_conditions.py assigned_validator")
-        print("  python find_matching_conditions.py authorizing_entity")
-        print("  python find_matching_conditions.py distance_threshold")
+        print("  python find_matching_conditions.py '{\"qualification_standard\": \"Job band and grade\"}'")
+        print("  python find_matching_conditions.py '{\"assigned_validator\": \"Person who validates the request\"}'")
         sys.exit(1)
     
-    payload_field = sys.argv[1]
-    result = find_matching_conditions(payload_field)
+    # Parse input - could be string or JSON
+    input_arg = sys.argv[1]
+    payload_field = None
+    field_description = None
+    
+    # Try to parse as JSON
+    if input_arg.startswith('{'):
+        try:
+            input_json = json.loads(input_arg)
+            if isinstance(input_json, dict) and len(input_json) > 0:
+                # Get first key-value pair
+                payload_field = list(input_json.keys())[0]
+                field_description = input_json[payload_field]
+                print(f"[*] Parsed JSON input:")
+                print(f"    Payload Field: {payload_field}")
+                print(f"    Description: {field_description}\n")
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON format")
+            sys.exit(1)
+    else:
+        # Plain string argument
+        payload_field = input_arg
+    
+    # Use both field name and description for better matching
+    if field_description:
+        # Combine field name and description for richer semantic context
+        search_query = f"{payload_field} {field_description}"
+        print(f"[*] Using combined search: \"{search_query}\"\n")
+    else:
+        search_query = payload_field
+    
+    result = find_matching_conditions(search_query)
     
     print(f"\n{'='*70}")
     print("📋 SUMMARY")
