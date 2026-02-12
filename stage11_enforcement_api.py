@@ -12,8 +12,23 @@ from typing import Optional, Dict, Any, List
 import asyncio
 import logging
 import re
+import json
+import sys
+from pathlib import Path
 from datetime import datetime
 from opa_runtime_client import OPARuntimeClient, create_opa_client
+
+# Add rego_field_mapper to path
+rego_mapper_path = Path(__file__).parent / "rego_field_mapper_module"
+if rego_mapper_path.exists():
+    sys.path.insert(0, str(rego_mapper_path))
+    try:
+        from rego_field_mapper import map_json_payload, map_json_payload_to_opa_input
+        REGO_MAPPER_AVAILABLE = True
+    except ImportError:
+        REGO_MAPPER_AVAILABLE = False
+else:
+    REGO_MAPPER_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(
@@ -21,6 +36,69 @@ logging.basicConfig(
     format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# ============================================================================
+# Rego Field Mapper - Map payload fields to OPA input.xxx conditions
+# ============================================================================
+
+def map_payload_to_opa_conditions(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Map payload fields to OPA input.xxx field names using rego_field_mapper
+    
+    Converts semantic payload field names to actual Rego condition fields.
+    For example: "authorizing_entity" → "input.validationauthority"
+    
+    Args:
+        payload: The request payload with semantic field names
+    
+    Returns:
+        Mapped payload with OPA input.xxx field names, or original if mapping unavailable
+    """
+    if not REGO_MAPPER_AVAILABLE:
+        logger.warning("Rego field mapper not available, using original payload")
+        return payload
+    
+    try:
+        # Use the mapper to convert payload field names to OPA input fields
+        mapped_payload = map_json_payload_to_opa_input(payload)
+        
+        if mapped_payload:
+            logger.info(f"Mapped payload fields: {list(mapped_payload.keys())}")
+            return mapped_payload
+        else:
+            logger.warning("No mappings found, returning original payload")
+            return payload
+    
+    except Exception as e:
+        logger.error(f"Error mapping payload: {e}")
+        return payload
+
+
+def get_payload_field_mappings(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Get detailed mapping information for each payload field
+    
+    Returns mapping details including:
+    - Original payload field name
+    - Matched OPA input field(s)
+    - Match scores
+    - Field context
+    
+    Args:
+        payload: The request payload
+    
+    Returns:
+        Detailed mapping information for each field
+    """
+    if not REGO_MAPPER_AVAILABLE:
+        return {}
+    
+    try:
+        return map_json_payload(payload, top_k=3)
+    except Exception as e:
+        logger.error(f"Error getting field mappings: {e}")
+        return {}
+
 
 # ============================================================================
 # Rego Policy Analyzer - Parse conditions from Rego files
@@ -522,6 +600,55 @@ def _evaluate_condition(condition: str, payload: Dict[str, Any], field_name: str
         return "violated"
 
 
+def _get_matched_payload_key(field_name: str, payload: Dict[str, Any], condition: str = "") -> str:
+    """
+    Determine which payload key was matched for a rego field
+    Returns the actual payload key name that was matched by _find_field_in_payload
+    """
+    # Try exact match first
+    if field_name in payload:
+        return field_name
+    
+    # Try case-insensitive match
+    field_lower = field_name.lower()
+    for key in payload.keys():
+        if key.lower() == field_lower:
+            return key
+    
+    # Try normalized match
+    normalized_target = _normalize_field_name(field_name)
+    for key in payload.keys():
+        if _normalize_field_name(key) == normalized_target:
+            return key
+    
+    # Try semantic match with type constraint
+    expected_keywords = _extract_keywords(field_name)
+    expected_type = _infer_value_type(condition) if condition else 'unknown'
+    
+    if expected_keywords:
+        best_match_key = None
+        best_score = 0.0
+        
+        for key, value in payload.items():
+            payload_value_type = _get_payload_value_type(value)
+            
+            if expected_type != 'unknown' and payload_value_type != 'unknown':
+                if expected_type != payload_value_type:
+                    continue
+            
+            payload_keywords = _extract_keywords(key)
+            similarity_score = _calculate_keyword_similarity(expected_keywords, payload_keywords)
+            
+            if similarity_score > best_score:
+                best_score = similarity_score
+                best_match_key = key
+        
+        if best_match_key is not None and best_score > 0.25:
+            return best_match_key
+    
+    return "NOT_FOUND"
+
+
 def _build_simple_failure_report(
     failed_rules_list: List[str],
     payload: Dict[str, Any],
@@ -531,7 +658,7 @@ def _build_simple_failure_report(
     Build detailed failure report for failed rules
     
     Shows rules where fields exist in payload with condition status (passed/violated).
-    Omits rules with only missing fields since those don't need analysis.
+    Reports BOTH rego field name (expected) and matched payload field name (actual source).
     
     Returns structured dict with condition evaluation results.
     """
@@ -554,9 +681,12 @@ def _build_simple_failure_report(
                     payload_value = _find_field_in_payload(field_name, payload, condition)
                     if payload_value is not None:
                         status = _evaluate_condition(condition, payload, field_name)
+                        # Get the actual payload key that was matched
+                        matched_payload_key = _get_matched_payload_key(field_name, payload, condition)
                         
                         rule_violations.append({
-                            "field": field_name,
+                            "rego_field": field_name,
+                            "payload_field": matched_payload_key,
                             "value": payload_value,
                             "condition": condition,
                             "status": status
@@ -691,11 +821,15 @@ async def enforce_policy(
     - Nested JSON: {employee: {...}, travel: {...}, ...}
     - Any custom structure matching your policy
     
+    Can accept semantic payload field names which are automatically mapped to OPA
+    input.xxx conditions (e.g., "authorizing_entity" → "input.validationauthority")
+    
     Returns detailed reasons WHY policies failed:
     - Which policies passed/failed
     - Exact conditions that weren't met
     - What was expected vs. what was provided
     - DETAILED rule-by-rule failure analysis
+    - Payload field mappings (if rego_field_mapper available)
     """
     try:
         request_id = request.request_id or f"REQ_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -711,11 +845,22 @@ async def enforce_policy(
         request_data.pop('policy_type', None)
         request_data.pop('submitted_date', None)
         
-        logger.info(f"Request fields: {list(request_data.keys())}")
+        logger.info(f"Original request fields: {list(request_data.keys())}")
+        
+        # Get field mappings if rego_field_mapper is available
+        field_mappings = get_payload_field_mappings(request_data)
+        
+        # Map payload fields to OPA conditions if available
+        if REGO_MAPPER_AVAILABLE and field_mappings:
+            opa_request_data = map_payload_to_opa_conditions(request_data)
+            logger.info(f"Mapped request fields: {list(opa_request_data.keys())}")
+        else:
+            opa_request_data = request_data
+            logger.info(f"Using original request fields (no mapping available)")
         
         # Enforce policy via OPA - returns detailed violations
-        # For now using travel_policy enforcement; make policy-agnostic in future
-        result = await opa_client.enforce_travel_policy(request_data)
+         # For now using travel_policy enforcement; make policy-agnostic in future
+         result = await opa_client.enforce_travel_policy(opa_request_data)
         
         if result.get('status') == 'error':
             raise HTTPException(status_code=500, detail=result.get('error'))
@@ -758,13 +903,19 @@ async def enforce_policy(
             except:
                 pass
         
-        # Return response with detailed failure analysis
-        return {
+        # Return response with detailed failure analysis and field mappings
+        response = {
             "request_id": request_id,
             "status": result.get('status'),
             "detailed_failure_analysis": detailed_failure_report,
             "timestamp": datetime.now().isoformat()
         }
+        
+        # Add field mappings if available
+        if field_mappings:
+            response["payload_field_mappings"] = field_mappings
+        
+        return response
     
     except HTTPException:
         raise
