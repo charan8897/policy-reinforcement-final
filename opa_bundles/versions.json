@@ -1,0 +1,34 @@
+{
+  "active": "v1.0.1",
+  "previous": "v1.0.0",
+  "all_versions": [
+    "v1.0.0",
+    "v1.0.1"
+  ],
+  "created": "2026-02-13T11:48:22.298680Z",
+  "latest": "1.0.1",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "created": "2026-02-13T11:48:22.295661Z",
+      "status": "active",
+      "policy_type": "travel_policy",
+      "rules_count": 55,
+      "hash": "2dd09a893115a5fa795514b3a99ddc775b1f5b35c394380c24724be18b600625",
+      "document_id": "travel_policy_20260213_114822",
+      "filesystem_path": "v1.0.0",
+      "bundle_name": "policy_travel_policy_20260213_114822"
+    },
+    {
+      "version": "1.0.1",
+      "created": "2026-02-13T11:54:42.961672Z",
+      "status": "active",
+      "policy_type": "travel_policy",
+      "rules_count": 55,
+      "hash": "852dfd18b48d6c320df64890dbd132e17e70f2415e768be8bc976968e8be333d",
+      "document_id": "travel_policy_20260213_115442",
+      "filesystem_path": "v1.0.1",
+      "bundle_name": "policy_travel_policy_20260213_115442"
+    }
+  ]
+}

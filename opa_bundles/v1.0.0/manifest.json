@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "rules_count": 55,
+  "created": "2026-02-13T11:48:22.295661Z",
+  "hash": "sha256:2dd09a893115a5fa795514b3a99ddc775b1f5b35c394380c24724be18b600625",
+  "policy_type": "travel_policy",
+  "metadata": {
+    "bundle_name": "policy_travel_policy_20260213_114822",
+    "rego_version": "v1",
+    "source_stage": 9,
+    "destination_stage": 10,
+    "document_id": "travel_policy_20260213_114822"
+  }
+}
