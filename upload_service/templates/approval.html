@@ -805,17 +805,18 @@
                 btn.textContent = '🔧 Generate OPA Bundle';
                 
                 if (data.success) {
+                     const version = data.data.bundle_version || 'unknown';
                      const gitCommit = data.data.git_commit ? `<br><small>📦 Git commit: <code>${data.data.git_commit.substring(0, 7)}</code></small>` : '';
                      const gitStatus = data.data.git_status === 'committed' ? '✓ Committed to Git' : '';
                      statusDiv.innerHTML = `
                          <div style="color: #28a745; padding: 10px; background: rgba(40, 167, 69, 0.1); border-radius: 4px;">
-                             ✓ OPA Bundle generated successfully!<br>
-                             <small>📁 Bundle location: ${data.data.bundle_file}</small>
+                             ✓ OPA Bundle v${version} generated successfully!<br>
+                             <small>📁 Bundle path: ${data.data.bundle_file}</small>
                              ${gitCommit}
                              ${gitStatus ? `<br><small>🔗 ${gitStatus}</small>` : ''}
                          </div>
                      `;
-                     showAlert('✓ OPA Bundle generated & committed to Git!', 'success');
+                     showAlert(`✓ OPA Bundle v${version} generated & committed to Git!`, 'success');
                 } else {
                     statusDiv.innerHTML = `
                         <div style="color: #dc3545; padding: 10px; background: rgba(220, 53, 69, 0.1); border-radius: 4px;">

@@ -1361,6 +1361,15 @@ def generate_opa_bundle():
             if result.returncode == 0:
                 app_logger.info(f"Stage 10 completed successfully")
                 
+                # Extract bundle version from output
+                import re
+                version_match = re.search(r'Bundle Version: ([\d.]+)', result.stdout)
+                bundle_version = version_match.group(1) if version_match else 'unknown'
+                
+                # Extract bundle path from output
+                path_match = re.search(r'Filesystem Path: (.*?)(?:\n|$)', result.stdout)
+                bundle_path = path_match.group(1).strip() if path_match else f'{OUTPUT_DIR}/opa_bundles/v{bundle_version}/'
+                
                 # Commit bundle to Git
                 git_result = commit_bundle_to_git(OUTPUT_DIR, result.stdout)
                 
@@ -1369,7 +1378,8 @@ def generate_opa_bundle():
                     data={
                         'message': 'OPA bundle generated successfully',
                         'output': result.stdout[-500:] if result.stdout else '',  # Last 500 chars
-                        'bundle_file': f'{OUTPUT_DIR}/opa_bundles/v1.0.0/',
+                        'bundle_version': bundle_version,
+                        'bundle_file': bundle_path,
                         'git_commit': git_result.get('commit_hash') if git_result.get('success') else None,
                         'git_status': 'committed' if git_result.get('success') else 'pending'
                     },
