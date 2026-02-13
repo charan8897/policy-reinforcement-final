@@ -191,29 +191,35 @@
 
         .button-group {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
+            gap: 10px;
+            margin-top: 12px;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 8px 16px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            flex: 1;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 11px;
         }
 
         .btn-approve {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #28a745;
             color: white;
+            flex: 1;
         }
 
         .btn-approve:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
 
         .btn-approve:disabled {
@@ -223,15 +229,15 @@
         }
 
         .btn-decline {
-            background: #e9ecef;
-            color: #333;
-            border: 2px solid #ddd;
+            background: #dc3545;
+            color: white;
+            flex: 1;
         }
 
         .btn-decline:hover {
-            background: #dee2e6;
-            border-color: #adb5bd;
-            transform: translateY(-2px);
+            background: #c82333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
         }
 
         .btn-decline:disabled {
@@ -418,29 +424,10 @@
                     <div class="metadata-label">Generated:</div>
                     <div class="metadata-value" id="metadataGenerated">-</div>
                 </div>
-            </div>
-
-            <!-- Approval Form -->
-            <div class="form-section">
-                <h3 style="margin-bottom: 20px;">Approval Decision</h3>
-
-                <div class="form-group">
-                    <label class="form-label">Your Name/Email</label>
-                    <input type="email" id="approverEmail" class="form-input" placeholder="your.email@company.com" required>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Approval Notes (Optional)</label>
-                    <textarea id="approvalNotes" class="form-textarea" placeholder="Add any notes about this approval..."></textarea>
                 </div>
-
-                <div class="button-group">
-                    <button class="btn btn-approve" id="approveBtn" onclick="approvePolicies()">Approve All Policies</button>
-                    <button class="btn btn-decline" id="declineBtn" onclick="declinePolicies()">Decline & Review</button>
                 </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         let policiesData = null;
@@ -601,157 +588,156 @@
             document.getElementById('metadataGenerated').textContent = new Date(metadata.generated).toLocaleString();
 
             // Render policies list with human-readable explanations
-            const policiesList = document.getElementById('policiesList');
-            policiesList.innerHTML = policies.map(policy => {
-                const readable = policy.readable || {};
-                const constraint = (policy.what && policy.what.constraint) || {};
-                const whenConditions = policy.when || [];
-                const outcome = policy.outcome || {};
+             const policiesList = document.getElementById('policiesList');
+             policiesList.innerHTML = policies.map(policy => {
+                 const readable = policy.readable || {};
+                 const constraint = (policy.what && policy.what.constraint) || {};
+                 const whenConditions = policy.when || [];
+                 const outcome = policy.outcome || {};
+                 const approvalStatus = policy.approval_status || 'pending_approval';
+                 const policyId = policy.policyId || 'UNKNOWN';
 
-                return `
-                <div class="policy-item">
-                    <div class="policy-header">
-                        <div class="policy-id">${policy.policyId || 'UNKNOWN'}</div>
-                    </div>
-                    
-                    ${policy.core_attributes && policy.core_attributes.text_clarified ? `
-                        <div style="margin-bottom: 12px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px;">
-                            <div style="font-size: 12px; color: #856404; font-weight: 500; margin-bottom: 6px;">📄 Policy Clause</div>
-                            <div style="font-size: 12px; color: #665d00; line-height: 1.5;">${policy.core_attributes.text_clarified}</div>
-                        </div>
-                    ` : ''}
-                    
-                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 4px;">
-                        <div style="font-size: 14px; color: #333; font-weight: 500; margin-bottom: 8px;">📖 Business Rule</div>
-                        <div style="font-size: 13px; color: #555; line-height: 1.6;">
-                            <strong>${readable.when_text || 'Always applies'}</strong><br>
-                            Then: <strong>${readable.constraint || 'No constraint defined'}</strong>
-                        </div>
-                    </div>
-                    
-                    ${readable.explanation ? `
-                        <div style="font-size: 12px; color: #666; padding: 10px; background: #f5f5f5; border-radius: 4px; margin-bottom: 10px; white-space: pre-wrap;">
-                            ${readable.explanation}
-                        </div>
-                    ` : ''}
-                    
-                    <details style="margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 4px; border: 1px solid #ddd;">
-                        <summary style="cursor: pointer; color: #667eea; font-weight: bold;">🔧 Technical DSL (Advanced)</summary>
-                        <div style="margin-top: 10px; font-family: monospace; font-size: 11px; color: #666; background: #fff; padding: 8px; border-radius: 3px;">
-                            <div><strong>Policy ID:</strong> ${policy.policyId || 'UNKNOWN'}</div>
-                            ${constraint && constraint.fact ? `
-                                <div><strong>Constraint:</strong> ${constraint.fact} ${constraint.operator || ''} ${constraint.value || ''}</div>
-                            ` : '<div><strong>Constraint:</strong> Not defined</div>'}
-                            ${whenConditions && whenConditions.length > 0 ? `
-                                <div><strong>Conditions:</strong> ${whenConditions.map(w => `${w.fact} ${w.operator} ${w.value}`).join(', ')}</div>
-                            ` : ''}
-                            ${outcome.message ? `<div><strong>Message:</strong> ${outcome.message}</div>` : ''}
-                        </div>
-                    </details>
-                </div>
-            `}).join('');
+                 return `
+                 <div class="policy-item">
+                     <div class="policy-header">
+                         <div class="policy-id">${policyId}</div>
+                     </div>
+                     
+                     ${policy.core_attributes && policy.core_attributes.text_clarified ? `
+                         <div style="margin-bottom: 12px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; border-radius: 4px;">
+                             <div style="font-size: 12px; color: #856404; font-weight: 500; margin-bottom: 6px;">📄 Policy Clause</div>
+                             <div style="font-size: 12px; color: #665d00; line-height: 1.5;">${policy.core_attributes.text_clarified}</div>
+                         </div>
+                     ` : ''}
+                     
+                     <div style="margin-bottom: 15px; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 4px;">
+                         <div style="font-size: 14px; color: #333; font-weight: 500; margin-bottom: 8px;">📖 Business Rule</div>
+                         <div style="font-size: 13px; color: #555; line-height: 1.6;">
+                             <strong>${readable.when_text || 'Always applies'}</strong><br>
+                             Then: <strong>${readable.constraint || 'No constraint defined'}</strong>
+                         </div>
+                     </div>
+                     
+                     ${readable.explanation ? `
+                         <div style="font-size: 12px; color: #666; padding: 10px; background: #f5f5f5; border-radius: 4px; margin-bottom: 10px; white-space: pre-wrap;">
+                             ${readable.explanation}
+                         </div>
+                     ` : ''}
+                     
+                     <details style="margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 4px; border: 1px solid #ddd;">
+                         <summary style="cursor: pointer; color: #667eea; font-weight: bold;">🔧 Technical DSL (Advanced)</summary>
+                         <div style="margin-top: 10px; font-family: monospace; font-size: 11px; color: #666; background: #fff; padding: 8px; border-radius: 3px;">
+                             <div><strong>Policy ID:</strong> ${policyId}</div>
+                             ${constraint && constraint.fact ? `
+                                 <div><strong>Constraint:</strong> ${constraint.fact} ${constraint.operator || ''} ${constraint.value || ''}</div>
+                             ` : '<div><strong>Constraint:</strong> Not defined</div>'}
+                             ${whenConditions && whenConditions.length > 0 ? `
+                                 <div><strong>Conditions:</strong> ${whenConditions.map(w => `${w.fact} ${w.operator} ${w.value}`).join(', ')}</div>
+                             ` : ''}
+                             ${outcome.message ? `<div><strong>Message:</strong> ${outcome.message}</div>` : ''}
+                         </div>
+                     </details>
+
+                     <!-- Per-Clause Approval Buttons -->
+                     <div class="button-group" style="margin-top: 12px;">
+                         <button class="btn btn-approve btn-small" onclick="approveSingleClause('${policyId}')">Approve</button>
+                         <button class="btn btn-decline btn-small" onclick="rejectSingleClause('${policyId}')">Reject</button>
+                     </div>
+                     <div style="margin-top: 8px; font-size: 11px; color: #666;">
+                         Status: <strong>${approvalStatus}</strong>
+                     </div>
+                 </div>
+             `}).join('');
         }
 
-        function approvePolicies() {
-            const email = document.getElementById('approverEmail').value.trim();
-            const notes = document.getElementById('approvalNotes').value.trim();
+        function approveSingleClause(policyId) {
+             const email = prompt('Enter your email/name for approval:');
+             if (!email) return;
 
-            if (!email) {
-                showAlert('Please enter your email address', 'error');
-                return;
-            }
+             const notes = prompt('Add approval notes (optional):', '');
 
-            if (!policiesData) {
-                showAlert('No policies loaded', 'error');
-                return;
-            }
+             const btn = event.target;
+             btn.disabled = true;
+             btn.textContent = 'Approving...';
 
-            const approveBtn = document.getElementById('approveBtn');
-            approveBtn.disabled = true;
-            approveBtn.textContent = 'Approving...';
+             const payload = {
+                 policy_id: policyId,
+                 approved_by: email,
+                 approval_notes: notes || ''
+             };
 
-            const payload = {
-                policies: policiesData.policies,
-                metadata: policiesData.metadata,
-                approved_by: email,
-                notes: notes
-            };
+             fetch('/api/v1/approve-clause', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify(payload)
+             })
+             .then(response => response.json())
+             .then(data => {
+                 btn.disabled = false;
+                 btn.textContent = 'Approve';
 
-            fetch('/api/v1/approve-policies', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                approveBtn.disabled = false;
-                approveBtn.textContent = 'Approve All Policies';
+                 if (data.success) {
+                     showAlert(`✓ ${policyId} approved successfully!`, 'success');
+                     setTimeout(() => {
+                         location.reload();
+                     }, 1500);
+                 } else {
+                     showAlert(data.error || `Failed to approve ${policyId}`, 'error');
+                 }
+             })
+             .catch(error => {
+                 btn.disabled = false;
+                 btn.textContent = 'Approve';
+                 showAlert('Error: ' + error.message, 'error');
+             });
+         }
 
-                if (data.success) {
-                    showAlert(`✓ Successfully approved and saved ${data.data.saved_count} policies to MongoDB!`, 'success');
-                    setTimeout(() => {
-                        // Redirect or reset
-                        window.location.href = '/';
-                    }, 2000);
-                } else {
-                    showAlert(data.error || 'Failed to approve policies', 'error');
-                }
-            })
-            .catch(error => {
-                approveBtn.disabled = false;
-                approveBtn.textContent = 'Approve All Policies';
-                showAlert('Error: ' + error.message, 'error');
-            });
-        }
+         function rejectSingleClause(policyId) {
+             const reason = prompt(`Reason for rejecting ${policyId}:`, '');
+             if (reason === null) return;
 
-        function declinePolicies() {
-            const reason = prompt('Please provide a reason for declining:', '');
-            if (reason === null) return; // User cancelled
+             const email = prompt('Enter your email/name for rejection:');
+             if (!email) return;
 
-            const email = document.getElementById('approverEmail').value.trim();
-            if (!email) {
-                showAlert('Please enter your email address first', 'error');
-                return;
-            }
+             const btn = event.target;
+             btn.disabled = true;
+             btn.textContent = 'Rejecting...';
 
-            const declineBtn = document.getElementById('declineBtn');
-            declineBtn.disabled = true;
-            declineBtn.textContent = 'Declining...';
+             const payload = {
+                 policy_id: policyId,
+                 rejected_by: email,
+                 rejection_reason: reason || 'Not specified'
+             };
 
-            const payload = {
-                declined_by: email,
-                reason: reason || 'Not specified'
-            };
+             fetch('/api/v1/reject-clause', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify(payload)
+             })
+             .then(response => response.json())
+             .then(data => {
+                 btn.disabled = false;
+                 btn.textContent = 'Reject';
 
-            fetch('/api/v1/decline-policies', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                declineBtn.disabled = false;
-                declineBtn.textContent = 'Decline & Review';
-
-                if (data.success) {
-                    showAlert('✓ Policies declined and logged. You can make changes and resubmit.', 'success');
-                    setTimeout(() => {
-                        window.location.href = '/';
-                    }, 2000);
-                } else {
-                    showAlert(data.error || 'Failed to decline policies', 'error');
-                }
-            })
-            .catch(error => {
-                declineBtn.disabled = false;
-                declineBtn.textContent = 'Decline & Review';
-                showAlert('Error: ' + error.message, 'error');
-            });
-        }
+                 if (data.success) {
+                     showAlert(`✓ ${policyId} rejected and logged for review!`, 'success');
+                     setTimeout(() => {
+                         location.reload();
+                     }, 1500);
+                 } else {
+                     showAlert(data.error || `Failed to reject ${policyId}`, 'error');
+                 }
+             })
+             .catch(error => {
+                 btn.disabled = false;
+                 btn.textContent = 'Reject';
+                 showAlert('Error: ' + error.message, 'error');
+             });
+         }
 
         function showAlert(message, type) {
             const alertId = type === 'success' ? 'alertSuccess' : 'alertError';

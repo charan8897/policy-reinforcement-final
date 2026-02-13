@@ -7,7 +7,7 @@ from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 from datetime import datetime
 import logging
 import uuid
-from config import Config
+from upload_service.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -471,6 +471,11 @@ class PipelineStageManager:
         try:
             stage_id = f"stage_{stage_number}_{uuid.uuid4().hex[:8]}"
             
+            # Add per-clause/policy approval tracking for stage 8 (normalize-policies)
+            processed_output = stage_output
+            if stage_number == 8 and isinstance(stage_output, dict) and 'policies' in stage_output:
+                processed_output = self._add_clause_approval_tracking(stage_output)
+            
             # Create stage record
             stage_record = {
                 'stage_id': stage_id,
@@ -479,7 +484,7 @@ class PipelineStageManager:
                 'stage_number': stage_number,
                 'stage_name': stage_name,
                 'status': 'pending_approval',
-                'output': stage_output,
+                'output': processed_output,
                 'metadata': {
                     'created_by': 'policy_validator',
                     'stage_class': stage_name.replace('-', '_').title()
@@ -512,6 +517,30 @@ class PipelineStageManager:
                 'created_at': None,
                 'error': str(e)
             }
+    
+    def _add_clause_approval_tracking(self, stage_output):
+        """
+        Add per-clause approval tracking to stage 8 output.
+        
+        Args:
+            stage_output (dict): The stage 8 output containing policies
+        
+        Returns:
+            dict: Modified output with approval tracking per policy/clause
+        """
+        if 'policies' not in stage_output:
+            return stage_output
+        
+        output_copy = stage_output.copy()
+        for policy in output_copy.get('policies', []):
+            # Add approval status to each policy/clause
+            policy['approval_status'] = 'pending_approval'
+            policy['approved_at'] = None
+            policy['approved_by'] = None
+            policy['approval_notes'] = None
+            policy['policy_id'] = policy.get('policyId')  # Ensure policyId is also in policy_id
+        
+        return output_copy
     
     def get_stage(self, stage_id):
         """
@@ -637,4 +666,76 @@ class PipelineStageManager:
             
         except Exception as e:
             logger.error(f"Stage rejection failed: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    def approve_clause(self, stage_id, policy_id, approved_by, approval_notes=None):
+        """
+        Approve an individual clause/policy within a stage.
+        
+        Args:
+            stage_id (str): Stage identifier
+            policy_id (str): Policy ID to approve (e.g., POLICY_C9)
+            approved_by (str): User who approved
+            approval_notes (str): Optional approval notes
+        
+        Returns:
+            dict: {'success': bool, 'error': str}
+        """
+        
+        try:
+            result = self.stages_collection.update_one(
+                {'stage_id': stage_id, 'output.policies.policyId': policy_id},
+                {'$set': {
+                    'output.$.approval_status': 'approved',
+                    'output.$.approved_at': datetime.utcnow(),
+                    'output.$.approved_by': approved_by,
+                    'output.$.approval_notes': approval_notes or '',
+                    'updated_at': datetime.utcnow()
+                }}
+            )
+            
+            if result.matched_count == 0:
+                return {'success': False, 'error': f'Clause {policy_id} not found in stage {stage_id}'}
+            
+            logger.info(f"Clause approved: {policy_id} in stage {stage_id} by {approved_by}")
+            return {'success': True, 'error': None}
+            
+        except Exception as e:
+            logger.error(f"Clause approval failed: {str(e)}")
+            return {'success': False, 'error': str(e)}
+    
+    def reject_clause(self, stage_id, policy_id, rejected_by, rejection_reason):
+        """
+        Reject an individual clause/policy within a stage.
+        
+        Args:
+            stage_id (str): Stage identifier
+            policy_id (str): Policy ID to reject (e.g., POLICY_C9)
+            rejected_by (str): User who rejected
+            rejection_reason (str): Reason for rejection
+        
+        Returns:
+            dict: {'success': bool, 'error': str}
+        """
+        
+        try:
+            result = self.stages_collection.update_one(
+                {'stage_id': stage_id, 'output.policies.policyId': policy_id},
+                {'$set': {
+                    'output.$.approval_status': 'rejected',
+                    'output.$.rejected_at': datetime.utcnow(),
+                    'output.$.rejected_by': rejected_by,
+                    'output.$.rejection_reason': rejection_reason,
+                    'updated_at': datetime.utcnow()
+                }}
+            )
+            
+            if result.matched_count == 0:
+                return {'success': False, 'error': f'Clause {policy_id} not found in stage {stage_id}'}
+            
+            logger.info(f"Clause rejected: {policy_id} in stage {stage_id} by {rejected_by}")
+            return {'success': True, 'error': None}
+            
+        except Exception as e:
+            logger.error(f"Clause rejection failed: {str(e)}")
             return {'success': False, 'error': str(e)}

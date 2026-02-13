@@ -1064,9 +1064,141 @@ def decline_policies():
         )
 
 
-# ============================================================================
-# ERROR HANDLERS
-# ============================================================================
+@app.route('/api/v1/approve-clause', methods=['POST'])
+def approve_clause():
+    """
+    Approve a single clause/policy
+    
+    Request:
+    {
+        "policy_id": "POLICY_C9",
+        "approved_by": "user@example.com",
+        "approval_notes": "Looks good"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "policy_id": "POLICY_C9",
+            "status": "approved"
+        }
+    }
+    """
+    try:
+        from upload_service.database import DatabaseService
+        
+        data = request.get_json()
+        policy_id = data.get('policy_id')
+        approved_by = data.get('approved_by')
+        approval_notes = data.get('approval_notes', '')
+        
+        if not policy_id or not approved_by:
+            return format_response(False, error='Missing policy_id or approved_by', status_code=400)
+        
+        # Get the current stage 8
+        db = DatabaseService()
+        stage8 = db.stages_collection.findOne({'stage_name': 'normalize-policies'})
+        
+        if not stage8:
+            return format_response(False, error='No normalized policies found', status_code=404)
+        
+        # Approve the clause
+        result = db.approve_clause(
+            stage_id=stage8['stage_id'],
+            policy_id=policy_id,
+            approved_by=approved_by,
+            approval_notes=approval_notes
+        )
+        
+        if result['success']:
+            app_logger.info(f"Clause {policy_id} approved by {approved_by}")
+            return format_response(
+                True,
+                data={
+                    'policy_id': policy_id,
+                    'status': 'approved',
+                    'timestamp': datetime.utcnow().isoformat()
+                },
+                status_code=200
+            )
+        else:
+            return format_response(False, error=result['error'], status_code=400)
+    
+    except Exception as e:
+        app_logger.error(f"Approve clause error: {str(e)}")
+        return format_response(False, error=f'Approval failed: {str(e)}', status_code=500)
+
+
+@app.route('/api/v1/reject-clause', methods=['POST'])
+def reject_clause():
+    """
+    Reject a single clause/policy
+    
+    Request:
+    {
+        "policy_id": "POLICY_C9",
+        "rejected_by": "user@example.com",
+        "rejection_reason": "Needs revision"
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "policy_id": "POLICY_C9",
+            "status": "rejected"
+        }
+    }
+    """
+    try:
+        from upload_service.database import DatabaseService
+        
+        data = request.get_json()
+        policy_id = data.get('policy_id')
+        rejected_by = data.get('rejected_by')
+        rejection_reason = data.get('rejection_reason', '')
+        
+        if not policy_id or not rejected_by:
+            return format_response(False, error='Missing policy_id or rejected_by', status_code=400)
+        
+        # Get the current stage 8
+        db = DatabaseService()
+        stage8 = db.stages_collection.findOne({'stage_name': 'normalize-policies'})
+        
+        if not stage8:
+            return format_response(False, error='No normalized policies found', status_code=404)
+        
+        # Reject the clause
+        result = db.reject_clause(
+            stage_id=stage8['stage_id'],
+            policy_id=policy_id,
+            rejected_by=rejected_by,
+            rejection_reason=rejection_reason
+        )
+        
+        if result['success']:
+            app_logger.info(f"Clause {policy_id} rejected by {rejected_by}: {rejection_reason}")
+            return format_response(
+                True,
+                data={
+                    'policy_id': policy_id,
+                    'status': 'rejected',
+                    'timestamp': datetime.utcnow().isoformat()
+                },
+                status_code=200
+            )
+        else:
+            return format_response(False, error=result['error'], status_code=400)
+    
+    except Exception as e:
+        app_logger.error(f"Reject clause error: {str(e)}")
+        return format_response(False, error=f'Rejection failed: {str(e)}', status_code=500)
+
+
+    # ============================================================================
+    # ERROR HANDLERS
+    # ============================================================================
 
 @app.errorhandler(404)
 def not_found(error):
