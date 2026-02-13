@@ -688,17 +688,21 @@ class PipelineStageManager:
         
         try:
             result = self.stages_collection.update_one(
-                {'stage_id': stage_id, 'output.policies.policyId': policy_id},
+                {'stage_id': stage_id},
                 {'$set': {
-                    'output.$.approval_status': 'approved',
-                    'output.$.approved_at': datetime.utcnow(),
-                    'output.$.approved_by': approved_by,
-                    'output.$.approval_notes': approval_notes or '',
+                    'output.policies.$[elem].approval_status': 'approved',
+                    'output.policies.$[elem].approved_at': datetime.utcnow(),
+                    'output.policies.$[elem].approved_by': approved_by,
+                    'output.policies.$[elem].approval_notes': approval_notes or '',
                     'updated_at': datetime.utcnow()
-                }}
+                }},
+                array_filters=[{'elem.policyId': policy_id}]
             )
             
             if result.matched_count == 0:
+                return {'success': False, 'error': f'Stage {stage_id} not found'}
+            
+            if result.modified_count == 0:
                 return {'success': False, 'error': f'Clause {policy_id} not found in stage {stage_id}'}
             
             logger.info(f"Clause approved: {policy_id} in stage {stage_id} by {approved_by}")
@@ -724,17 +728,21 @@ class PipelineStageManager:
         
         try:
             result = self.stages_collection.update_one(
-                {'stage_id': stage_id, 'output.policies.policyId': policy_id},
+                {'stage_id': stage_id},
                 {'$set': {
-                    'output.$.approval_status': 'rejected',
-                    'output.$.rejected_at': datetime.utcnow(),
-                    'output.$.rejected_by': rejected_by,
-                    'output.$.rejection_reason': rejection_reason,
+                    'output.policies.$[elem].approval_status': 'rejected',
+                    'output.policies.$[elem].rejected_at': datetime.utcnow(),
+                    'output.policies.$[elem].rejected_by': rejected_by,
+                    'output.policies.$[elem].rejection_reason': rejection_reason,
                     'updated_at': datetime.utcnow()
-                }}
+                }},
+                array_filters=[{'elem.policyId': policy_id}]
             )
             
             if result.matched_count == 0:
+                return {'success': False, 'error': f'Stage {stage_id} not found'}
+            
+            if result.modified_count == 0:
                 return {'success': False, 'error': f'Clause {policy_id} not found in stage {stage_id}'}
             
             logger.info(f"Clause rejected: {policy_id} in stage {stage_id} by {rejected_by}")

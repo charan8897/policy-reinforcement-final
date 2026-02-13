@@ -1086,7 +1086,7 @@ def approve_clause():
     }
     """
     try:
-        from upload_service.database import DatabaseService
+        from database import PipelineStageManager
         
         data = request.get_json()
         policy_id = data.get('policy_id')
@@ -1097,8 +1097,9 @@ def approve_clause():
             return format_response(False, error='Missing policy_id or approved_by', status_code=400)
         
         # Get the current stage 8
-        db = DatabaseService()
-        stage8 = db.stages_collection.findOne({'stage_name': 'normalize-policies'})
+        db = PipelineStageManager()
+        db.connect()
+        stage8 = db.stages_collection.find_one({'stage_name': 'normalize-policies'})
         
         if not stage8:
             return format_response(False, error='No normalized policies found', status_code=404)
@@ -1152,7 +1153,7 @@ def reject_clause():
     }
     """
     try:
-        from upload_service.database import DatabaseService
+        from database import PipelineStageManager
         
         data = request.get_json()
         policy_id = data.get('policy_id')
@@ -1163,8 +1164,9 @@ def reject_clause():
             return format_response(False, error='Missing policy_id or rejected_by', status_code=400)
         
         # Get the current stage 8
-        db = DatabaseService()
-        stage8 = db.stages_collection.findOne({'stage_name': 'normalize-policies'})
+        db = PipelineStageManager()
+        db.connect()
+        stage8 = db.stages_collection.find_one({'stage_name': 'normalize-policies'})
         
         if not stage8:
             return format_response(False, error='No normalized policies found', status_code=404)
