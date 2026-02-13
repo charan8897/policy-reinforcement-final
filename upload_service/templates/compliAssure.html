@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompliAssure - Policy Compliance Chatbot</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --bg-hover: #333;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --text-tertiary: #666;
+            --border-color: #333;
+            --border-hover: #555;
+            --input-bg: #2a2a2a;
+            --message-bot-bg: #1a1a1a;
+            --chip-bg: #1a1a1a;
+            --chip-hover: #667eea;
+            --header-grad-1: #667eea;
+            --header-grad-2: #764ba2;
+            --accent-color: #667eea;
+            --accent-hover: #5568d3;
+        }
+
+        body.light-mode {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f5f5;
+            --bg-hover: #e8e8e8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-tertiary: #999;
+            --border-color: #e0e0e0;
+            --border-hover: #d0d0d0;
+            --input-bg: #f5f5f5;
+            --message-bot-bg: #f0f7ff;
+            --chip-bg: #f0f0f0;
+            --chip-hover: #667eea;
+            --header-grad-1: #667eea;
+            --header-grad-2: #764ba2;
+            --accent-color: #667eea;
+            --accent-hover: #5568d3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--header-grad-1) 0%, var(--header-grad-2) 100%);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        .chat-container::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 4px;
+        }
+
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: var(--border-color);
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 400px;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .chip {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chip:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .user .message-content {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot .message-content {
+            background: var(--message-bot-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .input-area {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+        }
+
+        .input-area-wrapper {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+            background: var(--bg-tertiary);
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 10px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border-hover);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-icon {
+            font-size: 16px;
+        }
+
+        .send-btn {
+            padding: 6px 12px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-btn:disabled {
+            background: var(--border-hover);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .loading-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .loading-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            animation: pulse 1.4s infinite;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
+        .attachment-preview {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .attachment-item {
+            background: var(--bg-hover);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .attachment-remove {
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+
+        .attachment-remove:hover {
+            color: var(--text-primary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .document-context {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .document-context-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .document-context-item {
+            color: var(--text-secondary);
+            padding: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🛡️ CompliAssure</h1>
+            <p>AI-Powered Policy Compliance Assistant</p>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+            <span id="themeIcon">🌙</span>
+        </button>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="empty-state">
+            <div class="empty-state-icon">💬</div>
+            <div class="empty-state-title">Welcome to CompliAssure</div>
+            <div class="empty-state-subtitle">
+                Ask questions about policy compliance, document requirements, and regulatory guidelines. 
+                I can help analyze documents and provide compliance insights.
+            </div>
+            <div class="suggestion-chips">
+                <div class="chip" onclick="insertSuggestion('What are the compliance requirements for this policy?')">
+                    📋 Compliance Check
+                </div>
+                <div class="chip" onclick="insertSuggestion('Analyze policy ambiguities')">
+                    ⚠️ Find Ambiguities
+                </div>
+                <div class="chip" onclick="insertSuggestion('Extract key entities from the policy')">
+                    🔍 Extract Entities
+                </div>
+                <div class="chip" onclick="insertSuggestion('Classify policy intents')">
+                    🏷️ Intent Analysis
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <div class="input-area-wrapper">
+            <div id="documentContext" class="document-context" style="display: none;">
+                <div class="document-context-title">📄 Active Document</div>
+                <div class="document-context-item" id="docContextText">No document selected</div>
+            </div>
+
+            <div class="attachment-preview" id="attachmentPreview"></div>
+
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Ask anything" 
+                    autocomplete="off"
+                />
+                <button class="action-btn" title="Attach file" onclick="triggerFileInput()">
+                    <span class="action-icon">📎</span>
+                </button>
+                <button class="send-btn" title="Send message" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFileUpload(event)">
+
+    <style>
+        .progress-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-modal.show {
+            display: flex;
+        }
+
+        .progress-modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .progress-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .progress-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .progress-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 15px;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            max-width: 400px;
+        }
+
+        .option-box {
+            background: var(--bg-hover);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            width: 100%;
+        }
+
+        .option-box:hover {
+            border-color: var(--accent-color);
+            background: var(--bg-tertiary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .option-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .option-description {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+    </style>
+
+    <div class="progress-modal" id="progressModal">
+        <div class="progress-modal-content">
+            <div class="progress-title">⏳ Processing Document</div>
+            <div class="progress-subtitle">Your document is being analyzed through our AI pipeline</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="progress-text" id="progressText">0%</div>
+            <div class="progress-detail" id="progressDetail">Initializing pipeline...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1';
+        let attachedFiles = [];
+        let isLoading = false;
+        let isDarkMode = true;
+        // Always generate new session on page load (don't persist)
+        let sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
+        
+        // Clear any old session data from localStorage
+        localStorage.removeItem('compliAssure_sessionId');
+        
+        // Upload file function (from index.html)
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const allowed = ['pdf', 'doc', 'docx', 'txt'];
+            const ext = file.name.split('.').pop().toLowerCase();
+            
+            if (!allowed.includes(ext)) {
+                showAlert(`Invalid file type. Allowed: ${allowed.join(', ')}`, 'error');
+                return;
+            }
+
+            // Validate file size (50MB)
+            if (file.size > 52428800) {
+                showAlert('File too large. Maximum size: 50MB', 'error');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                isLoading = true;
+                showLoadingIndicator();
+
+                const response = await fetch(`${API_BASE}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                isLoading = false;
+                removeLoadingIndicator();
+
+                if (data.success) {
+                    const doc = data.data;
+                    const docId = doc.document_id;
+                    addMessage(`✓ Document uploaded successfully!\nID: ${docId}\n\nProcessing pipeline...`, 'bot');
+                    showAlert(`Document: ${doc.filename} uploaded`, 'success');
+                    document.getElementById('fileInput').value = '';
+                    
+                    // Track pipeline status
+                    trackPipelineStatus(docId);
+                } else {
+                    addMessage(`Upload failed: ${data.error}`, 'bot');
+                    showAlert(`Upload failed: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                isLoading = false;
+                removeLoadingIndicator();
+                addMessage(`Error: ${error.message}`, 'bot');
+                showAlert(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('compliAssureTheme') || 'dark';
+            isDarkMode = savedTheme === 'dark';
+            applyTheme();
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('compliAssureTheme', isDarkMode ? 'dark' : 'light');
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            
+            if (isDarkMode) {
+                body.classList.remove('light-mode');
+                icon.textContent = '🌙';
+            } else {
+                body.classList.add('light-mode');
+                icon.textContent = '☀️';
+            }
+        }
+
+        // Initialize greeting on page load
+        async function initializeGreeting() {
+            try {
+                const formData = new FormData();
+                formData.append('session_id', sessionId);
+                
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.success && data.data.response) {
+                    addMessage(data.data.response, 'bot');
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        }
+
+        // Initialize
+        initTheme();
+        initializeGreeting();
+        
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isLoading) {
+                sendMessage();
+            }
+        });
+
+        function insertSuggestion(text) {
+            document.getElementById('messageInput').value = text;
+            document.getElementById('messageInput').focus();
+        }
+
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+        // Track pipeline processing status
+        async function trackPipelineStatus(docId, pollInterval = 2000) {
+            const maxAttempts = 3600; // 2 hours max with 2 second polls (no hard timeout)
+            let attempts = 0;
+
+            showProgressModal();
+
+            const pollStatus = async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/process-status/${docId}`);
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        addMessage(`❌ Pipeline error: ${data.error}`, 'bot');
+                        hideProgressModal();
+                        return;
+                    }
+
+                    const status = data.data;
+                    const progress = status.progress || 0;
+                    const currentStage = status.current_stage || 0;
+                    const totalStages = status.total_stages || 10;
+
+                    // Update progress modal
+                    updateProgressModal(currentStage, totalStages, progress);
+
+                    // Check if completed
+                    if (status.status === 'processing_complete' || progress === 100) {
+                        updateProgressModal(totalStages, totalStages, 100);
+                        
+                        setTimeout(() => {
+                            hideProgressModal();
+                            addMessage(
+                                `✅ Pipeline Complete!\n` +
+                                `All ${totalStages} stages processed.\n` +
+                                `Total time: ${status.elapsed_time?.toFixed(1) || 0}s\n\n` +
+                                `📊 Document ready for analysis.`,
+                                'bot'
+                            );
+                        }, 1000);
+                        
+                        return; // Stop polling
+                    }
+
+                    // Continue polling
+                    if (++attempts < maxAttempts) {
+                        setTimeout(pollStatus, pollInterval);
+                    } else {
+                        hideProgressModal();
+                        addMessage(`⚠️ Pipeline timed out after ${(pollInterval * maxAttempts / 1000).toFixed(0)}s`, 'bot');
+                    }
+
+                } catch (error) {
+                    // Retry on error
+                    if (++attempts < maxAttempts) {
+                        setTimeout(pollStatus, pollInterval * 2);
+                    } else {
+                        hideProgressModal();
+                        addMessage(`❌ Status check error: ${error.message}`, 'bot');
+                    }
+                }
+            };
+
+            // Start polling
+            pollStatus();
+        }
+
+        async function sendMessage(skipAddMessage = false) {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message && attachedFiles.length === 0) {
+                return;
+            }
+
+            // Add user message to chat (skip if already added via addMessage)
+            if (message && !skipAddMessage) addMessage(message, 'user');
+            input.value = '';
+
+            // Show loading indicator
+            isLoading = true;
+            showLoadingIndicator();
+
+            try {
+                // Prepare FormData
+                const formData = new FormData();
+                formData.append('message', message);
+                formData.append('session_id', sessionId);
+                formData.append('mode', 'default');
+
+                attachedFiles.forEach(file => {
+                    formData.append('files', file);
+                });
+
+                const response = await fetch(`${API_BASE}/chat`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                isLoading = false;
+                removeLoadingIndicator();
+
+                if (data.success) {
+                    const responseData = data.data;
+                    
+                    // Add bot response
+                    addMessage(responseData.response, 'bot');
+                    
+                    // Handle Phase 0 actions
+                    handlePhase0Action(responseData);
+                } else {
+                    addMessage(`Error: ${data.error}`, 'bot');
+                }
+            } catch (error) {
+                isLoading = false;
+                removeLoadingIndicator();
+                addMessage(`Connection error: ${error.message}`, 'bot');
+            }
+        }
+
+        function handlePhase0Action(responseData) {
+            const action = responseData.action;
+            const stage = responseData.stage;
+            const options = responseData.options;
+            
+            console.log('Phase0Action:', { action, stage, options });
+            
+            // Display options if available
+            if (options && Array.isArray(options) && options.length > 0) {
+                console.log('Showing options:', options);
+                showOptions(options);
+            } else {
+                console.log('No options to show', { options, isArray: Array.isArray(options) });
+            }
+            
+            switch(action) {
+                case 'await_input':
+                    // Normal input awaiting
+                    break;
+                
+                case 'wait_for_upload':
+                    // Waiting for document upload
+                    document.getElementById('messageInput').placeholder = 'Upload a document...';
+                    break;
+                
+                case 'show_progress_modal':
+                    // Show progress modal
+                    showProgressModal();
+                    break;
+                
+                case 'show_options':
+                    // Options are displayed by showOptions() above
+                    break;
+                
+                case 'continue_processing':
+                    // Keep progress modal showing
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+
+        function showOptions(options) {
+            console.log('showOptions called with:', options);
+            const container = document.getElementById('chatContainer');
+            
+            if (!container) {
+                console.error('Chat container not found!');
+                return;
+            }
+            
+            // Create wrapper div with vertical stacking
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.flexDirection = 'column';
+            wrapper.style.gap = '10px';
+            wrapper.style.marginTop = '15px';
+            wrapper.style.maxWidth = '400px';
+            
+            console.log('Creating option boxes for', options.length, 'options');
+            
+            options.forEach((option, i) => {
+                console.log(`Creating option ${i}:`, option);
+                
+                const optionBox = document.createElement('div');
+                optionBox.style.background = 'var(--bg-hover)';
+                optionBox.style.border = '2px solid var(--border-color)';
+                optionBox.style.borderRadius = '8px';
+                optionBox.style.padding = '10px 14px';
+                optionBox.style.cursor = 'pointer';
+                optionBox.style.transition = 'all 0.3s ease';
+                optionBox.style.textAlign = 'left';
+                optionBox.style.width = '100%';
+                
+                optionBox.innerHTML = `
+                    <div style="color: var(--text-primary); font-weight: 600; font-size: 13px; margin-bottom: 4px;">
+                        ${option.label}
+                    </div>
+                    <div style="color: var(--text-secondary); font-size: 11px;">
+                        ${option.description}
+                    </div>
+                `;
+                
+                optionBox.onmouseover = () => {
+                    optionBox.style.borderColor = 'var(--accent-color)';
+                    optionBox.style.background = 'var(--bg-tertiary)';
+                };
+                
+                optionBox.onmouseout = () => {
+                    optionBox.style.borderColor = 'var(--border-color)';
+                    optionBox.style.background = 'var(--bg-hover)';
+                };
+                
+                optionBox.onclick = () => {
+                    console.log('Option clicked:', option.value);
+                    selectOption(option.value, option.label);
+                };
+                
+                wrapper.appendChild(optionBox);
+            });
+            
+            console.log('Appending options wrapper to container');
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+            console.log('Options displayed successfully');
+        }
+
+        function selectOption(value, label) {
+            // Hide options
+            const optionsContainers = document.querySelectorAll('.options-container');
+            optionsContainers.forEach(el => el.style.display = 'none');
+            
+            // Clean label by removing emoji prefix (text after emoji)
+            const cleanLabel = label.replace(/^[\uD800-\uDBFF][\uDC00-\uDFFF]|^[\p{Extended_Pictographic}]+|^\s+/gu, '').trim();
+            addMessage(`✓ ${cleanLabel}`, 'user');
+            
+            // Send only the value to backend (skip addMessage since we already added it)
+            document.getElementById('messageInput').value = value;
+            sendMessage(true);
+        }
+
+        function showProgressModal() {
+            document.getElementById('progressModal').classList.add('show');
+        }
+
+        function hideProgressModal() {
+            document.getElementById('progressModal').classList.remove('show');
+        }
+
+        function updateProgressModal(stage, totalStages, progress) {
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '%';
+            document.getElementById('progressDetail').textContent = `Stage ${stage}/${totalStages}`;
+        }
+
+        function addMessage(text, sender) {
+            const container = document.getElementById('chatContainer');
+
+            // Remove empty state if present
+            if (container.querySelector('.empty-state')) {
+                container.innerHTML = '';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            if (sender === 'bot') {
+                messageDiv.innerHTML = `
+                    <div class="bot-avatar">🤖</div>
+                    <div class="message-content">${escapeHtml(text)}</div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">${escapeHtml(text)}</div>
+                `;
+            }
+
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showLoadingIndicator() {
+            const container = document.getElementById('chatContainer');
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.id = 'loadingIndicator';
+            loadingDiv.innerHTML = `
+                <div class="bot-avatar">🤖</div>
+                <div class="loading-indicator">
+                    <span>CompliAssure is thinking</span>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                    <div class="loading-dot"></div>
+                </div>
+            `;
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeLoadingIndicator() {
+            const indicator = document.getElementById('loadingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showAlert(message, type = 'info') {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            // Could be enhanced with toast notifications
+        }
+    </script>
+</body>
+</html>
