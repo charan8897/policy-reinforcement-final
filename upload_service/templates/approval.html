@@ -640,11 +640,13 @@
 
                      <!-- Per-Clause Approval Buttons -->
                      <div class="button-group" style="margin-top: 12px;">
-                         <button class="btn btn-approve btn-small" onclick="approveSingleClause('${policyId}')">Approve</button>
-                         <button class="btn btn-decline btn-small" onclick="rejectSingleClause('${policyId}')">Reject</button>
+                         ${approvalStatus !== 'approved' ? `<button class="btn btn-approve btn-small" onclick="approveSingleClause('${policyId}')">Approve</button>` : `<button class="btn btn-approve btn-small" style="opacity: 0.5; cursor: not-allowed;" disabled>✓ Approved</button>`}
+                         ${approvalStatus !== 'rejected' ? `<button class="btn btn-decline btn-small" onclick="rejectSingleClause('${policyId}')">Reject</button>` : `<button class="btn btn-decline btn-small" style="opacity: 0.5; cursor: not-allowed;" disabled>✗ Rejected</button>`}
                      </div>
                      <div style="margin-top: 8px; font-size: 11px; color: #666;">
                          Status: <strong>${approvalStatus}</strong>
+                         ${approvalStatus === 'approved' && policy.approved_by ? ` (by ${policy.approved_by})` : ''}
+                         ${approvalStatus === 'rejected' && policy.rejected_by ? ` (by ${policy.rejected_by})` : ''}
                      </div>
                  </div>
              `}).join('');
