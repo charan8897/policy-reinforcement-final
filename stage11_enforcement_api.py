@@ -819,36 +819,76 @@ def infer_rego_field_value_types(field: str, conditions: List[Dict]) -> set:
     return value_types if value_types else {'unknown'}
 
 
-def values_match(payload_value: Any, rego_value: str) -> bool:
+def values_match(payload_value: Any, rego_value: str, operator: str = "==") -> bool:
     """
     Check if payload value matches rego value
-    Handles fuzzy matching for similar values
+    Handles fuzzy matching for similar values and comparison operators
+    
+    Args:
+        payload_value: Value from payload
+        rego_value: Expected value from rego
+        operator: Comparison operator (==, >=, <=, <, >)
     """
     if payload_value is None or rego_value is None:
         return False
     
-    # Convert to strings for comparison
     pv_str = str(payload_value).strip().lower()
     rv_str = str(rego_value).strip().lower()
     
-    # Exact match
-    if pv_str == rv_str:
-        return True
-    
-    # Partial match (one contains the other)
-    if pv_str in rv_str or rv_str in pv_str:
-        return True
-    
-    # Fuzzy matching - check if words overlap significantly
-    pv_words = set(pv_str.split())
-    rv_words = set(rv_str.split())
-    
-    if pv_words & rv_words:  # If there's any word overlap
-        overlap_ratio = len(pv_words & rv_words) / max(len(pv_words), len(rv_words))
-        if overlap_ratio >= 0.5:  # 50% or more words match
+    # For == operator, use fuzzy matching
+    if operator == "==":
+        # Exact match
+        if pv_str == rv_str:
             return True
+        
+        # Partial match (one contains the other)
+        if pv_str in rv_str or rv_str in pv_str:
+            return True
+        
+        # Fuzzy matching - check if words overlap significantly
+        pv_words = set(pv_str.split())
+        rv_words = set(rv_str.split())
+        
+        if pv_words & rv_words:  # If there's any word overlap
+            overlap_ratio = len(pv_words & rv_words) / max(len(pv_words), len(rv_words))
+            if overlap_ratio >= 0.5:  # 50% or more words match
+                return True
+        
+        return False
     
-    return False
+    # For comparison operators, try numeric comparison first
+    else:
+        # Extract numbers from strings
+        pv_num = None
+        rv_num = None
+        
+        try:
+            # Try to extract numbers
+            pv_num_match = re.search(r'(\d+(?:\.\d+)?)', pv_str)
+            rv_num_match = re.search(r'(\d+(?:\.\d+)?)', rv_str)
+            
+            if pv_num_match and rv_num_match:
+                pv_num = float(pv_num_match.group(1))
+                rv_num = float(rv_num_match.group(1))
+        except:
+            pass
+        
+        # If both have numbers, do numeric comparison
+        if pv_num is not None and rv_num is not None:
+            if operator == ">=":
+                return pv_num >= rv_num
+            elif operator == "<=":
+                return pv_num <= rv_num
+            elif operator == ">":
+                return pv_num > rv_num
+            elif operator == "<":
+                return pv_num < rv_num
+        
+        # Fallback to string matching
+        if pv_str == rv_str:
+            return True
+        
+        return False
 
 
 def compute_semantic_matches(payload: Dict[str, Any], rego_fields: List[str], all_conditions: List[Dict]) -> List[Dict[str, Any]]:
@@ -898,13 +938,20 @@ def compute_semantic_matches(payload: Dict[str, Any], rego_fields: List[str], al
             
             for cond in field_conditions[:1]:  # Take first condition per field
                 context = cond['context']
-                pattern = rf'input\.{rego_field}\s*==\s*(["\']?)([^,\n' + '}' + r']+)\1'
+                # Extract operator and value from condition - handle ==, >=, <=, <, > operators
+                pattern = rf'input\.{rego_field}\s*(==|<=|>=|<|>)\s*(["\']?)([^,\n' + '}' + r']+)\2'
                 value_match = re.search(pattern, context)
-                extracted_value = value_match.group(2) if value_match else "unknown"
                 
-                # Check if values match
+                if value_match:
+                    operator = value_match.group(1)
+                    extracted_value = value_match.group(3)
+                else:
+                    operator = "=="
+                    extracted_value = "unknown"
+                
+                # Check if values match (pass operator for proper comparison)
                 rego_val_clean = extracted_value.strip().strip('"\'')
-                is_match = values_match(payload_value, rego_val_clean)
+                is_match = values_match(payload_value, rego_val_clean, operator)
                 status = "passed" if is_match else "violated"
                 
                 results.append({
@@ -914,7 +961,7 @@ def compute_semantic_matches(payload: Dict[str, Any], rego_fields: List[str], al
                     "payload_type": payload_value_type,
                     "rego_value": rego_val_clean,
                     "rego_value_type": extract_value_type(extracted_value),
-                    "condition": f"input.{rego_field} == {extracted_value}",
+                    "condition": f"input.{rego_field} {operator} {extracted_value}",
                     "similarity": round(float(score), 4),
                     "status": status,
                     "file": Path(cond['file']).name,
