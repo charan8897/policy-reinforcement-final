@@ -7,7 +7,11 @@ from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 from datetime import datetime
 import logging
 import uuid
-from upload_service.config import Config
+
+try:
+    from upload_service.config import Config
+except ImportError:
+    from config import Config
 
 logger = logging.getLogger(__name__)
 
