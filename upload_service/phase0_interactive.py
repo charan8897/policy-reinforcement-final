@@ -450,13 +450,25 @@ Keep it brief and calming.
             }
     
     def handle_general_chat(self, user_message):
-        """Handle general conversation"""
+        """Handle general conversation with full history context"""
+        
+        # Build conversation history context
+        history_text = ""
+        if self.conversation_history:
+            history_text = "\n--- Conversation History ---\n"
+            for i, msg in enumerate(self.conversation_history):
+                sender = msg.get('sender', 'unknown')
+                content = msg.get('message', '')
+                history_text += f"{sender.upper()}: {content}\n"
+            history_text += "--- End of History ---\n\n"
         
         context = (
             f"You are CompliAssure, a helpful policy analysis assistant.\n"
             f"User Name: {self.conversation_state.get('user_name', 'User')}\n"
             f"Current Stage: {self.conversation_state.get('stage', 'unknown')}\n\n"
-            f"Respond helpfully to the user's message."
+            f"{history_text}"
+            f"User's latest message: {user_message}\n\n"
+            f"Respond helpfully, considering the conversation history above."
         )
         
         chat_prompt = f"{context}\n\nUser: {user_message}"
