@@ -878,8 +878,8 @@ def get_process_status(document_id):
 @app.route('/api/v1/normalized-policies', methods=['GET'])
 def get_normalized_policies():
     """
-    Get normalized policies from stage8_normalized_policies.json
-    WITH human-readable translations
+    Get normalized policies from MongoDB (stage 8)
+    WITH human-readable translations and approval status
 
     Response:
     {
@@ -889,6 +889,9 @@ def get_normalized_policies():
                 {
                     "policyId": "POLICY_C1",
                     "name": "Policy Rule C1",
+                    "approval_status": "pending_approval|approved|rejected",
+                    "approved_by": "email@company.com",
+                    "approved_at": "2026-02-13T...",
                     "...": "...(original DSL fields)...",
                     "readable": {
                         "enforcement": "WARN",
@@ -903,17 +906,26 @@ def get_normalized_policies():
     }
     """
     try:
-        normalized_file = f"{OUTPUT_DIR}/stage8_normalized_policies.json"
-
-        if not os.path.exists(normalized_file):
-            return format_response(
-                False,
-                error='Normalized policies file not found',
-                status_code=404
-            )
-
-        with open(normalized_file, 'r') as f:
-            policies_data = json.load(f)
+        from database import PipelineStageManager
+        
+        # Try to fetch from MongoDB first
+        db = PipelineStageManager()
+        db.connect()
+        stage8 = db.stages_collection.find_one({'stage_name': 'normalize-policies'})
+        
+        if stage8 and 'output' in stage8:
+            policies_data = stage8['output']
+        else:
+            # Fallback to JSON file if MongoDB doesn't have it
+            normalized_file = f"{OUTPUT_DIR}/stage8_normalized_policies.json"
+            if not os.path.exists(normalized_file):
+                return format_response(
+                    False,
+                    error='Normalized policies not found in MongoDB or file',
+                    status_code=404
+                )
+            with open(normalized_file, 'r') as f:
+                policies_data = json.load(f)
 
         # Add human-readable translations to each policy
         if 'policies' in policies_data:
