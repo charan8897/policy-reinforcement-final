@@ -8,6 +8,7 @@ Usage:
     python find_matching_conditions.py "assigned_validator"
     python find_matching_conditions.py "authorizing_entity"
 
+    
 This script directly analyzes rego files to find matching conditions.
 """
 
