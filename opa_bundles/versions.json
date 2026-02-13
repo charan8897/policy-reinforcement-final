@@ -1,12 +1,13 @@
 {
-  "active": "v1.0.1",
-  "previous": "v1.0.0",
+  "active": "v1.0.2",
+  "previous": "v1.0.1",
   "all_versions": [
     "v1.0.0",
-    "v1.0.1"
+    "v1.0.1",
+    "v1.0.2"
   ],
   "created": "2026-02-13T11:48:22.298680Z",
-  "latest": "1.0.1",
+  "latest": "1.0.2",
   "versions": [
     {
       "version": "1.0.0",
@@ -29,6 +30,17 @@
       "document_id": "travel_policy_20260213_115442",
       "filesystem_path": "v1.0.1",
       "bundle_name": "policy_travel_policy_20260213_115442"
+    },
+    {
+      "version": "1.0.2",
+      "created": "2026-02-13T11:56:58.456251Z",
+      "status": "active",
+      "policy_type": "travel_policy",
+      "rules_count": 55,
+      "hash": "e682f6e5e40b38b2299f19cba7380c168306c3457a2b22d73d04cd718b60022a",
+      "document_id": "travel_policy_20260213_115658",
+      "filesystem_path": "v1.0.2",
+      "bundle_name": "policy_travel_policy_20260213_115658"
     }
   ]
 }
