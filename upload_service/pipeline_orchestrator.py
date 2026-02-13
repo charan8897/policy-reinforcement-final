@@ -592,6 +592,24 @@ class PipelineOrchestrator:
                 })
                 
                 self.log_progress(f"✓ Stage 10 completed: {result.get('bundle_version')}")
+                
+                # Automatically trigger OPA bundle generation and Git push
+                try:
+                    import requests
+                    self.log_progress("Auto-triggering OPA bundle generation...")
+                    
+                    # Call the generate-opa-bundle API
+                    response = requests.post('http://127.0.0.1:5000/api/v1/generate-opa-bundle', 
+                                           json={}, timeout=60)
+                    
+                    if response.status_code == 200:
+                        self.log_progress("✓ OPA bundle generated and pushed to Git")
+                    else:
+                        self.log_progress(f"⚠️ OPA bundle generation returned: {response.status_code}")
+                        
+                except Exception as e:
+                    self.log_progress(f"⚠️ Auto-trigger OPA bundle failed: {str(e)}")
+                
                 return True
             else:
                 self.error = f"Stage 10 (OPA Bundle Storage) failed: {result.get('error', 'Unknown error')}"
