@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "generated": "2026-02-13T14:27:26.243112",
+    "stage": 9,
+    "stage_name": "dsl-to-rego",
+    "source_dsl": "/home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml",
+    "source_normalized": "/home/hutech/Documents/docupolicy/stage8_normalized_policies.json",
+    "total_policies": 1,
+    "total_rules": 45
+  },
+  "statistics": {
+    "total_clauses": 45,
+    "total_rules": 45,
+    "ambiguous_rules": 0,
+    "enforce_rules": 30,
+    "warn_rules": 15
+  }
+}
