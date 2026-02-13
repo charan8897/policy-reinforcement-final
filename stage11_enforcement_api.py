@@ -12,23 +12,17 @@ from typing import Optional, Dict, Any, List
 import asyncio
 import logging
 import re
-import json
-import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from opa_runtime_client import OPARuntimeClient, create_opa_client
 
-# Add rego_field_mapper to path
-rego_mapper_path = Path(__file__).parent / "rego_field_mapper_module"
-if rego_mapper_path.exists():
-    sys.path.insert(0, str(rego_mapper_path))
-    try:
-        from rego_field_mapper import map_json_payload, map_json_payload_to_opa_input
-        REGO_MAPPER_AVAILABLE = True
-    except ImportError:
-        REGO_MAPPER_AVAILABLE = False
-else:
-    REGO_MAPPER_AVAILABLE = False
+# Import semantic matching
+try:
+    from sentence_transformers import SentenceTransformer
+    from sklearn.metrics.pairwise import cosine_similarity
+    SEMANTIC_MATCHING_AVAILABLE = True
+except ImportError:
+    SEMANTIC_MATCHING_AVAILABLE = False
 
 # Configure logging
 logging.basicConfig(
@@ -36,104 +30,6 @@ logging.basicConfig(
     format='[%(asctime)s] [%(levelname)s] %(name)s: %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-# ============================================================================
-# Rego Field Mapper - Map payload fields to OPA input.xxx conditions
-# ============================================================================
-
-def map_payload_to_opa_conditions(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Map payload fields to OPA input.xxx field names using rego_field_mapper
-    
-    Converts semantic payload field names to actual Rego condition fields.
-    For example: "authorizing_entity" → "input.validationauthority"
-    
-    Args:
-        payload: The request payload with semantic field names
-    
-    Returns:
-        Mapped payload with OPA input.xxx field names, or original if mapping unavailable
-    """
-    if not REGO_MAPPER_AVAILABLE:
-        logger.warning("Rego field mapper not available, using original payload")
-        return payload
-    
-    try:
-        # Use the mapper to convert payload field names to OPA input fields
-        mapped_payload = map_json_payload_to_opa_input(payload)
-        
-        if mapped_payload:
-            logger.info(f"Mapped payload fields: {list(mapped_payload.keys())}")
-            return mapped_payload
-        else:
-            logger.warning("No mappings found, returning original payload")
-            return payload
-    
-    except Exception as e:
-        logger.error(f"Error mapping payload: {e}")
-        return payload
-
-
-def get_payload_field_mappings(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Get detailed mapping information for each payload field
-    
-    Returns mapping details including:
-    - Original payload field name
-    - Matched OPA input field(s)
-    - Match scores
-    - Field context
-    
-    Args:
-        payload: The request payload
-    
-    Returns:
-        Detailed mapping information for each field
-    """
-    if not REGO_MAPPER_AVAILABLE:
-        return {}
-    
-    try:
-        return map_json_payload(payload, top_k=3)
-    except Exception as e:
-        logger.error(f"Error getting field mappings: {e}")
-        return {}
-
-
-def simplify_field_mappings(field_mappings: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Simplify field mappings for API response
-    
-    Removes verbose fields and keeps only:
-    - payload_value: Original value from request
-    - mapped_to: The OPA input field name
-    - confidence_score: Match score (0-100)
-    - context: Where this field is used in rego
-    
-    Args:
-        field_mappings: Raw field mappings from map_json_payload
-    
-    Returns:
-        Simplified mappings suitable for API response
-    """
-    simplified = {}
-    
-    for field_name, mapping in field_mappings.items():
-        if "best_match" not in mapping:
-            # Skip fields with no matches
-            continue
-        
-        best = mapping["best_match"]
-        
-        simplified[field_name] = {
-            "payload_value": mapping.get("payload_value"),
-            "mapped_to": best.get("rego_field"),
-            "confidence_score": best.get("score"),
-            "context": best.get("context", "")
-        }
-    
-    return simplified
-
 
 # ============================================================================
 # Rego Policy Analyzer - Parse conditions from Rego files
@@ -838,6 +734,197 @@ async def get_bundle_info(opa_client: OPARuntimeClient = Depends(get_opa_client)
 
 
 # ============================================================================
+# Semantic Field Mapping Functions
+# ============================================================================
+
+def extract_value_type(value_str: Any) -> str:
+    """Determine if a value is numeric, string, boolean, etc."""
+    if value_str is None:
+        return 'unknown'
+    
+    value_str = str(value_str).strip()
+    
+    try:
+        float(value_str)
+        return 'numeric'
+    except ValueError:
+        pass
+    
+    if value_str.lower() in ['true', 'false']:
+        return 'boolean'
+    
+    if (value_str.startswith('"') and value_str.endswith('"')) or \
+       (value_str.startswith("'") and value_str.endswith("'")):
+        return 'string'
+    
+    return 'string'
+
+
+def extract_rego_fields() -> List[str]:
+    """Extract all unique input.xxx field names from rego files"""
+    rego_fields = set()
+    rego_dir = Path("/home/hutech/Documents/docupolicy/opa_bundles")
+    
+    for rego_file in rego_dir.rglob("*.rego"):
+        with open(rego_file, 'r', errors='ignore') as f:
+            content = f.read()
+            matches = re.findall(r'input\.([a-zA-Z_][a-zA-Z0-9_]*)', content)
+            rego_fields.update(matches)
+    
+    return sorted(list(rego_fields))
+
+
+def extract_rego_conditions() -> List[Dict[str, Any]]:
+    """Extract all input.xxx fields with their conditions"""
+    conditions = []
+    rego_dir = Path("/home/hutech/Documents/docupolicy/opa_bundles")
+    
+    for rego_file in rego_dir.rglob("*.rego"):
+        with open(rego_file, 'r', errors='ignore') as f:
+            content = f.read()
+            lines = content.split('\n')
+            
+            for i, line in enumerate(lines):
+                input_matches = re.findall(r'input\.([a-zA-Z_][a-zA-Z0-9_]*)', line)
+                
+                for field in input_matches:
+                    start = max(0, i - 2)
+                    end = min(len(lines), i + 3)
+                    context = '\n'.join(lines[start:end])
+                    
+                    conditions.append({
+                        'file': str(rego_file),
+                        'field': field,
+                        'context': context.strip(),
+                        'line_number': i + 1
+                    })
+    
+    return conditions
+
+
+def infer_rego_field_value_types(field: str, conditions: List[Dict]) -> set:
+    """Infer expected value types for a rego field by examining its conditions"""
+    value_types = set()
+    
+    for cond in conditions:
+        if cond['field'] == field:
+            context = cond['context']
+            pattern = rf'input\.{field}\s*==\s*(["\']?)([^,\n' + '}' + r']+)\1'
+            matches = re.findall(pattern, context)
+            
+            for quote, value in matches:
+                vtype = extract_value_type(value)
+                value_types.add(vtype)
+    
+    return value_types if value_types else {'unknown'}
+
+
+def values_match(payload_value: Any, rego_value: str) -> bool:
+    """
+    Check if payload value matches rego value
+    Handles fuzzy matching for similar values
+    """
+    if payload_value is None or rego_value is None:
+        return False
+    
+    # Convert to strings for comparison
+    pv_str = str(payload_value).strip().lower()
+    rv_str = str(rego_value).strip().lower()
+    
+    # Exact match
+    if pv_str == rv_str:
+        return True
+    
+    # Partial match (one contains the other)
+    if pv_str in rv_str or rv_str in pv_str:
+        return True
+    
+    # Fuzzy matching - check if words overlap significantly
+    pv_words = set(pv_str.split())
+    rv_words = set(rv_str.split())
+    
+    if pv_words & rv_words:  # If there's any word overlap
+        overlap_ratio = len(pv_words & rv_words) / max(len(pv_words), len(rv_words))
+        if overlap_ratio >= 0.5:  # 50% or more words match
+            return True
+    
+    return False
+
+
+def compute_semantic_matches(payload: Dict[str, Any], rego_fields: List[str], all_conditions: List[Dict]) -> List[Dict[str, Any]]:
+    """Compute semantic matches for payload fields using embeddings with TYPE FILTERING"""
+    if not SEMANTIC_MATCHING_AVAILABLE:
+        return []
+    
+    results = []
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    
+    for payload_field, payload_value in payload.items():
+        payload_value_type = extract_value_type(payload_value)
+        
+        # Prepare search query
+        if payload_value is not None and isinstance(payload_value, str) and len(str(payload_value)) > 10:
+            search_query = f"{payload_field} {payload_value}"
+        else:
+            search_query = payload_field
+        
+        # Compute similarities
+        all_texts = [search_query] + rego_fields
+        embeddings = model.encode(all_texts, convert_to_numpy=True, show_progress_bar=False)
+        similarities = cosine_similarity([embeddings[0]], embeddings[1:])[0].tolist()
+        
+        # Score fields with type filtering
+        scored = []
+        for field, sim_score in zip(rego_fields, similarities):
+            if sim_score > 0:
+                # Apply type filtering
+                field_types = infer_rego_field_value_types(field, all_conditions)
+                
+                # Boost score for type match, penalize for mismatch
+                if payload_value_type != 'unknown' and 'unknown' not in field_types:
+                    if payload_value_type in field_types:
+                        sim_score *= 1.2  # 20% boost for type match
+                    else:
+                        sim_score *= 0.5  # 50% penalty for type mismatch
+                        continue  # Skip if types don't match
+                
+                scored.append((field, sim_score))
+        
+        scored.sort(key=lambda x: -x[1])
+        
+        # Get top 1 match with conditions
+        for rego_field, score in scored[:1]:
+            field_conditions = [c for c in all_conditions if c['field'] == rego_field]
+            
+            for cond in field_conditions[:1]:  # Take first condition per field
+                context = cond['context']
+                pattern = rf'input\.{rego_field}\s*==\s*(["\']?)([^,\n' + '}' + r']+)\1'
+                value_match = re.search(pattern, context)
+                extracted_value = value_match.group(2) if value_match else "unknown"
+                
+                # Check if values match
+                rego_val_clean = extracted_value.strip().strip('"\'')
+                is_match = values_match(payload_value, rego_val_clean)
+                status = "passed" if is_match else "violated"
+                
+                results.append({
+                    "rego_field": rego_field,
+                    "payload_field": payload_field,
+                    "payload_value": payload_value,
+                    "payload_type": payload_value_type,
+                    "rego_value": rego_val_clean,
+                    "rego_value_type": extract_value_type(extracted_value),
+                    "condition": f"input.{rego_field} == {extracted_value}",
+                    "similarity": round(float(score), 4),
+                    "status": status,
+                    "file": Path(cond['file']).name,
+                    "line": cond['line_number']
+                })
+    
+    return results
+
+
+# ============================================================================
 # Policy Enforcement Endpoints
 # ============================================================================
 
@@ -856,15 +943,11 @@ async def enforce_policy(
     - Nested JSON: {employee: {...}, travel: {...}, ...}
     - Any custom structure matching your policy
     
-    Can accept semantic payload field names which are automatically mapped to OPA
-    input.xxx conditions (e.g., "authorizing_entity" → "input.validationauthority")
-    
     Returns detailed reasons WHY policies failed:
     - Which policies passed/failed
     - Exact conditions that weren't met
     - What was expected vs. what was provided
     - DETAILED rule-by-rule failure analysis
-    - Payload field mappings (if rego_field_mapper available)
     """
     try:
         request_id = request.request_id or f"REQ_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -880,22 +963,11 @@ async def enforce_policy(
         request_data.pop('policy_type', None)
         request_data.pop('submitted_date', None)
         
-        logger.info(f"Original request fields: {list(request_data.keys())}")
-        
-        # Get field mappings if rego_field_mapper is available
-        field_mappings = get_payload_field_mappings(request_data)
-        
-        # Map payload fields to OPA conditions if available
-        if REGO_MAPPER_AVAILABLE and field_mappings:
-            opa_request_data = map_payload_to_opa_conditions(request_data)
-            logger.info(f"Mapped request fields: {list(opa_request_data.keys())}")
-        else:
-            opa_request_data = request_data
-            logger.info(f"Using original request fields (no mapping available)")
+        logger.info(f"Request fields: {list(request_data.keys())}")
         
         # Enforce policy via OPA - returns detailed violations
         # For now using travel_policy enforcement; make policy-agnostic in future
-        result = await opa_client.enforce_travel_policy(opa_request_data)
+        result = await opa_client.enforce_travel_policy(request_data)
         
         if result.get('status') == 'error':
             raise HTTPException(status_code=500, detail=result.get('error'))
@@ -938,21 +1010,24 @@ async def enforce_policy(
             except:
                 pass
         
-        # Return response with detailed failure analysis and simplified field mappings
-        response = {
+        # Add semantic field mappings
+        semantic_matches = []
+        try:
+            if SEMANTIC_MATCHING_AVAILABLE:
+                rego_fields = extract_rego_fields()
+                all_conditions = extract_rego_conditions()
+                semantic_matches = compute_semantic_matches(request_data, rego_fields, all_conditions)
+        except Exception as e:
+            logger.error(f"Error in semantic matching: {e}")
+        
+        # Return response with detailed failure analysis AND semantic mappings
+        return {
             "request_id": request_id,
             "status": result.get('status'),
             "detailed_failure_analysis": detailed_failure_report,
+            "semantic_field_mappings": semantic_matches,
             "timestamp": datetime.now().isoformat()
         }
-        
-        # Add simplified field mappings if available
-        if field_mappings:
-            simplified_mappings = simplify_field_mappings(field_mappings)
-            if simplified_mappings:
-                response["payload_field_mappings"] = simplified_mappings
-        
-        return response
     
     except HTTPException:
         raise
