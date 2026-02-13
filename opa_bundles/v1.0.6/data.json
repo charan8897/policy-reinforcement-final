@@ -1,18 +1,18 @@
 {
   "metadata": {
-    "generated": "2026-02-13T11:13:19.814338",
+    "generated": "2026-02-13T15:46:16.173986",
     "stage": 9,
     "stage_name": "dsl-to-rego",
     "source_dsl": "/home/hutech/Documents/docupolicy/stage6_dsl_rules.yaml",
     "source_normalized": "/home/hutech/Documents/docupolicy/stage8_normalized_policies.json",
     "total_policies": 1,
-    "total_rules": 55
+    "total_rules": 21
   },
   "statistics": {
-    "total_clauses": 55,
-    "total_rules": 55,
+    "total_clauses": 21,
+    "total_rules": 21,
     "ambiguous_rules": 0,
-    "enforce_rules": 48,
-    "warn_rules": 7
+    "enforce_rules": 19,
+    "warn_rules": 2
   }
 }
