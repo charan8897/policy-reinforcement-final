@@ -385,7 +385,7 @@
             <!-- Stage 10 Generator Button -->
             <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
                 <button class="btn btn-approve" style="width: 100%; padding: 15px; font-size: 16px;" onclick="generateOPABundle()" id="stage10Btn">
-                    🔧 Generate OPA Bundle (Stage 10)
+                    🔧 Generate OPA Bundle
                 </button>
                 <div id="stage10Status" style="margin-top: 10px; font-size: 12px; color: #666; display: none;"></div>
             </div>
@@ -802,16 +802,20 @@
             .then(response => response.json())
             .then(data => {
                 btn.disabled = false;
-                btn.textContent = '🔧 Generate OPA Bundle (Stage 10)';
+                btn.textContent = '🔧 Generate OPA Bundle';
                 
                 if (data.success) {
-                    statusDiv.innerHTML = `
-                        <div style="color: #28a745; padding: 10px; background: rgba(40, 167, 69, 0.1); border-radius: 4px;">
-                            ✓ OPA Bundle generated successfully!<br>
-                            <small>Bundle location: ${data.data.bundle_file}</small>
-                        </div>
-                    `;
-                    showAlert('✓ OPA Bundle generated successfully!', 'success');
+                     const gitCommit = data.data.git_commit ? `<br><small>📦 Git commit: <code>${data.data.git_commit.substring(0, 7)}</code></small>` : '';
+                     const gitStatus = data.data.git_status === 'committed' ? '✓ Committed to Git' : '';
+                     statusDiv.innerHTML = `
+                         <div style="color: #28a745; padding: 10px; background: rgba(40, 167, 69, 0.1); border-radius: 4px;">
+                             ✓ OPA Bundle generated successfully!<br>
+                             <small>📁 Bundle location: ${data.data.bundle_file}</small>
+                             ${gitCommit}
+                             ${gitStatus ? `<br><small>🔗 ${gitStatus}</small>` : ''}
+                         </div>
+                     `;
+                     showAlert('✓ OPA Bundle generated & committed to Git!', 'success');
                 } else {
                     statusDiv.innerHTML = `
                         <div style="color: #dc3545; padding: 10px; background: rgba(220, 53, 69, 0.1); border-radius: 4px;">
@@ -823,7 +827,7 @@
             })
             .catch(error => {
                 btn.disabled = false;
-                btn.textContent = '🔧 Generate OPA Bundle (Stage 10)';
+                btn.textContent = '🔧 Generate OPA Bundle';
                 statusDiv.innerHTML = `
                     <div style="color: #dc3545; padding: 10px; background: rgba(220, 53, 69, 0.1); border-radius: 4px;">
                         ✗ Error: ${error.message}

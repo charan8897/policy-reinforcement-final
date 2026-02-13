@@ -30,6 +30,106 @@ import threading
 # Setup logging
 app_logger = setup_logger('upload_service')
 
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+def commit_bundle_to_git(bundle_dir, output_text=''):
+    """
+    Commit OPA bundle to Git repository
+    
+    Args:
+        bundle_dir (str): Directory containing OPA bundles
+        output_text (str): Output from bundle generation
+    
+    Returns:
+        dict: {'success': bool, 'commit_hash': str, 'message': str}
+    """
+    try:
+        import subprocess
+        import re
+        
+        # Extract version from output
+        version_match = re.search(r'Bundle Version: ([\d.]+)', output_text)
+        version = version_match.group(1) if version_match else 'unknown'
+        
+        # Git add bundles
+        add_result = subprocess.run(
+            ['git', 'add', 'opa_bundles/', 'stage9_rego_bundles.json'],
+            cwd=bundle_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if add_result.returncode != 0:
+            app_logger.warning(f"Git add warning: {add_result.stderr}")
+        
+        # Check if there are changes to commit
+        status_result = subprocess.run(
+            ['git', 'status', '--porcelain'],
+            cwd=bundle_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if not status_result.stdout.strip():
+            app_logger.info("No changes to commit")
+            return {'success': True, 'message': 'No changes to commit', 'commit_hash': None}
+        
+        # Git commit
+        commit_msg = f"chore: update OPA bundle v{version} - auto-generated"
+        commit_result = subprocess.run(
+            ['git', 'commit', '-m', commit_msg],
+            cwd=bundle_dir,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if commit_result.returncode == 0:
+            # Extract commit hash
+            commit_hash_match = re.search(r'\[phase2 ([a-f0-9]+)\]', commit_result.stdout)
+            commit_hash = commit_hash_match.group(1) if commit_hash_match else 'unknown'
+            
+            app_logger.info(f"Bundle committed to Git: {commit_hash}")
+            
+            # Try to push (optional, don't fail if it errors)
+            push_result = subprocess.run(
+                ['git', 'push', 'origin', 'phase2'],
+                cwd=bundle_dir,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if push_result.returncode == 0:
+                app_logger.info(f"Bundle pushed to origin/phase2")
+            else:
+                app_logger.warning(f"Git push warning: {push_result.stderr}")
+            
+            return {
+                'success': True,
+                'commit_hash': commit_hash,
+                'message': 'Bundle committed and pushed to Git'
+            }
+        else:
+            app_logger.warning(f"Git commit message: {commit_result.stdout}")
+            return {
+                'success': False,
+                'message': commit_result.stdout or 'No changes to commit'
+            }
+    
+    except Exception as e:
+        app_logger.error(f"Git commit error: {str(e)}")
+        return {
+            'success': False,
+            'message': f'Git error: {str(e)}'
+        }
+
+
 # Flask app setup
 app = Flask(__name__, template_folder='templates', static_folder='static')
 config = get_config()
@@ -1261,13 +1361,17 @@ def generate_opa_bundle():
             if result.returncode == 0:
                 app_logger.info(f"Stage 10 completed successfully")
                 
-                # Try to extract bundle info from output or files
+                # Commit bundle to Git
+                git_result = commit_bundle_to_git(OUTPUT_DIR, result.stdout)
+                
                 return format_response(
                     True,
                     data={
                         'message': 'OPA bundle generated successfully',
                         'output': result.stdout[-500:] if result.stdout else '',  # Last 500 chars
-                        'bundle_file': f'{OUTPUT_DIR}/opa_bundles/v1.0.0/'
+                        'bundle_file': f'{OUTPUT_DIR}/opa_bundles/v1.0.0/',
+                        'git_commit': git_result.get('commit_hash') if git_result.get('success') else None,
+                        'git_status': 'committed' if git_result.get('success') else 'pending'
                     },
                     status_code=200
                 )
