@@ -1210,9 +1210,91 @@ def reject_clause():
         return format_response(False, error=f'Rejection failed: {str(e)}', status_code=500)
 
 
-    # ============================================================================
-    # ERROR HANDLERS
-    # ============================================================================
+@app.route('/api/v1/generate-opa-bundle', methods=['POST'])
+def generate_opa_bundle():
+    """
+    Trigger Stage 10: OPA Bundle Storage
+    Generate OPA-compatible bundle from stage 9 Rego rules
+    
+    Request:
+    {
+        "stage9_file": "stage9_rego_bundles.json" (optional, defaults to file)
+    }
+    
+    Response:
+    {
+        "success": true,
+        "data": {
+            "bundle_version": "1.0.0",
+            "bundle_hash": "abc123...",
+            "filesystem_path": "/path/to/bundle",
+            "stage_id": "stage_10_xyz"
+        }
+    }
+    """
+    try:
+        import subprocess
+        
+        data = request.get_json() or {}
+        stage9_file = data.get('stage9_file', f'{OUTPUT_DIR}/stage9_rego_bundles.json')
+        
+        # Verify stage 9 file exists
+        if not os.path.exists(stage9_file):
+            return format_response(
+                False,
+                error=f'Stage 9 Rego bundles file not found: {stage9_file}',
+                status_code=404
+            )
+        
+        app_logger.info(f"Triggering Stage 10 (OPA Bundle Storage) with {stage9_file}")
+        
+        # Run stage 10 via policy_validator
+        try:
+            result = subprocess.run(
+                ['python3', 'policy_validator.py', 'opa-bundle-storage', stage9_file],
+                cwd=OUTPUT_DIR,
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            if result.returncode == 0:
+                app_logger.info(f"Stage 10 completed successfully")
+                
+                # Try to extract bundle info from output or files
+                return format_response(
+                    True,
+                    data={
+                        'message': 'OPA bundle generated successfully',
+                        'output': result.stdout[-500:] if result.stdout else '',  # Last 500 chars
+                        'bundle_file': f'{OUTPUT_DIR}/opa_bundles/v1.0.0/'
+                    },
+                    status_code=200
+                )
+            else:
+                error_msg = result.stderr if result.stderr else 'Stage 10 failed with unknown error'
+                app_logger.error(f"Stage 10 failed: {error_msg}")
+                return format_response(
+                    False,
+                    error=error_msg,
+                    status_code=500
+                )
+        
+        except subprocess.TimeoutExpired:
+            return format_response(
+                False,
+                error='Stage 10 execution timed out (60s)',
+                status_code=504
+            )
+    
+    except Exception as e:
+        app_logger.error(f"OPA bundle generation error: {str(e)}")
+        return format_response(False, error=f'Bundle generation failed: {str(e)}', status_code=500)
+
+
+     # ============================================================================
+     # ERROR HANDLERS
+     # ============================================================================
 
 @app.errorhandler(404)
 def not_found(error):
