@@ -24,8 +24,10 @@ from database import DatabaseManager
 from extractor import DocumentExtractor
 from pipeline_orchestrator import get_or_create_pipeline, get_pipeline_status
 from policy_translator import PolicyTranslator
+from phase0_interactive import process_chat_message, handle_document_upload, get_or_create_session
 import asyncio
 import threading
+import uuid
 
 # Setup logging
 app_logger = setup_logger('upload_service')
@@ -189,6 +191,12 @@ def index():
 def approval_ui():
     """Serve policy approval UI"""
     return render_template('approval.html')
+
+
+@app.route('/compliassure', methods=['GET'])
+def compliassure_ui():
+    """Serve CompliAssure chatbot UI"""
+    return render_template('compliAssure.html')
 
 
 # ============================================================================
@@ -1406,9 +1414,150 @@ def generate_opa_bundle():
         return format_response(False, error=f'Bundle generation failed: {str(e)}', status_code=500)
 
 
-     # ============================================================================
-     # ERROR HANDLERS
-     # ============================================================================
+# ============================================================================
+# COMPLIASSURE CHATBOT API
+# ============================================================================
+
+@app.route('/api/v1/chat', methods=['POST'])
+def chat_endpoint():
+        """
+        CompliAssure interactive chatbot endpoint with Phase 0
+        
+        Request:
+        {
+            "message": "user query",
+            "session_id": "optional session id",
+            "mode": "default",
+            "files": [file uploads]
+        }
+        
+        Response:
+        {
+            "success": true,
+            "data": {
+                "response": "AI response text",
+                "session_id": "session_id",
+                "stage": "greeting|name_received|waiting_for_document|processing",
+                "action": "await_input|wait_for_upload|show_progress_modal|continue_processing",
+                "modal_message": "optional progress message"
+            }
+        }
+        """
+        try:
+            # Parse request
+            message = request.form.get('message', '').strip()
+            session_id = request.form.get('session_id', str(uuid.uuid4()))
+            mode = request.form.get('mode', 'default')
+            files = request.files.getlist('files')
+            
+            # Get or create session
+            session = get_or_create_session(session_id)
+            
+            # Handle file upload
+            file_response = None
+            if files:
+                for file in files:
+                    if file and file.filename:
+                        filename = secure_filename(file.filename)
+                        # Save file temporarily for upload
+                        file_content = file.read()
+                        file.seek(0)
+                        
+                        app_logger.info(f"File uploaded in chat: {filename} ({len(file_content)} bytes)")
+                        
+                        # Create document entry and trigger pipeline
+                        # This will be handled by the upload endpoint integration
+                        # For now, just acknowledge
+                        pass
+            
+            # Check if session is new (only has greeting, no user interaction yet)
+            is_new_session = len(session.conversation_history) <= 1
+            
+            # If no message and new session, return the greeting
+            if not message and is_new_session:
+                # Return the greeting that was added during initialization
+                if session.conversation_history:
+                    greeting_text = session.conversation_history[0].get('message', '')
+                    return format_response(
+                        True,
+                        data={
+                            'response': greeting_text,
+                            'session_id': session_id,
+                            'stage': 'greeting',
+                            'action': 'await_input'
+                        }
+                    )
+            
+            # Process user message through Phase 0
+            if message:
+                phase0_response = process_chat_message(session_id, message)
+                
+                app_logger.info(f"Chat [Phase0]: {phase0_response.get('stage')} - {phase0_response.get('action')}")
+                
+                return format_response(
+                    True,
+                    data={
+                        'response': phase0_response.get('response'),
+                        'session_id': session_id,
+                        'stage': phase0_response.get('stage'),
+                        'action': phase0_response.get('action'),
+                        'user_name': phase0_response.get('user_name'),
+                        'has_document': phase0_response.get('has_document'),
+                        'modal_message': phase0_response.get('modal_message'),
+                        'options': phase0_response.get('options'),
+                        'conversation_count': len(session.conversation_history)
+                    }
+                )
+            
+            else:
+                # No message sent - return last bot response or current state
+                if session.conversation_history:
+                    # Find last bot message
+                    last_bot_msg = None
+                    for msg in reversed(session.conversation_history):
+                        if msg.get('sender') == 'bot':
+                            last_bot_msg = msg.get('message')
+                            break
+                    
+                    current_stage = session.conversation_state.get('stage', 'unknown')
+                    
+                    return format_response(
+                        True,
+                        data={
+                            'response': last_bot_msg or "How can I help you with your policy?",
+                            'session_id': session_id,
+                            'stage': current_stage,
+                            'action': 'await_input',
+                            'user_name': session.conversation_state.get('user_name'),
+                            'has_document': session.conversation_state.get('has_document'),
+                            'options': None,  # Options already shown, user needs to respond
+                            'conversation_count': len(session.conversation_history)
+                        }
+                    )
+                else:
+                    # No history at all - return greeting
+                    return format_response(
+                        True,
+                        data={
+                            'response': "🛡️ Welcome to CompliAssure!\n\nI'm your AI-powered Policy Compliance Assistant.\n\nMay I know your name?",
+                            'session_id': session_id,
+                            'stage': 'greeting',
+                            'action': 'await_input'
+                        }
+                    )
+        
+        except Exception as e:
+            app_logger.error(f"Chat endpoint error: {str(e)}")
+            return format_response(
+                False,
+                error=f'Chat processing failed: {str(e)}',
+                status_code=500
+            )
+
+
+    # ============================================================================
+    # ERROR HANDLERS
+    # ============================================================================
 
 @app.errorhandler(404)
 def not_found(error):
